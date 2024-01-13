@@ -80,7 +80,6 @@ function codeAddress() {
   for(let i = 0; i < all.length; i ++){
     let element = all[i]
     if(element.getAttributeNames().includes(attribute)){
-      console.log(element.getAttribute(component_definition))
       if(element.getAttribute(component_definition) == "true")
       {
         all[i].style.display="none"
