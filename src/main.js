@@ -1,3 +1,6 @@
+
+
+// this attribute is used to locate componente tagNames
 const attribute = "component-name"
 const component_definition = "component-definition"
 
