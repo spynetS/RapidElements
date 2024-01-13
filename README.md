@@ -12,13 +12,6 @@ To "install" just add the script link
 <!doctype html>
 <html class="no-js" lang="">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Untitled</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
         <script src="https://cdn.tailwindcss.com"></script>
         <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >
 
@@ -48,6 +41,51 @@ To "install" just add the script link
     </body>
 </html>
 ```
+- Global components
+
+Card.html
+``` html
+    <div component-name="card" class="bg-blue-400 rounded-lg shadow-lg p-5 w-[300px] flex flex-col items-center">
+        <h1>This is card with id: {id}</h1>
+        ---------
+        {children}
+    </div>
+```
+
+index.html
+``` html
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >
+
+    </head>
+    <body class="flex flex-col gap-2" >
+        <div include-html="Card.html" ></div>
+        
+        <div component-name="child" class="bg-red-500 p-5" >
+            {children}
+        </div>
+
+        <card id="0" name="alfred" color="blue">
+            <child>
+                <card id="0.5">
+                    <h1>hej</h1>
+                </card>
+            </child>
+        </card>
+        <card id="1"></card>
+        <card id="2"></card>
+        <card id="3"></card>
+
+    </body>
+</html>
+    
+```
+
+:   This will only work on a server. It will embed the components indide the div conting the `include-html` attribute and then compile the components
+
 ## How it works
 RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg component-name).
 And then everytime we comeacross a element with that tagname replaces the outerHTML with the definition and replacing the props
