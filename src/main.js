@@ -3,6 +3,8 @@
 // this attribute is used to locate componente tagNames
 const attribute = "component-name"
 const component_definition = "component-definition"
+const start_prop = "$"
+const end_prop = "$"
 
 function isComponent(element, components){
   for(let i = 0; i < components.length; i ++){
@@ -21,11 +23,11 @@ function replaceProps(oldElement, newHtml){
     childrenString+= oldElement.children[i].outerHTML;
   }
 
-  newHtml = newHtml.replace("{children}", childrenString)
+  newHtml = newHtml.replaceAll(`{start_prop}children{end_prop}`, childrenString)
 
   let propNames = oldElement.getAttributeNames();
   for(let i = 0; i < propNames.length;i++){
-    newHtml = newHtml.replace("{"+propNames[i]+"}",oldElement.getAttribute(propNames[i]))
+    newHtml = newHtml.replaceAll(start_prop+propNames[i]+end_prop,oldElement.getAttribute(propNames[i]))
   }
   return newHtml
 }
@@ -79,7 +81,7 @@ function codeAddress() {
     // we then set it to true so the defintions is true
     component.setAttribute(component_definition,true)
   }
-
+  //disable
   for(let i = 0; i < all.length; i ++){
     let element = all[i]
     if(element.getAttributeNames().includes(attribute)){
