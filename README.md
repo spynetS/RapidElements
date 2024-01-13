@@ -22,20 +22,12 @@ To "install" just add the script link
         <script src="https://cdn.tailwindcss.com"></script>
         <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >
 
-        </script>
-        <!-- Place favicon.ico in the root directory -->
-
     </head>
     <body class="flex flex-col gap-2" >
-        <h1 component-name="title" component-definition="true" class="text-4xl" >{name}</h1>
         <div component-name="card" class="bg-blue-400 rounded-lg shadow-lg p-5 w-[300px] flex flex-col items-center">
             <h1>This is card with id: {id}</h1>
             ---------
             {children}
-        </div>
-
-        <div component-name="person" class="bg-slate-500 p-4 rounded-xl" >
-            <h1>{children}</h1>
         </div>
 
         <div component-name="child" class="bg-red-500 p-5" >
