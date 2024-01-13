@@ -59,3 +59,4 @@ To "install" just add the script link
 ## TODO
 - [ ] Find a way to define components outside the same html (global componts)
 - [ ] Get some javascript logic in component definitions for convinience
+- [ ] Children without element, just content, is not assieged
