@@ -1,5 +1,6 @@
 # RapidElements
 RapidElements is a very small library that enables you to easily create compontens with plain html (NO NODE NEEDED).
+This library is for you who are tiered to use big js frameworks to create a website but want the convinence of components.
 
 ## Installation
 To "install" just add the script link
@@ -26,7 +27,7 @@ To "install" just add the script link
 
     </head>
     <body class="flex flex-col gap-2" >
-        <h1 component-name="title" class="text-4xl" >{name}</h1>
+        <h1 component-name="title" component-definition="true" class="text-4xl" >{name}</h1>
         <div component-name="card" class="bg-blue-400 rounded-lg shadow-lg p-5 w-[300px] flex flex-col items-center">
             <h1>This is card with id: {id}</h1>
             ---------
@@ -54,5 +55,7 @@ To "install" just add the script link
 
     </body>
 </html>
-
 ```
+## TODO
+- Find a way to define components outside the same html (global componts)
+- Get some javascript logic in component definitions for convinience
