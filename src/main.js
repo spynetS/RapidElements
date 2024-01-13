@@ -6,6 +6,48 @@ const component_definition = "component-definition"
 const start_prop = "{"
 const end_prop = "}"
 
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /* Loop through a collection of all HTML elements: */
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("include-html");
+    dev = elmnt.getAttribute("include-dev");
+    if(file && dev == 'true'){
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function () {
+            if(rawFile.readyState === 4)  {
+            if(rawFile.status === 200 || rawFile.status == 0) {
+                var allText = rawFile.responseText;
+                console.log(allText);
+            }
+            }
+        }
+        rawFile.send(null);    }
+    else if (file) {
+      /* Make an HTTP request using the attribute value as the file name: */
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /* Remove the attribute, and call this function once more: */
+          elmnt.removeAttribute("include-html");
+          replaceComponents();
+          includeHTML();
+        }
+      }
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /* Exit the function: */
+      return;
+    }
+  }
+}
+
 function isComponent(element, components){
   for(let i = 0; i < components.length; i ++){
     const componentName = components[i].getAttribute(attribute)
@@ -32,7 +74,7 @@ function replaceProps(oldElement, newHtml){
   return newHtml
 }
 
-function codeAddress() {
+function replaceComponents() {
     var all = document.getElementsByTagName("*");
     var components = [];
     let elementsToChange = []
@@ -93,4 +135,9 @@ function codeAddress() {
   }
 }
 
-window.onload = codeAddress;
+function main(){
+  includeHTML();
+  replaceComponents()
+}
+
+window.onload = main();
