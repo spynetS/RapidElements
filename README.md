@@ -2,11 +2,11 @@
 RapidElements is a very small library that enables you to easily create compontens with plain html (NO NODE NEEDED).
 
 ## Installation
-To 'install' just add the script link
+To "install" just add the script link
 `<script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >`
 
 ## Usage
-Example
+- Example
 ```html
 <!doctype html>
 <html class="no-js" lang="">
@@ -19,11 +19,9 @@ Example
 
 
         <script src="https://cdn.tailwindcss.com"></script>
-
-        <script type="text/javascript" src="../src/main.js" >
+        <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >
 
         </script>
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
     </head>
