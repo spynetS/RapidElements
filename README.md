@@ -56,7 +56,9 @@ To "install" just add the script link
     </body>
 </html>
 ```
+## How it works
+RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg component-name).
+And then everytime we comeacross a element with that tagname replaces the outerHTML with the definition and replacing the props
+
 ## TODO
-- [ ] Find a way to define components outside the same html (global componts)
-- [ ] Get some javascript logic in component definitions for convinience
-- [ ] Children without element, just content, is not assieged
+- [ ] Find a way to define components outside the same html (global componts) without developer server
