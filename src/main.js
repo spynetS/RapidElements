@@ -3,8 +3,8 @@
 // this attribute is used to locate componente tagNames
 const attribute = "component-name"
 const component_definition = "component-definition"
-const start_prop = "$"
-const end_prop = "$"
+const start_prop = "{"
+const end_prop = "}"
 
 function isComponent(element, components){
   for(let i = 0; i < components.length; i ++){
