@@ -61,9 +61,14 @@ function isComponent(element, components){
 function replaceProps(oldElement, newHtml){
 
   let childrenString = ""
+
   for(let i = 0; i < oldElement.children.length; i ++){
     childrenString+= oldElement.children[i].outerHTML;
   }
+  if(oldElement.children.length == 0){
+    childrenString = oldElement.innerHTML
+  }
+
   newHtml = newHtml.replaceAll(`${start_prop}children${end_prop}`, childrenString)
 
   let propNames = oldElement.getAttributeNames();

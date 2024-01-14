@@ -12,8 +12,25 @@
 
     </head>
     <body class="flex flex-col gap-2 bg-gray-700 " >
-        <div include-html="components.html" >
+        <div component-name="card" class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] " >
+            <h1>Kort</h1>
+            <h1>{name}</h1>
+            {children}
         </div>
-        <card></card>
+
+        <div component-name="bigtitle" >
+            {children}
+        </div>
+
+
+        <card name="alfred" >
+            <bigtitle  >
+                THIS IS THE CHILD
+            </bigtitle>
+        </card>
+
+<script type="text/javascript" src="../src/main.js" >
+        </script>
+
     </body>
 </html>
