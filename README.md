@@ -58,7 +58,7 @@ index.html
 <html class="no-js" lang="">
     <head>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >
+        <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" />
 
     </head>
     <body class="flex flex-col gap-2" >
@@ -84,7 +84,7 @@ index.html
     
 ```
 
-:   This will only work on a server. It will embed the components indide the div conting the `include-html` attribute and then compile the components
+**This will only work on a server. It will embed the components indide the div conting the `include-html` attribute and then compile the components**
 
 ## How it works
 RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg component-name).
