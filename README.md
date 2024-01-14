@@ -43,13 +43,18 @@ To "install" just add the script link
 ```
 - Global components
 
-Card.html
+Components.html
 ``` html
     <div component-name="card" class="bg-blue-400 rounded-lg shadow-lg p-5 w-[300px] flex flex-col items-center">
         <h1>This is card with id: {id}</h1>
         ---------
         {children}
     </div>
+        
+    <div component-name="child" class="bg-red-500 p-5" >
+        {children}
+    </div>
+
 ```
 
 index.html
@@ -62,11 +67,7 @@ index.html
 
     </head>
     <body class="flex flex-col gap-2" >
-        <div include-html="Card.html" ></div>
-        
-        <div component-name="child" class="bg-red-500 p-5" >
-            {children}
-        </div>
+        <div include-html="Components.html" ></div>
 
         <card id="0" name="alfred" color="blue">
             <child>
