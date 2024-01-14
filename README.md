@@ -13,7 +13,7 @@ To "install" just add the script link
 <html class="no-js" lang="">
     <head>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >
+        <script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" />
 
     </head>
     <body class="flex flex-col gap-2" >
