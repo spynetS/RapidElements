@@ -4,7 +4,7 @@ This library is for you who are tiered to use big js frameworks to create a webs
 
 ## Installation
 To "install" just add the script link
-`<script type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >`
+`<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >`
 
 ## Usage
 - Example
