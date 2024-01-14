@@ -85,7 +85,7 @@ index.html
 ```
 
 **This will only work on a server. It will embed the components indide the div conting the `include-html` attribute and then compile the components**
-
+This also enables the creation of public component librarys. 
 ## How it works
 RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg component-name).
 And then everytime we comeacross a element with that tagname replaces the outerHTML with the definition and replacing the props
