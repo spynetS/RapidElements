@@ -64,8 +64,8 @@ function replaceProps(oldElement, newHtml){
   for(let i = 0; i < oldElement.children.length; i ++){
     childrenString+= oldElement.children[i].outerHTML;
   }
-
-  newHtml = newHtml.replaceAll(`{start_prop}children{end_prop}`, childrenString)
+  console.log(childrenString)
+  newHtml = newHtml.replaceAll(`${start_prop}children${end_prop}`, childrenString)
 
   let propNames = oldElement.getAttributeNames();
   for(let i = 0; i < propNames.length;i++){
