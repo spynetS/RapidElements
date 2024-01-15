@@ -85,7 +85,7 @@ index.html
     
 ```
 
-**This will only work on a server. It will embed the components indide the div conting the `include-html` attribute and then compile the components**
+**This will only work if the included html is on a server (liveserver inside vscode works).** It will embed the components indide the div conting the `include-html` attribute and then compile the components
 This also enables the creation of public component librarys. 
 ## How it works
 RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg component-name).
