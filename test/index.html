@@ -9,28 +9,36 @@
 
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- Place favicon.ico in the root directory -->
+       <script defer type="text/javascript" src="../src/main.js" ></script>
 
     </head>
-    <body class="flex flex-col gap-2 bg-gray-700 " >
-        <div component-name="card" class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] " >
-            <h1>Kort</h1>
-            <h1>{name}</h1>
-            {children}
-        </div>
+    <body class="flex flex-col gap-2 bg-gray-200 " >
+        <template rapid-name="card" >
+            <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
+                <h1>Kort</h1>
+                <h1>{name}</h1>
+                {children}
+            </div>
+        </template>
 
-        <div component-name="bigtitle" >
-            {children}
-        </div>
+        <template rapid-name="bigtitle">
+            <div class="text-blue-600" >
+                {children}
+            </div>
+        </template>
 
-
-        <card name="alfred" >
+        <card name="alfred" color="red" class="m-5" >
             <bigtitle  >
                 THIS IS THE CHILD
+                <p>TJONO</p>
             </bigtitle>
+            <h1>TJONO</h1>
         </card>
 
-<script type="text/javascript" src="../src/main.js" >
-        </script>
+     <card name="card2" color="blue" class="m-5" ></card>
+       <card name="card3" color="green"></card>
+       <card name="card4" color="green"></card>
+
 
     </body>
 </html>
