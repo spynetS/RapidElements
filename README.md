@@ -1,6 +1,6 @@
 # RapidElements
 RapidElements is a very small library that enables you to easily create compontens with plain html (NO NODE NEEDED).
-This library is for you who are tiered to use big js frameworks to create a website but want the convinence of components.
+This library is for you who are tired to use big js frameworks to create a website but want the convinence of components.
 
 ## Installation
 To "install" just add the script link
@@ -17,26 +17,31 @@ To "install" just add the script link
 
     </head>
     <body class="flex flex-col gap-2" >
-        <div component-name="card" class="bg-blue-400 rounded-lg shadow-lg p-5 w-[300px] flex flex-col items-center">
-            <h1>This is card with id: {id}</h1>
-            ---------
-            {children}
-        </div>
+        <template rapid-name="card" >
+            <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
+                <h1>Kort</h1>
+                <h1>{name}</h1>
+                {children}
+            </div>
+        </template>
 
-        <div component-name="child" class="bg-red-500 p-5" >
-            {children}
-        </div>
+        <template rapid-name="bigtitle">
+            <div class="text-blue-600" >
+                {children}
+            </div>
+        </template>
 
-        <card id="0" name="alfred" color="blue">
-            <child>
-                <card id="0.5">
-                    <h1>hej</h1>
-                </card>
-            </child>
+        <card name="card1" color="red" class="m-5" >
+            <bigtitle  >
+                THIS IS THE CHILD
+                <p>TJONO</p>
+            </bigtitle>
+            <h1>TJONO</h1>
         </card>
-        <card id="1"></card>
-        <card id="2"></card>
-        <card id="3"></card>
+
+       <card name="card2" color="blue" class="m-5" ></card>
+       <card name="card3" color="green"></card>
+       <card name="card4" color="green"></card>
 
     </body>
 </html>
@@ -45,15 +50,20 @@ To "install" just add the script link
 
 Components.html
 ``` html
-    <div component-name="card" class="bg-blue-400 rounded-lg shadow-lg p-5 w-[300px] flex flex-col items-center">
-        <h1>This is card with id: {id}</h1>
-        ---------
-        {children}
-    </div>
-        
-    <div component-name="child" class="bg-red-500 p-5" >
-        {children}
-    </div>
+
+        <template rapid-name="card" >
+            <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
+                <h1>Kort</h1>
+                <h1>{name}</h1>
+                {children}
+            </div>
+        </template>
+
+        <template rapid-name="bigtitle">
+            <div class="text-blue-600" >
+                {children}
+            </div>
+        </template>
 
 ```
 
@@ -76,9 +86,9 @@ index.html
                 </card>
             </child>
         </card>
-        <card id="1"></card>
-        <card id="2"></card>
-        <card id="3"></card>
+        <card name="1"></card>
+        <card name="2"></card>
+        <card name="3"></card>
 
     </body>
 </html>
@@ -87,8 +97,9 @@ index.html
 
 **This will only work if the included html is on a server (liveserver inside vscode works).** It will embed the components indide the div conting the `include-html` attribute and then compile the components
 This also enables the creation of public component librarys. 
+
 ## How it works
-RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg component-name).
+RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg rapid-name).
 And then everytime we comeacross a element with that tagname replaces the outerHTML with the definition and replacing the props
 
 ## TODO
