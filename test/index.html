@@ -9,36 +9,42 @@
 
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- Place favicon.ico in the root directory -->
-       <script defer type="text/javascript" src="../src/main.js" ></script>
+        <script defer type="text/javascript" src="../src/index.js" ></script>
+        <script >
+            let state = {count:10}
+            function clickasd(){
+                alert(name)
+            }
+        </script>
 
     </head>
     <body class="flex flex-col gap-2 bg-gray-200 " >
-        <template rapid-name="card" >
-            <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
-                <h1>Kort</h1>
-                <h1>{name}</h1>
-                {children}
-            </div>
-        </template>
 
         <template rapid-name="bigtitle">
-            <div class="text-blue-600" >
-                {children}
+            <code>
+
+            </code>
+            <h1 class="text-2xl text-red-600" >
+                {props.children}
+            </h1>
+        </template>
+
+        <template rapid-name="card" >
+            <script>
+
+
+            </script>
+
+            <div class="bg-{props.color === undefined ? 'gray' : props.color }-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {props.name}" >
+                <button onclick="state.count++;console.log(state.count)" >ad</button>
+                <bigtitle children="{state.count}" >Hej</bigtitle>
+                {props.children}
             </div>
         </template>
 
-        <card name="alfred" color="red" class="m-5" >
-            <bigtitle  >
-                THIS IS THE CHILD
-                <p>TJONO</p>
-            </bigtitle>
-            <h1>TJONO</h1>
+        <card name="10" >
+           Roos
         </card>
-
-     <card name="card2" color="blue" class="m-5" ></card>
-       <card name="card3" color="green"></card>
-       <card name="card4" color="green"></card>
-
 
     </body>
 </html>
