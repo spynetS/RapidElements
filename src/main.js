@@ -111,6 +111,37 @@ function replaceProps(oldElement, newHtml){
   }
   return newHtml
 }
+function re(scriptContent) {
+    // Match the class name using a regular expression
+    const classNameMatch = scriptContent.match(/class\s+([^\s{]+)/);
+    // Check if a match was found
+    if (classNameMatch && classNameMatch.length > 1) {
+      return classNameMatch[1];
+    } else {
+        return "No class name found";
+    }
+}
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+function addInstance(script,instanceName){
+  let className = re(script.innerHTML);
+
+  const scriptElement = document.createElement('script');
+  scriptElement.textContent = `let ${instanceName} = new ${className}();`;
+  document.body.appendChild(scriptElement);
+}
+function replaceAll(string, find, replace) {
+    // Create a regular expression with the 'g' flag to match all occurrences
+    const regex = new RegExp(find, 'g');
+    // Use the replace method with the regex to replace all occurrences
+    return string.replace(regex, replace);
+}
 
 function replaceComponents() {
   let componentDefinitions = []
@@ -120,6 +151,15 @@ function replaceComponents() {
   for(let i = 0; i < templates.length; i ++){
     let component = templates[i];
     let name = component.getAttribute("rapid-name");
+    let script = component.content.children[0];
+
+
+    // add script element from component template
+    const scriptElement = document.createElement('script');
+    scriptElement.textContent = script.innerHTML;
+    scriptElement.setAttribute("rapid-script","card")
+    document.body.appendChild(scriptElement);
+
     componentDefinitions.push([name,component.innerHTML])
   }
 
@@ -128,9 +168,21 @@ function replaceComponents() {
     // all the elements with tagname corosponding with a component-definitinos (rapid-name)
     let components = document.getElementsByTagName(componentDefinitions[i][0])
     for(let j = 0; j < components.length; j ++){
-      components[j].outerHTML = (replaceProps(components[j],componentDefinitions[i][1]))
-      console.log(document.body.outerHTML)
-      j--; // we go back a step because we have to (i don't really know but it somehow also makes sense -_ö_-)
+
+      // find the script from the card
+      let script = document.querySelectorAll('[rapid-script="card"]')[0];
+      let instanceName = generateRandomString(10);
+
+      let content = (replaceProps(components[j],componentDefinitions[i][1]));
+      // replace all selfs with the instance id
+      content = replaceAll(content,"self.",`${instanceName}.`)
+
+      // replace the component
+      components[j].outerHTML = content;
+      // add instance of script
+      addInstance(script,instanceName);
+
+      j--;// we go back a step because we have to (i don't really know but it somehow also makes sense -_ö_-)
     }
   }
 

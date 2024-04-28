@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Untitled</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Place favicon.ico in the root directory -->
+        <script defer type="text/javascript" src="../src/main.js" ></script>
+
+    </head>
+    <body class="flex flex-col gap-2 bg-gray-200 " >
+
+
+        <template rapid-name="card" >
+            <script defer >
+                class Card {
+                    constructor(){
+                        this.open = true;
+                    }
+                    hej() {
+                        console.log(this.open);
+                    }
+                }
+            </script>
+
+            <div class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}" >
+                {name}
+                <button onclick="alert(self.open)" >is open</button>
+                <button onclick="self.open = false" >close</button>
+                <button onclick="self.open = true" >open</button>
+            </div>
+        </template>
+
+        <card name="Alfred" >
+           Children is placed here
+        </card>
+        <card name="Ali" >
+           Children is placed here
+        </card>
+
+    </body>
+</html>
