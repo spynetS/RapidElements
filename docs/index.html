@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-05-17 Fri 01:13 -->
+<!-- 2024-05-17 Fri 01:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>RapidElements documentation</title>
@@ -202,18 +202,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgfaa70a4">1. Component</a>
+<li><a href="#org11b8df3">1. Component</a>
 <ul>
-<li><a href="#orgd209cf9">1.1. CDN</a></li>
-<li><a href="#org43cdc3c">1.2. Props</a></li>
-<li><a href="#org63ba0d9">1.3. Example component with props</a></li>
-<li><a href="#org6542829">1.4. Components as children</a></li>
-<li><a href="#org0d9af7e">1.5. Components inside component definitions</a></li>
-<li><a href="#orgf90734d">1.6. Example component with scripts</a></li>
-<li><a href="#org49efe56">1.7. Accessing elements in code</a></li>
+<li><a href="#org9cb978e">1.1. CDN</a></li>
+<li><a href="#org5094e8e">1.2. Props</a></li>
+<li><a href="#orgae55362">1.3. Example component with props</a></li>
+<li><a href="#orga77a36a">1.4. Components as children</a></li>
+<li><a href="#org1d148c8">1.5. Components inside component definitions</a></li>
+<li><a href="#org40fe726">1.6. Example component with scripts</a></li>
+<li><a href="#org955071b">1.7. Accessing elements in code</a></li>
 </ul>
 </li>
-<li><a href="#org439bdf0">2. Seperate files</a></li>
+<li><a href="#org1cae40c">2. Components in seperate files</a></li>
 </ul>
 </div>
 </div>
@@ -221,8 +221,8 @@
 <b>RapidElements</b> is a javascript <b>library</b> which lets the developer use components in plain html with only one script tag.
 </p>
 
-<div id="outline-container-orgfaa70a4" class="outline-2">
-<h2 id="orgfaa70a4"><span class="section-number-2">1.</span> Component</h2>
+<div id="outline-container-org11b8df3" class="outline-2">
+<h2 id="org11b8df3"><span class="section-number-2">1.</span> Component</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 A component is made inside a template and giving the template a <i>rapid-name</i>, which will become the components name.
@@ -230,8 +230,8 @@ Then you can only write the component name and use it as any other html tag.
 </p>
 </div>
 
-<div id="outline-container-orgd209cf9" class="outline-3">
-<h3 id="orgd209cf9"><span class="section-number-3">1.1.</span> CDN</h3>
+<div id="outline-container-org9cb978e" class="outline-3">
+<h3 id="org9cb978e"><span class="section-number-3">1.1.</span> CDN</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 To import the library you can include the js file or from CDN
@@ -243,8 +243,8 @@ To import the library you can include the js file or from CDN
 </div>
 </div>
 
-<div id="outline-container-org43cdc3c" class="outline-3">
-<h3 id="org43cdc3c"><span class="section-number-3">1.2.</span> Props</h3>
+<div id="outline-container-org5094e8e" class="outline-3">
+<h3 id="org5094e8e"><span class="section-number-3">1.2.</span> Props</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Props are the attributes that get passed to component&rsquo;s deffintion by it&rsquo;s initlization.
@@ -256,13 +256,13 @@ To acces the prop write
 </div>
 <p>
 as demostrated in the
-<a href="#org63ba0d9">1.3</a>
+<a href="#orgae55362">1.3</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org63ba0d9" class="outline-3">
-<h3 id="org63ba0d9"><span class="section-number-3">1.3.</span> Example component with props</h3>
+<div id="outline-container-orgae55362" class="outline-3">
+<h3 id="orgae55362"><span class="section-number-3">1.3.</span> Example component with props</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"component"</span>&gt;
@@ -287,8 +287,8 @@ as demostrated in the
 <component title="My component 2">This is a component</component>
 </div>
 </div>
-<div id="outline-container-org6542829" class="outline-3">
-<h3 id="org6542829"><span class="section-number-3">1.4.</span> Components as children</h3>
+<div id="outline-container-orga77a36a" class="outline-3">
+<h3 id="orga77a36a"><span class="section-number-3">1.4.</span> Components as children</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 Ofcourse we can have nested components
@@ -314,8 +314,8 @@ Ofcourse we can have nested components
 </component>
 </div>
 </div>
-<div id="outline-container-org0d9af7e" class="outline-3">
-<h3 id="org0d9af7e"><span class="section-number-3">1.5.</span> Components inside component definitions</h3>
+<div id="outline-container-org1d148c8" class="outline-3">
+<h3 id="org1d148c8"><span class="section-number-3">1.5.</span> Components inside component definitions</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 We can also use components inside other components when we create new components.
@@ -341,8 +341,8 @@ We can also use components inside other components when we create new components
 </div>
 </div>
 
-<div id="outline-container-orgf90734d" class="outline-3">
-<h3 id="orgf90734d"><span class="section-number-3">1.6.</span> Example component with scripts</h3>
+<div id="outline-container-org40fe726" class="outline-3">
+<h3 id="org40fe726"><span class="section-number-3">1.6.</span> Example component with scripts</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 Components can have scripts inside them which lets them have their own coding space. You can do this by creating a script tag inside the template and creating a class with the same name as the component and extends the Component class provieded by the library. The Component class comes with the onComponentLoad which will run when the site is loaded.
@@ -391,8 +391,8 @@ To access the components instance in the html write <i>self</i> as <i>this</i> i
 </div>
 </div>
 
-<div id="outline-container-org49efe56" class="outline-3">
-<h3 id="org49efe56"><span class="section-number-3">1.7.</span> Accessing elements in code</h3>
+<div id="outline-container-org955071b" class="outline-3">
+<h3 id="org955071b"><span class="section-number-3">1.7.</span> Accessing elements in code</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 To access elements use the child-id and run
@@ -446,24 +446,24 @@ This will return an element which you can change.
 </div>
 
 
-<div id="outline-container-org439bdf0" class="outline-2">
-<h2 id="org439bdf0"><span class="section-number-2">2.</span> Seperate files</h2>
+<div id="outline-container-org1cae40c" class="outline-2">
+<h2 id="org1cae40c"><span class="section-number-2">2.</span> Components in seperate files</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-To have components in seperate files you have to have a server hosting the files. It works with vscode go live extentions.
-To include the files to another you can do
+To have components in seperate files you will have to have a webserver hosting your files. (Vscode go live works).
+To do this just run
 </p>
 
 <div class="org-src-container">
-<pre class="src src-html">&lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">include-html</span>=<span style="color: #DB8E73;">"../test/Components.html"</span> &gt;&lt;/<span style="color: #D9DAA2;">div</span>&gt;
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">script</span> defer <span style="color: #85DDFF;">type</span>=<span style="color: #DB8E73;">"text/javascript"</span> <span style="color: #85DDFF;">src</span>=<span style="color: #DB8E73;">"https://spynets.github.io/RapidElements/test/components.html"</span> &gt;
 </pre>
 </div>
-<div include-html="../test/Components.html" ></div>
+<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/test/components.html" >
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2024-05-17 Fri 01:13</p>
+<p class="date">Created: 2024-05-17 Fri 01:20</p>
 </div>
 </body>
 </html>

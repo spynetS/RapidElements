@@ -1,0 +1,193 @@
+#+title: RapidElements documentation
+#+HTML_HEAD: <script defer type="text/javascript" src="../src/main.js" ></script>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="README.css" />
+
+*RapidElements* is a javascript *library* which lets the developer use components in plain html with only one script tag.
+
+* Component
+A component is made inside a template and giving the template a /rapid-name/, which will become the components name.
+Then you can only write the component name and use it as any other html tag.
+
+** CDN
+To import the library you can include the js file or from CDN
+#+begin_src html :tangle readme.html
+<script defer type="text/javascript" src="./src/main.js" ></script>
+#+end_src
+
+** Props
+Props are the attributes that get passed to component's deffintion by it's initlization.
+To acces the prop write
+#+begin_src html
+{propname}
+#+end_src
+as demostrated in the
+[[Example component with props]]
+
+** Example component with props
+#+begin_src html :tangle readme.html
+<template rapid-name="component">
+  <div style="background:gray;" >
+    <h1>{title}</h1>
+    {children}
+  </div>
+</template>
+
+<component title="My component 1">This is a component</component>
+<component title="My component 2">This is a component</component>
+#+end_src
+#+begin_export html
+<template rapid-name="component">
+  <div style="background:gray;" >
+    <h1>{title}</h1>
+    {children}
+  </div>
+</template>
+
+<component title="My component 1">This is a component</component>
+<component title="My component 2">This is a component</component>
+#+end_export
+** Components as children
+Ofcourse we can have nested components
+
+#+begin_src html :tangle readme.html
+<template rapid-name="bigtitle">
+  <h1 style="font-size:60px;" >{children}</h1>
+</template>
+
+<component title="My component 2">
+  <bigtitle>This is with a big title</bigtitle>
+</component>
+<!-- from before -->
+#+end_src
+#+begin_export html
+<template rapid-name="bigtitle">
+  <h1 style="font-size:60px;" >{children}</h1>
+</template>
+
+<component title="My component 2">
+  <bigtitle>This is with a big title</bigtitle>
+</component>
+#+end_export
+** Components inside component definitions
+We can also use components inside other components when we create new components.
+
+#+begin_src html :tangle readme.html
+<template rapid-name="component2">
+  <div style="background:gray;" >
+    <bigtitle>{title}</bigtitle> {children}
+  </div>
+</template>
+
+<component2 title="my component2 1" > This is the second component 2</component2>
+#+end_src
+#+begin_export html
+<template rapid-name="component2">
+  <div style="background:gray;" >
+    <bigtitle>{title}</bigtitle> {children}
+  </div>
+</template>
+
+<component2 title="my component2 1" > This is the second component 2</component2>
+#+end_export
+
+** Example component with scripts
+Components can have scripts inside them which lets them have their own coding space. You can do this by creating a script tag inside the template and creating a class with the same name as the component and extends the Component class provieded by the library. The Component class comes with the onComponentLoad which will run when the site is loaded.
+To access the components instance in the html write /self/ as /this/ in normal js
+
+#+begin_src html :tangle readme.html
+<template rapid-name="scriptcomponent">
+  <script>
+    class ScriptComponent extends Component{
+        onComponentLoad(){
+            alert("component has loaded");
+        }
+        sayHi(){
+            alert("Hi!");
+        }
+    }
+
+  </script>
+  <div>
+    <button onclick="self.sayHi()" >Say hi</button>
+  </div>
+</template>
+
+<scriptcomponent></scriptcomponent>
+#+end_src
+#+begin_export html
+<template rapid-name="scriptcomponent">
+  <script>
+    class ScriptComponent extends Component{
+        onComponentLoad(){
+            alert("A component has loaded, it's part of the documentation");
+        }
+        sayHi(){
+            alert("Hi!");
+        }
+    }
+
+  </script>
+  <div>
+    <button onclick="self.sayHi()" >Say hi</button>
+  </div>
+</template>
+
+<scriptcomponent></scriptcomponent>
+#+end_export
+
+** Accessing elements in code
+To access elements use the child-id and run
+#+begin_src js
+let element = this.getChild(id);
+#+end_src
+This will return an element which you can change.
+
+#+begin_src html :tangle readme.html
+<template rapid-name="scriptcomponent2">
+  <script>
+    class ScriptComponent2 extends Component{
+        sayHi(){
+            this.getChild("text").innerHTML = "Hi!";
+        }
+    }
+
+  </script>
+  <div >
+    <button onclick="self.sayHi()" >Say hi</button>
+    <h1 child-id="text" ></h1>
+  </div>
+</template>
+
+<scriptcomponent2></scriptcomponent2>
+#+end_src
+
+#+BEGIN_export html
+<template rapid-name="scriptcomponent2">
+  <script>
+    class ScriptComponent2 extends Component{
+        sayHi(){
+            this.getChild("text").innerHTML = "Hi!";
+        }
+    }
+
+  </script>
+  <div >
+    <button onclick="self.sayHi()" >Say hi</button>
+    <h1 child-id="text" ></h1>
+  </div>
+</template>
+
+<scriptcomponent2></scriptcomponent2>
+#+END_export
+
+
+* Components in seperate files
+To have components in seperate files you will have to have a webserver hosting your files. (Vscode go live works).
+To do this just run
+
+#+begin_src html :tangle readme.html
+<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/test/components.html" >
+#+end_src
+#+begin_export html
+<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/test/components.html" >
+#+end_export
