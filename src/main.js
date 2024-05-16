@@ -1,52 +1,14 @@
-/*
- * Alfred Roos
- * This is a script that enables rapid reusable components.
- * To specify a component use the template tag and set the attribute
- * rapid-name to specify the component name. Then just write the component
- * with the rapid-name as tagname.
- *
- * EXAMPLE
- *      <template rapid-name="card" >
- *          <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
- *              <h1>Kort</h1>
- *              <h1>{name}</h1>
- *              {children}
- *          </div>
- *      </template>
+class Component {
+  constructor(){
+    this.self = "asd";
+  }
+  onComponentLoad(){
 
- *      <template rapid-name="bigtitle">
- *          <div class="text-blue-600" >
- *              {children}
- *          </div>
- *      </template>
-
- *      <card name="alfred" color="red" class="m-5" >
- *          <bigtitle  >
- *              THIS IS THE CHILD
- *              <p>TJONO</p>
- *          </bigtitle>
- *          <h1>TJONO</h1>
- *      </card>
- *      <card name="alfred2" color="blue" class="m-5" ></card>
- *
- * BECOMES
- * <div class="bg-red-500 p-5 rouneded-lg flex flex-col items-center w-[400px] m-5">
- *    <h1>Kort</h1>
- *    <h1>alfred</h1>
- *    <div class="text-blue-600">
- *        THIS IS THE CHILD
- *        <p>TJONO</p>
- *    </div>
- *    <h1>TJONO</h1>
- * </div>
- *
- * <div class="bg-blue-500 p-5 rouneded-lg flex flex-col items-center w-[400px] m-5">
- *     <h1>Kort</h1>
- *     <h1>alfred2</h1>
- * </div>
- */
-
-
+  }
+  getChild(name){
+    return document.querySelectorAll(`[child-id="RAPID${this.self+name}"]`)[0];
+  }
+}
 
 // this attribute is used to locate componente tagNames
 const attribute = "component-name"
@@ -70,7 +32,6 @@ function includeHTML() {
             if(rawFile.readyState === 4)  {
             if(rawFile.status === 200 || rawFile.status == 0) {
                 var allText = rawFile.responseText;
-                console.log(allText);
             }
             }
         }
@@ -107,19 +68,82 @@ function replaceProps(oldElement, newHtml){
   // <component name="test"/> of <h1>{name}</h1> becomes <h1>test</h1>
   let propNames = oldElement.getAttributeNames();
   for(let i = 0; i < propNames.length;i++){
-    newHtml = newHtml.replaceAll(`${start_prop}${propNames[i]}${end_prop}`,oldElement.getAttribute(propNames[i]))
+    // if the propname is child-id we want to
+    // add the id to the replaced componment
+    // we load in the html string in an element add the atribute to the first
+    // element and reset the string with the new element
+    if(propNames[i] === "child-id"){
+      var tempContainer = document.createElement('div');
+      tempContainer.innerHTML = newHtml;
+
+      var element = tempContainer.firstElementChild;
+
+      element.setAttribute('child-id', oldElement.getAttribute(propNames[i]));
+      newHtml = element.outerHTML;
+    }
+    else{
+      newHtml = newHtml.replaceAll(`${start_prop}${propNames[i]}${end_prop}`,oldElement.getAttribute(propNames[i]))
+    }
   }
+
+
   return newHtml
 }
 
+function getClassName(scriptContent) {
+    // Match the class name using a regular expression
+    const classNameMatch = scriptContent.match(/class\s+([^\s{]+)/);
+    // Check if a match was found
+    if (classNameMatch && classNameMatch.length > 1) {
+      return classNameMatch[1];
+    } else {
+        return null;
+    }
+}
+
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+
+function addInstance(script,instanceName){
+  let className = getClassName(script.innerHTML);
+  if(className != null){
+    const scriptElement = document.createElement('script');
+    scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}";${instanceName}.onComponentLoad()`;
+    document.body.appendChild(scriptElement);
+  }
+}
+function replaceAll(string, find, replace) {
+    // Create a regular expression with the 'g' flag to match all occurrences
+    const regex = new RegExp(find, 'g');
+    // Use the replace method with the regex to replace all occurrences
+    return string.replace(regex, replace);
+}
+
 function replaceComponents() {
+  //this lists holds all template values
   let componentDefinitions = []
 
   // fetch the component definitions
   let templates = document.getElementsByTagName("template");
-  for(let i = 0; i < templates.length; i ++){
+  for(let i = templates.length - 1; i >= 0 ; i --){
     let component = templates[i];
     let name = component.getAttribute("rapid-name");
+    let script = component.content.children[0];
+
+
+    // add script element from component template outside the template
+    const scriptElement = document.createElement('script');
+    scriptElement.textContent = script.innerHTML;
+
+    scriptElement.setAttribute("rapid-script", name);
+    document.body.appendChild(scriptElement);
+
     componentDefinitions.push([name,component.innerHTML])
   }
 
@@ -128,9 +152,38 @@ function replaceComponents() {
     // all the elements with tagname corosponding with a component-definitinos (rapid-name)
     let components = document.getElementsByTagName(componentDefinitions[i][0])
     for(let j = 0; j < components.length; j ++){
-      components[j].outerHTML = (replaceProps(components[j],componentDefinitions[i][1]))
-      console.log(document.body.outerHTML)
-      j--; // we go back a step because we have to (i don't really know but it somehow also makes sense -_ö_-)
+      // find the script from the card
+      let script = document.querySelectorAll(`[rapid-script="${components[j].localName}"]`)[0];
+      let instanceName = generateRandomString(10);
+
+      let content = (replaceProps(components[j],componentDefinitions[i][1]));
+
+      // add instance id to child ids
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(content, 'text/html');
+      // Step 3: Query for the desired element in the parsed document
+      var childElement = doc.querySelectorAll(`[child-id]`)
+      for(let i = 0; i < childElement.length; i++){
+        const was = childElement[i].getAttribute("child-id")
+        // if the child-id attribute has RAPID it has already
+        // been changed so we should not change it now
+        // (this comes from when a component is inside another component
+        // and has the child-id on it)
+        if(!was.includes("RAPID")){
+          childElement[i].setAttribute('child-id', 'RAPIDself'+was);
+        }
+      }
+      content = doc.body.innerHTML;
+
+      // replace all selfs with the instance id
+      content = replaceAll(content,"self",`${instanceName}`)
+
+      // replace the component
+      components[j].outerHTML = content;
+      // add instance of script
+      addInstance(script,instanceName);
+
+      j--;// we go back a step because we have to (i don't really know but it somehow also makes sense -_ö_-)
     }
   }
 
@@ -139,6 +192,7 @@ function replaceComponents() {
 function main(){
   //try to include html
   includeHTML();
+  //replace all componments
   replaceComponents()
 }
 
