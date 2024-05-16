@@ -2,6 +2,10 @@
 #+HTML_HEAD: <script defer type="text/javascript" src="../src/main.js" ></script>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="README.css" />
 
+#+begin_export html
+<div include-html="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" ></div>
+#+end_export
+
 *RapidElements* is a javascript *library* which lets the developer use components in plain html with only one script tag.
 
 * Component
@@ -190,6 +194,5 @@ To do this just run
 <card name="test import" ></card>
 #+end_src
 #+begin_export html
-<div include-html="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" ></div>
 <card name="test import" ></card>
 #+end_export
