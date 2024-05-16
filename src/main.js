@@ -68,8 +68,11 @@ function replaceProps(oldElement, newHtml){
   // <component name="test"/> of <h1>{name}</h1> becomes <h1>test</h1>
   let propNames = oldElement.getAttributeNames();
   for(let i = 0; i < propNames.length;i++){
+    // if the propname is child-id we want to
+    // add the id to the replaced componment
+    // we load in the html string in an element add the atribute to the first
+    // element and reset the string with the new element
     if(propNames[i] === "child-id"){
-
       var tempContainer = document.createElement('div');
       tempContainer.innerHTML = newHtml;
 
@@ -86,16 +89,18 @@ function replaceProps(oldElement, newHtml){
 
   return newHtml
 }
-function re(scriptContent) {
+
+function getClassName(scriptContent) {
     // Match the class name using a regular expression
     const classNameMatch = scriptContent.match(/class\s+([^\s{]+)/);
     // Check if a match was found
     if (classNameMatch && classNameMatch.length > 1) {
       return classNameMatch[1];
     } else {
-        return "No class name found";
+        return null;
     }
 }
+
 function generateRandomString(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     let result = '';
@@ -104,12 +109,14 @@ function generateRandomString(length) {
     }
     return result;
 }
-function addInstance(script,instanceName){
-  let className = re(script.innerHTML);
 
-  const scriptElement = document.createElement('script');
-  scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}";${instanceName}.onComponentLoad()`;
-  document.body.appendChild(scriptElement);
+function addInstance(script,instanceName){
+  let className = getClassName(script.innerHTML);
+  if(className != null){
+    const scriptElement = document.createElement('script');
+    scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}";${instanceName}.onComponentLoad()`;
+    document.body.appendChild(scriptElement);
+  }
 }
 function replaceAll(string, find, replace) {
     // Create a regular expression with the 'g' flag to match all occurrences
@@ -119,20 +126,21 @@ function replaceAll(string, find, replace) {
 }
 
 function replaceComponents() {
+  //this lists holds all template values
   let componentDefinitions = []
 
   // fetch the component definitions
   let templates = document.getElementsByTagName("template");
-  for(let i = 0; i < templates.length; i ++){
+  for(let i = templates.length - 1; i >= 0 ; i --){
     let component = templates[i];
     let name = component.getAttribute("rapid-name");
     let script = component.content.children[0];
 
 
-    // add script element from component template
+    // add script element from component template outside the template
     const scriptElement = document.createElement('script');
     scriptElement.textContent = script.innerHTML;
-    // TODO rename card !!
+
     scriptElement.setAttribute("rapid-script", name);
     document.body.appendChild(scriptElement);
 
@@ -150,13 +158,17 @@ function replaceComponents() {
 
       let content = (replaceProps(components[j],componentDefinitions[i][1]));
 
-      // add isntance id to child ids
+      // add instance id to child ids
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, 'text/html');
       // Step 3: Query for the desired element in the parsed document
       var childElement = doc.querySelectorAll(`[child-id]`)
       for(let i = 0; i < childElement.length; i++){
         const was = childElement[i].getAttribute("child-id")
+        // if the child-id attribute has RAPID it has already
+        // been changed so we should not change it now
+        // (this comes from when a component is inside another component
+        // and has the child-id on it)
         if(!was.includes("RAPID")){
           childElement[i].setAttribute('child-id', 'RAPIDself'+was);
         }
@@ -180,6 +192,7 @@ function replaceComponents() {
 function main(){
   //try to include html
   includeHTML();
+  //replace all componments
   replaceComponents()
 }
 
