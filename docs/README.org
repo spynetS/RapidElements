@@ -187,7 +187,9 @@ To do this just run
 
 #+begin_src html :tangle readme.html
 <script defer type="text/javascript" src="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" >
+<card name="test import" ></card>
 #+end_src
 #+begin_export html
 <script defer type="text/javascript" src="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" >
+<card name="test import" ></card>
 #+end_export
