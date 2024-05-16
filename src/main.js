@@ -46,7 +46,14 @@
  * </div>
  */
 
-
+class Component {
+  constructor(){
+    this.self = "asd";
+  }
+  getChild(name){
+    return document.querySelectorAll(`[child-id="${this.self+name}"]`)[0];
+  }
+}
 
 // this attribute is used to locate componente tagNames
 const attribute = "component-name"
@@ -133,7 +140,7 @@ function addInstance(script,instanceName){
   let className = re(script.innerHTML);
 
   const scriptElement = document.createElement('script');
-  scriptElement.textContent = `let ${instanceName} = new ${className}();`;
+  scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}"`;
   document.body.appendChild(scriptElement);
 }
 function replaceAll(string, find, replace) {
@@ -157,7 +164,8 @@ function replaceComponents() {
     // add script element from component template
     const scriptElement = document.createElement('script');
     scriptElement.textContent = script.innerHTML;
-    scriptElement.setAttribute("rapid-script","card")
+    // TODO rename card !!
+    scriptElement.setAttribute("rapid-script", name);
     document.body.appendChild(scriptElement);
 
     componentDefinitions.push([name,component.innerHTML])
@@ -168,14 +176,28 @@ function replaceComponents() {
     // all the elements with tagname corosponding with a component-definitinos (rapid-name)
     let components = document.getElementsByTagName(componentDefinitions[i][0])
     for(let j = 0; j < components.length; j ++){
-
       // find the script from the card
-      let script = document.querySelectorAll('[rapid-script="card"]')[0];
+      let script = document.querySelectorAll(`[rapid-script="${components[j].localName}"]`)[0];
       let instanceName = generateRandomString(10);
 
       let content = (replaceProps(components[j],componentDefinitions[i][1]));
+      console.log(content)
+
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(content, 'text/html');
+
+      // Step 3: Query for the desired element in the parsed document
+      var childElement = doc.querySelectorAll(`[child-id]`)
+      for(let i = 0; i < childElement.length; i++){
+        console.log(childElement[i]);
+        const was = childElement[i].getAttribute("child-id")
+        console.log(was)
+        childElement[i].setAttribute('child-id', 'self'+was);
+      }
+      content = doc.body.innerHTML;
+      console.log(content)
       // replace all selfs with the instance id
-      content = replaceAll(content,"self.",`${instanceName}.`)
+      content = replaceAll(content,"self",`${instanceName}`)
 
       // replace the component
       components[j].outerHTML = content;

@@ -14,33 +14,48 @@
     </head>
     <body class="flex flex-col gap-2 bg-gray-200 " >
 
+        <template rapid-name="but">
+            <div class="rounded-lg bg-gray-500 p-2 max-w-32" >
+                <h1>CLICK ME</h1>
+            </div>
+        </template>
 
-        <template rapid-name="card" >
+        <template rapid-name="carding" >
             <script defer >
-                class Card {
+                class Carding extends Component{
                     constructor(){
+                        super()
                         this.open = true;
                     }
-                    hej() {
-                        console.log(this.open);
+                    set_open(state) {
+                        //var thing = document.getElementById(this.self+"thing");
+                        var thing = this.getChild("thing");
+                        console.log(thing)
+                        if(state)
+                            thing.style.display = "block";
+                        else
+                            thing.style.display = "none";
                     }
                 }
             </script>
 
             <div class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}" >
-                {name}
                 <button onclick="alert(self.open)" >is open</button>
-                <button onclick="self.open = false" >close</button>
-                <button onclick="self.open = true" >open</button>
+                <button onclick="self.set_open(true)" >open</button>
+                <div onclick="self.set_open(false)" child-id="thing" class="bg-gray-200 p-5">
+                    <h1>Close me</h1>
+                </div>
             </div>
         </template>
 
-        <card name="Alfred" >
+        <carding name="Alfred" >
            Children is placed here
-        </card>
-        <card name="Ali" >
+        </carding>
+        <carding name="Ali" >
            Children is placed here
-        </card>
+        </carding>
+
+        <but></but>
 
     </body>
 </html>
