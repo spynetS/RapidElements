@@ -189,6 +189,7 @@ function replaceComponents() {
 
 }
 
+
 function main(){
   //try to include html
   includeHTML();
