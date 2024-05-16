@@ -1,57 +1,12 @@
-/*
- * Alfred Roos
- * This is a script that enables rapid reusable components.
- * To specify a component use the template tag and set the attribute
- * rapid-name to specify the component name. Then just write the component
- * with the rapid-name as tagname.
- *
- * EXAMPLE
- *      <template rapid-name="card" >
- *          <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
- *              <h1>Kort</h1>
- *              <h1>{name}</h1>
- *              {children}
- *          </div>
- *      </template>
-
- *      <template rapid-name="bigtitle">
- *          <div class="text-blue-600" >
- *              {children}
- *          </div>
- *      </template>
-
- *      <card name="alfred" color="red" class="m-5" >
- *          <bigtitle  >
- *              THIS IS THE CHILD
- *              <p>TJONO</p>
- *          </bigtitle>
- *          <h1>TJONO</h1>
- *      </card>
- *      <card name="alfred2" color="blue" class="m-5" ></card>
- *
- * BECOMES
- * <div class="bg-red-500 p-5 rouneded-lg flex flex-col items-center w-[400px] m-5">
- *    <h1>Kort</h1>
- *    <h1>alfred</h1>
- *    <div class="text-blue-600">
- *        THIS IS THE CHILD
- *        <p>TJONO</p>
- *    </div>
- *    <h1>TJONO</h1>
- * </div>
- *
- * <div class="bg-blue-500 p-5 rouneded-lg flex flex-col items-center w-[400px] m-5">
- *     <h1>Kort</h1>
- *     <h1>alfred2</h1>
- * </div>
- */
-
 class Component {
   constructor(){
     this.self = "asd";
   }
+  onComponentLoad(){
+
+  }
   getChild(name){
-    return document.querySelectorAll(`[child-id="${this.self+name}"]`)[0];
+    return document.querySelectorAll(`[child-id="RAPID${this.self+name}"]`)[0];
   }
 }
 
@@ -77,7 +32,6 @@ function includeHTML() {
             if(rawFile.readyState === 4)  {
             if(rawFile.status === 200 || rawFile.status == 0) {
                 var allText = rawFile.responseText;
-                console.log(allText);
             }
             }
         }
@@ -114,8 +68,22 @@ function replaceProps(oldElement, newHtml){
   // <component name="test"/> of <h1>{name}</h1> becomes <h1>test</h1>
   let propNames = oldElement.getAttributeNames();
   for(let i = 0; i < propNames.length;i++){
-    newHtml = newHtml.replaceAll(`${start_prop}${propNames[i]}${end_prop}`,oldElement.getAttribute(propNames[i]))
+    if(propNames[i] === "child-id"){
+
+      var tempContainer = document.createElement('div');
+      tempContainer.innerHTML = newHtml;
+
+      var element = tempContainer.firstElementChild;
+
+      element.setAttribute('child-id', oldElement.getAttribute(propNames[i]));
+      newHtml = element.outerHTML;
+    }
+    else{
+      newHtml = newHtml.replaceAll(`${start_prop}${propNames[i]}${end_prop}`,oldElement.getAttribute(propNames[i]))
+    }
   }
+
+
   return newHtml
 }
 function re(scriptContent) {
@@ -140,7 +108,7 @@ function addInstance(script,instanceName){
   let className = re(script.innerHTML);
 
   const scriptElement = document.createElement('script');
-  scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}"`;
+  scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}";${instanceName}.onComponentLoad()`;
   document.body.appendChild(scriptElement);
 }
 function replaceAll(string, find, replace) {
@@ -181,21 +149,20 @@ function replaceComponents() {
       let instanceName = generateRandomString(10);
 
       let content = (replaceProps(components[j],componentDefinitions[i][1]));
-      console.log(content)
 
+      // add isntance id to child ids
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, 'text/html');
-
       // Step 3: Query for the desired element in the parsed document
       var childElement = doc.querySelectorAll(`[child-id]`)
       for(let i = 0; i < childElement.length; i++){
-        console.log(childElement[i]);
         const was = childElement[i].getAttribute("child-id")
-        console.log(was)
-        childElement[i].setAttribute('child-id', 'self'+was);
+        if(!was.includes("RAPID")){
+          childElement[i].setAttribute('child-id', 'RAPIDself'+was);
+        }
       }
       content = doc.body.innerHTML;
-      console.log(content)
+
       // replace all selfs with the instance id
       content = replaceAll(content,"self",`${instanceName}`)
 
