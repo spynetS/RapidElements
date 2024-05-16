@@ -186,10 +186,10 @@ To have components in seperate files you will have to have a webserver hosting y
 To do this just run
 
 #+begin_src html :tangle readme.html
-<script defer type="text/javascript" src="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" >
+<div include-html="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" ></div>
 <card name="test import" ></card>
 #+end_src
 #+begin_export html
-<script defer type="text/javascript" src="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" >
+<div include-html="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" ></div>
 <card name="test import" ></card>
 #+end_export
