@@ -19,42 +19,43 @@
     <div include-html="../cosmic_card.html"></div>
     <div include-html="../cosmic_popup.html"></div>
 
-
-    <template rapid-name="thing">
+    <template rapid-name="app">
       <script type="text/javascript">
-        class thing extends Component {
-          setvalue(ais) {
-            this.getChild("title").innerHTML = ais;
-          }
-        }
+       class app extends Component{
+         setTitle(value){
+           this.getChild("popup-title").innerHTML=value;
+         }
+         closePopup(save){
+           document.getElementById("popup").style.display='none';
+           if(save)
+             this.getChild('result').innerHTML = this.value;
+
+         }
+       }
       </script>
-      <h1 child-id="title"></h1>
-      <textfield
-        placeholder="Write title"
-        setvalue="self.setvalue(event.target.value)"
-      ></textfield>
+      <div class="flex flex-col items-center" >
+        <popup id="popup">
+          <div class="flex flex-col items-center justify-between gap-5 p-5 text-white">
+            <cosmic_textfield placeholder="Write the new title" setvalue="self.value = (event.target.value)" ></cosmic_textfield>
+            <div class="flex flex-row justify-center gap-2">
+              <but onclick="self.closePopup(true)">Save</but>
+              <but onclick="self.closePopup(false)">close</but>
+            </div>
+          </div>
+        </popup>
+
+        <h1 class="text-white text-lg" child-id="result" >This is the title</h1>
+
+        <but onclick="document.getElementById('popup').style.display = 'flex'"
+          >Change the title
+        </but>
+
+      </div>
+
+
     </template>
 
-    <popup id="popup">
-      <div class="p-5 text-white">
-        <h1>Hello</h1>
-        <but onclick="document.getElementById('popup').style.display = 'none'">Hello</but>
-      </div>
-    </popup>
-
-    <popup id="popup2">
-      <div class="p-5 text-white">
-        <h1>Hello2</h1>
-        <but onclick="document.getElementById('popup2').style.display = 'none'">Hello</but>
-      </div>
-    </popup>
-
-    <but onclick="document.getElementById('popup').style.display = 'flex'"
-      >Open 1
-    </but>
-    <but onclick="document.getElementById('popup2').style.display = 'flex'"
-      >Open 2
-    </but>
+    <app></app>
 
   </body>
 </html>
