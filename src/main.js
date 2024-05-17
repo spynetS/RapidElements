@@ -30,62 +30,65 @@ const component_definition = "component-definition";
 const start_prop = "{";
 const end_prop = "}";
 
-function parseMd(md){
-  
-  //ul
-  md = md.replace(/^\s*\n\*/gm, '<ul>\n*');
-  md = md.replace(/^(\*.+)\s*\n([^\*])/gm, '$1\n</ul>\n\n$2');
-  md = md.replace(/^\*(.+)/gm, '<li>$1</li>');
-  
-  //ol
-  md = md.replace(/^\s*\n\d\./gm, '<ol>\n1.');
-  md = md.replace(/^(\d\..+)\s*\n([^\d\.])/gm, '$1\n</ol>\n\n$2');
-  md = md.replace(/^\d\.(.+)/gm, '<li>$1</li>');
-  
-  //blockquote
-  md = md.replace(/^\>(.+)/gm, '<blockquote>$1</blockquote>');
-  
-  //h
-  md = md.replace(/[\#]{6}(.+)/g, '<h6>$1</h6>');
-  md = md.replace(/[\#]{5}(.+)/g, '<h5>$1</h5>');
-  md = md.replace(/[\#]{4}(.+)/g, '<h4>$1</h4>');
-  md = md.replace(/[\#]{3}(.+)/g, '<h3>$1</h3>');
-  md = md.replace(/[\#]{2}(.+)/g, '<h2>$1</h2>');
-  md = md.replace(/[\#]{1}(.+)/g, '<h1>$1</h1>');
-  
-  //alt h
-  md = md.replace(/^(.+)\n\=+/gm, '<h1>$1</h1>');
-  md = md.replace(/^(.+)\n\-+/gm, '<h2>$1</h2>');
-  
-  //images
-  md = md.replace(/\!\[([^\]]+)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1" />');
-  
-  //links
-  md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
-  
-  //font styles
-  md = md.replace(/[\*\_]{2}([^\*\_]+)[\*\_]{2}/g, '<b>$1</b>');
-  md = md.replace(/[\*\_]{1}([^\*\_]+)[\*\_]{1}/g, '<i>$1</i>');
-  md = md.replace(/[\~]{2}([^\~]+)[\~]{2}/g, '<del>$1</del>');
-  
-  //pre
-  md = md.replace(/^\s*\n\`\`\`(([^\s]+))?/gm, '<pre class="$2">');
-  md = md.replace(/^\`\`\`\s*\n/gm, '</pre>\n\n');
-  
-  //code
-  md = md.replace(/[\`]{1}([^\`]+)[\`]{1}/g, '<code>$1</code>');
-  
-  //p
-  md = md.replace(/^\s*(\n)?(.+)/gm, function(m){
-    return  /\<(\/)?(h\d|ul|ol|li|blockquote|pre|img)/.test(m) ? m : '<p>'+m+'</p>';
-  });
-  
-  //strip p from pre
-  md = md.replace(/(\<pre.+\>)\s*\n\<p\>(.+)\<\/p\>/gm, '$1$2');
-  
-  return md;
-  
+function parseMd(markdown) {
+  // Convert headers
+  markdown = markdown.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
+  markdown = markdown.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
+  markdown = markdown.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+  markdown = markdown.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+  markdown = markdown.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+  markdown = markdown.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+  // Convert bold text
+  markdown = markdown.replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>');
+  markdown = markdown.replace(/__(.*?)__/gim, '<b>$1</b>');
+
+  // Convert italic text
+  markdown = markdown.replace(/\*(.*?)\*/gim, '<i>$1</i>');
+  markdown = markdown.replace(/_(.*?)_/gim, '<i>$1</i>');
+
+  // Convert links
+  markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
+
+  // Convert unordered lists
+  markdown = markdown.replace(/^\s*\n\* (.*)/gim, '<ul>\n<li>$1</li>\n</ul>');
+  markdown = markdown.replace(/^\* (.*)/gim, '<li>$1</li>');
+
+  // Convert ordered lists
+  markdown = markdown.replace(/^\s*\n\d\. (.*)/gim, '<ol>\n<li>$1</li>\n</ol>');
+  markdown = markdown.replace(/^\d\. (.*)/gim, '<li>$1</li>');
+
+  // Convert blockquotes
+  markdown = markdown.replace(/^\> (.*)/gim, '<blockquote>$1</blockquote>');
+
+  // Convert line breaks
+  markdown = markdown.replace(/\n$/gim, '<br />');
+
+  return markdown.trim();
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  const elmnt = document.querySelector('[include-md]');
+  const include_md = elmnt.getAttribute("include-md");
+  if (include_md) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4) {
+              if (this.status == 200) {
+                  elmnt.innerHTML = parseMd(this.responseText);
+                  elmnt.classList.add("no-tailwind");
+              }
+              if (this.status == 404) {
+                  elmnt.innerHTML = "Page not found.";
+              }
+          }
+      };
+      xhttp.open("GET", include_md, true);
+      xhttp.send();
+      /* Exit the function: */
+      return;
+  }
+});
 
 function createNoTailwindClass() {
   const style = document.createElement('style');
