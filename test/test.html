@@ -10,41 +10,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Place favicon.ico in the root directory -->
     <script defer type="text/javascript" src="../src/main.js"></script>
-    <script type="text/javascript">
-      function toggle() {
-        let pop = document.getElementById("popup");
-        if (pop.style.display == "flex") {
-          pop.style.display = "none";
-        } else pop.style.display = "flex";
-      }
-    </script>
   </head>
 
   <body class="flex flex-col gap-2 w-screen h-screen bg-gray-700">
-    <template rapid-name="but">
-      <button
-        class="max-w-fit h-[40px] px-4 dark:text-white text-black text-[16px] font-medium flex items-center justify-center rounded-lg shadow-md shadow-[#FFFFFF0A] outline outline-1 -inset-px dark:outline-[#FFFFFF10] outline-[#00000010] dark:bg-zinc-700 hover:dark:bg-zinc-800 hover:bg-zinc-50 transition-colors"
-        onclick="{onclick}"
-      >
-        {children}
-      </button>
-    </template>
 
-    <template rapid-name="textfield">
-      <input
-        class="min-w-[80px] w-full h-[32px] dark:bg-zinc-800 rounded-md outline outline-1 outline-offset-1 dark:outline-zinc-700 outline-zinc-300 -inset-px px-2 text-[16px] dark:text-white placeholder-zinc-500 focus:outline-2 focus:outline-blue-500 hover:outline-zinc-600"
-        placeholder="{placeholder}"
-        oninput="{setvalue}"
-      />
-    </template>
+    <div include-html="../cosmic_button.html"></div>
+    <div include-html="../cosmic_textfield.html"></div>
+    <div include-html="../cosmic_card.html"></div>
+    <div include-html="../cosmic_popup.html"></div>
 
-    <template rapid-name="card">
-      <div
-        class="p-5 min-h-[180px] h-full min-w-[140px] w-full rounded-xl bg-white dark:bg-zinc-900 shadow-md shadow-[#FFFFFF08] outline outline-offset-1 outline-1 -inset-px outline-[#00000004] dark:outline-[#FFFFFF14] border-zinc-900 dark:border-zinc-200"
-      >
-        {children}
-      </div>
-    </template>
 
     <template rapid-name="thing">
       <script type="text/javascript">
@@ -61,38 +35,26 @@
       ></textfield>
     </template>
 
-    <template rapid-name="popup">
-      <script type="text/javascript">
-        class popup extends Component {
-          close() {
-            this.getChild("popup").style.display = "none";
-          }
-        }
-      </script>
-
-      <div
-        id="{id}"
-        child-id="popup"
-        class="fixed z-40 bg-[#00000030] w-screen h-full items-center justify-center flex transition-opacity"
-      >
-        <div class="absolute w-full h-full" onclick="self.hidePopup_func"></div>
-        <div
-          class="min-w-[240px] h-fit min-h-[320px] max-w-fit mb-[200px] mx-4 z-50"
-        >
-          <card> {children} </card>
-        </div>
-      </div>
-    </template>
-
     <popup id="popup">
       <div class="p-5 text-white">
         <h1>Hello</h1>
-        <but onclick="self.close()">Hello</but>
+        <but onclick="document.getElementById('popup').style.display = 'none'">Hello</but>
+      </div>
+    </popup>
+
+    <popup id="popup2">
+      <div class="p-5 text-white">
+        <h1>Hello2</h1>
+        <but onclick="document.getElementById('popup2').style.display = 'none'">Hello</but>
       </div>
     </popup>
 
     <but onclick="document.getElementById('popup').style.display = 'flex'"
-      >Open
+      >Open 1
     </but>
+    <but onclick="document.getElementById('popup2').style.display = 'flex'"
+      >Open 2
+    </but>
+
   </body>
 </html>
