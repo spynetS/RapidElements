@@ -6,12 +6,25 @@ class Component {
     this.self = "asd";
     this.props = {};
   }
+
+  /**
+   * This function will be called when the component is loaded on the page
+   * use this as a constructor.
+   * */
   onComponentLoad() {}
+ /**
+  * This function returns the element with the child-id provided.
+  * REMEMEBER this function will not work before onComponentLoad is run
+  * */
   getChild(name) {
     return document.querySelectorAll(
       `[child-id="RAPID${this.self + name}"]`,
     )[0];
   }
+ /**
+  * This function retusns instance of the child component if there is one otherwise undefined.
+  * REMEMEBER this function will not work before onComponentLoad is run
+  * */
   getChildInstance(name){
     let child = this.getChild(name);
     if(child === undefined) return undefined;
