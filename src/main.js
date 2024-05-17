@@ -136,7 +136,7 @@ function includeHTML() {
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4) {
           if (this.status == 200) {
-            elmnt.innerHTML = parseMd(this.responseText.trim());
+            elmnt.innerHTML = parseMd(this.responseText);
             elmnt.classList.add("no-tailwind");
           }
           if (this.status == 404) {
