@@ -147,14 +147,6 @@ function includeHTML() {
       return;
     }
 
-    is_markdown = elmnt.getAttribute("markdown");
-    if(is_markdown == "1")
-    {
-      to_convert = elmnt.innerHTML;
-      elmnt.classList.add("no-tailwind")
-      converted = parseMd(to_convert);
-      elmnt.innerHTML = converted;
-    }
   }
 }
 
@@ -263,6 +255,7 @@ function replaceComponents() {
 
       let content = replaceProps(components[j], componentDefinitions[i][1]);
 
+
       // add instance id to child ids
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, "text/html");
@@ -293,12 +286,27 @@ function replaceComponents() {
   }
 }
 
+// searches all elements with attribute markdown and replaces the markdown inside with
+// html code
+function replaceMd(){
+  let markdowns = document.querySelectorAll("[markdown]");
+  for(let i = 0; i < markdowns.length; i ++){
+    let elmnt = markdowns[i];
+    to_convert = elmnt.innerHTML;
+    elmnt.classList.add("no-tailwind")
+    converted = parseMd(to_convert);
+    elmnt.innerHTML = converted;
+  }
+}
+
 function main() {
   //try to include html
   includeHTML();
   //replace all componments
   replaceComponents();
-  //creates a tailwind override class, to be applied to markdown defined elements.
+
+  replaceMd();
+  // creates a tailwind override class, to be applied to markdown defined elements.
   createNoTailwindClass();
 }
 
