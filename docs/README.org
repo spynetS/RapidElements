@@ -102,7 +102,7 @@ We can also use components inside other components when we create new components
 
 ** Example component with scripts
 Components can have scripts inside them which lets them have their own coding space. You can do this by creating a script tag inside the template and creating a class with the same name as the component and extends the Component class provieded by the library. The Component class comes with the onComponentLoad which will run when the site is loaded.
-To access the components instance in the html write /self/ as /this/ in normal js
+To access the components instance in the html write /self/ as /this/ in normal js. The class has a this.props object that holds all props that the component got.
 
 #+begin_src html :tangle readme.html
 <template rapid-name="scriptcomponent">

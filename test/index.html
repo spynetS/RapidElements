@@ -10,23 +10,20 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- Place favicon.ico in the root directory -->
         <script defer type="text/javascript" src="../src/main.js" ></script>
-        <script >
-            let state = {count:10}
-            function clickasd(){
-                alert(name)
-            }
-        </script>
 
     </head>
     <body class="flex flex-col gap-2 bg-gray-200 " >
 
         <template rapid-name="card" >
-
-            <script>
-                alert("card2");
+            <script type="text/javascript">
+             class card extends Component{
+                 onComponentLoad(){
+                     console.log("im loaded")
+                 }
+             }
             </script>
             <div class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}" >
-                <button onclick="state.count++;console.log(state.count)" >ad</button>
+                <button onclick="console.log(ad)" >ad</button>
                 {children}
             </div>
         </template>
