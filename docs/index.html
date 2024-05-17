@@ -263,3 +263,27 @@ c
 #+begin_export html
 <card name="test import" ></card>
 #+end_export
+
+* Markdown support
+RapidElements have markdown support. You can either have markdown inside an element (innerHTML) and add the markdown attribute to the element.
+#+begin_src html
+<div markdown>
+  # title1
+  ## title2
+  - 1
+  - 2
+</div>
+#+end_src
+#+begin_export html
+<div markdown>
+  # title1
+  ## title2
+  - 1
+  - 2
+</div>
+#+end_export
+or you can inject whole markdown files using the /include-md/ attribute
+/(remeber that you will need a webserver for this to work)/
+#+begin_src html
+<div include-md="/path/to/markdown.md"></div>
+#+end_src

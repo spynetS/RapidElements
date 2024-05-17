@@ -101,7 +101,7 @@ We can also use components inside other components when we create new components
 #+end_export
 
 ** Example component with scripts
-Components can have scripts inside them which lets them have their own coding space. You can do this by creating a script tag inside the template and creating a class with the same name as the component and extends the Component class provieded by the library. The Component class comes with the onComponentLoad which will run when the site is loaded.
+Components can have scripts inside them which lets them have their own coding space. You can do this by creating a script tag inside the template and creating a class with the same name as the component and extends the Component class provided by the library. The Component class comes with the onComponentLoad which will run when the site is loaded.
 To access the components instance in the html write /self/ as /this/ in normal js. The class has a this.props object that holds all props that the component got.
 
 #+begin_src html :tangle readme.html
@@ -263,3 +263,27 @@ c
 #+begin_export html
 <card name="test import" ></card>
 #+end_export
+
+* Markdown support
+RapidElements have markdown support. You can either have markdown inside an element (innerHTML) and add the markdown attribute to the element.
+#+begin_src html
+<div markdown>
+  # title1
+  ## title2
+  - 1
+  - 2
+</div>
+#+end_src
+#+begin_export html
+<div markdown>
+  # title1
+  ## title2
+  - 1
+  - 2
+</div>
+#+end_export
+or you can inject whole markdown files using the /include-md/ attribute
+/(remeber that you will need a webserver for this to work)/
+#+begin_src html
+<div include-md="/path/to/markdown.md"></div>
+#+end_src
