@@ -12,16 +12,6 @@ class Component {
       `[child-id="RAPID${this.self + name}"]`,
     )[0];
   }
-  getChildInstance(name){
-    let child = this.getChild(name);
-    if(child === undefined) return undefined;
-    let instanceName = child.getAttribute("instance")
-    if(instanceName === null) return undefined;
-
-    let instance = eval(`${instanceName}`)
-    return instance;
-
-  }
 }
 
 // this attribute is used to locate componente tagNames
@@ -191,14 +181,13 @@ function replaceProps(oldElement, newHtml) {
     // we load in the html string in an element add the atribute to the first
     // element and reset the string with the new element
     if (propNames[i] === "child-id") {
+      var tempContainer = document.createElement("div");
+      tempContainer.innerHTML = newHtml;
 
-      console.log(newHtml)
-      var element = document.createElement("div")
-      element.innerHTML = newHtml;
+      var element = tempContainer.firstElementChild;
 
       element.setAttribute("child-id", oldElement.getAttribute(propNames[i]));
       newHtml = element.outerHTML;
-      console.log(newHtml)
     }
     else {
       newHtml = newHtml.replaceAll(
@@ -284,7 +273,6 @@ function replaceComponents() {
       // add instance id to child ids
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, "text/html");
-      doc.body.firstElementChild.setAttribute("instance",instanceName)
       // Step 3: Query for the desired element in the parsed document
       var childElement = doc.querySelectorAll(`[child-id]`);
       for (let i = 0; i < childElement.length; i++) {
