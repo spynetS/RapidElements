@@ -1,35 +1,293 @@
-#+title: RapidElements documentation
-#+HTML_HEAD: <script defer type="text/javascript" src="../src/main.js" ></script>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./README.css" />
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-05-18 Sat 01:36 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RapidElements documentation</title>
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
-#+begin_export html
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script defer type="text/javascript" src="../src/main.js" ></script>
+<link rel="stylesheet" type="text/css" href="./README.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">RapidElements documentation</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge933477">1. Component</a>
+<ul>
+<li><a href="#org91cd80e">1.1. CDN</a></li>
+<li><a href="#org4a06445">1.2. Props</a></li>
+<li><a href="#orgdf74435">1.3. Example component with props</a></li>
+<li><a href="#org552909e">1.4. Components as children</a></li>
+<li><a href="#orgf595c5d">1.5. Components inside component definitions</a></li>
+<li><a href="#org54521ec">1.6. Example component with scripts</a></li>
+<li><a href="#org8ea276a">1.7. Accessing elements in code</a></li>
+<li><a href="#orga1567d8">1.8. Popup for them haters</a></li>
+</ul>
+</li>
+<li><a href="#org2ac4f9f">2. Components in seperate files</a></li>
+<li><a href="#org3305762">3. Markdown support</a>
+<ul>
+<li><a href="#org3fd01a3">3.1. Directly</a></li>
+<li><a href="#orgd379b3f">3.2. Inject</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div include-html="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html" ></div>
-#+end_export
 
-*RapidElements* is a javascript *library* which lets the developer use components in plain html with only one script tag.
+<p>
+<b>RapidElements</b> is a javascript <b>library</b> which lets the developer use components in plain html with only one script tag.
+</p>
 
-* Component
-A component is made inside a template and giving the template a /rapid-name/, which will become the components name.
+<div id="outline-container-orge933477" class="outline-2">
+<h2 id="orge933477"><span class="section-number-2">1.</span> Component</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A component is made inside a template and giving the template a <i>rapid-name</i>, which will become the components name.
 Then you can only write the component name and use it as any other html tag.
+</p>
+</div>
 
-** CDN
+<div id="outline-container-org91cd80e" class="outline-3">
+<h3 id="org91cd80e"><span class="section-number-3">1.1.</span> CDN</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
 To import the library you can include the js file or from CDN
-#+begin_src html :tangle readme.html
-<script defer type="text/javascript" src="./src/main.js" ></script>
-#+end_src
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">script</span> defer <span style="color: #85DDFF;">type</span>=<span style="color: #DB8E73;">"text/javascript"</span> <span style="color: #85DDFF;">src</span>=<span style="color: #DB8E73;">"./src/main.js"</span> &gt;&lt;/<span style="color: #D9DAA2;">script</span>&gt;
+</pre>
+</div>
+</div>
+</div>
 
 
-** Props
-Props are the attributes that get passed to component's deffintion by it's initlization.
+<div id="outline-container-org4a06445" class="outline-3">
+<h3 id="org4a06445"><span class="section-number-3">1.2.</span> Props</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Props are the attributes that get passed to component&rsquo;s deffintion by it&rsquo;s initlization.
 To acces the prop write
-#+begin_src html
-{propname}
-#+end_src
+</p>
+<div class="org-src-container">
+<pre class="src src-html">{propname}
+</pre>
+</div>
+<p>
 as demostrated in the
-[[Example component with props]]
+<a href="#orgdf74435">1.3</a>
+</p>
+</div>
+</div>
 
-** Example component with props
-#+begin_src html :tangle readme.html
+<div id="outline-container-orgdf74435" class="outline-3">
+<h3 id="orgdf74435"><span class="section-number-3">1.3.</span> Example component with props</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"component"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"card"</span>&gt;
+    &lt;<span style="color: #D9DAA2;">h1</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"card-title"</span>&gt;<span style="font-weight: bold; text-decoration: underline;">{title}</span>&lt;/<span style="color: #D9DAA2;">h1</span>&gt;
+    &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"card-content"</span>&gt;
+      {children}
+    &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+  &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+&lt;/<span style="color: #D9DAA2;">template</span>&gt;
+
+&lt;<span style="color: #D9DAA2;">component</span> <span style="color: #85DDFF;">title</span>=<span style="color: #DB8E73;">"My component 1"</span>&gt;This is a component&lt;/<span style="color: #D9DAA2;">component</span>&gt;
+&lt;<span style="color: #D9DAA2;">component</span> <span style="color: #85DDFF;">title</span>=<span style="color: #DB8E73;">"My component 2"</span>&gt;This is a component&lt;/<span style="color: #D9DAA2;">component</span>&gt;
+</pre>
+</div>
 <template rapid-name="component">
   <div class="card">
     <h1 class="card-title">{title}</h1>
@@ -41,56 +299,53 @@ as demostrated in the
 
 <component title="My component 1">This is a component</component>
 <component title="My component 2">This is a component</component>
-#+end_src
-#+begin_export html
-<template rapid-name="component">
-  <div class="card">
-    <h1 class="card-title">{title}</h1>
-    <div class="card-content">
-      {children}
-    </div>
-  </div>
-</template>
-
-<component title="My component 1">This is a component</component>
-<component title="My component 2">This is a component</component>
-#+end_export
-** Components as children
+</div>
+</div>
+<div id="outline-container-org552909e" class="outline-3">
+<h3 id="org552909e"><span class="section-number-3">1.4.</span> Components as children</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
 Ofcourse we can have nested components
+</p>
 
-#+begin_src html :tangle readme.html
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"bigtitle"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">h1</span> <span style="color: #85DDFF;">style</span>=<span style="color: #DB8E73;">"font-size:60px;"</span> &gt;<span style="font-weight: bold; text-decoration: underline;">{children}</span>&lt;/<span style="color: #D9DAA2;">h1</span>&gt;
+&lt;/<span style="color: #D9DAA2;">template</span>&gt;
+
+<span style="color: #579C4C;">&lt;!-- </span><span style="color: #579C4C;">from before</span><span style="color: #579C4C;"> --&gt;</span>
+&lt;<span style="color: #D9DAA2;">component</span> <span style="color: #85DDFF;">title</span>=<span style="color: #DB8E73;">"My component 2"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">bigtitle</span>&gt;This is with a big title&lt;/<span style="color: #D9DAA2;">bigtitle</span>&gt;
+&lt;/<span style="color: #D9DAA2;">component</span>&gt;
+</pre>
+</div>
+
 <template rapid-name="bigtitle">
   <h1 style="font-size:60px;" >{children}</h1>
 </template>
 
-<!-- from before -->
 <component title="My component 2">
   <bigtitle>This is with a big title</bigtitle>
 </component>
-#+end_src
-
-#+begin_export html
-<template rapid-name="bigtitle">
-  <h1 style="font-size:60px;" >{children}</h1>
-</template>
-
-<component title="My component 2">
-  <bigtitle>This is with a big title</bigtitle>
-</component>
-#+end_export
-** Components inside component definitions
+</div>
+</div>
+<div id="outline-container-orgf595c5d" class="outline-3">
+<h3 id="orgf595c5d"><span class="section-number-3">1.5.</span> Components inside component definitions</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
 We can also use components inside other components when we create new components.
+</p>
 
-#+begin_src html :tangle readme.html
-<template rapid-name="component2">
-  <div class="card">
-    <bigtitle>{title}</bigtitle> {children}
-  </div>
-</template>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"component2"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"card"</span>&gt;
+    &lt;<span style="color: #D9DAA2;">bigtitle</span>&gt;{title}&lt;/<span style="color: #D9DAA2;">bigtitle</span>&gt; {children}
+  &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+&lt;/<span style="color: #D9DAA2;">template</span>&gt;
 
-<component2 title="my component2 1" > This is the second component 2</component2>
-#+end_src
-#+begin_export html
+&lt;<span style="color: #D9DAA2;">component2</span> <span style="color: #85DDFF;">title</span>=<span style="color: #DB8E73;">"my component2 1"</span> &gt; This is the second component 2&lt;/<span style="color: #D9DAA2;">component2</span>&gt;
+</pre>
+</div>
 <template rapid-name="component2">
   <div class="card" >
     <bigtitle>{title}</bigtitle> {children}
@@ -98,15 +353,20 @@ We can also use components inside other components when we create new components
 </template>
 
 <component2 title="my component2 1" > This is the second component 2</component2>
-#+end_export
+</div>
+</div>
 
-** Example component with scripts
+<div id="outline-container-org54521ec" class="outline-3">
+<h3 id="org54521ec"><span class="section-number-3">1.6.</span> Example component with scripts</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
 Components can have scripts inside them which lets them have their own coding space. You can do this by creating a script tag inside the template and creating a class with the same name as the component and extends the Component class provided by the library. The Component class comes with the onComponentLoad which will run when the site is loaded.
-To access the components instance in the html write /self/ as /this/ in normal js. The class has a this.props object that holds all props that the component got.
+To access the components instance in the html write <i>self</i> as <i>this</i> in normal js. The class has a this.props object that holds all props that the component got.
+</p>
 
-#+begin_src html :tangle readme.html
-<template rapid-name="scriptcomponent">
-  <script>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"scriptcomponent"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">script</span>&gt;
     class ScriptComponent extends Component{
         onComponentLoad(){
             alert("component has loaded");
@@ -116,15 +376,15 @@ To access the components instance in the html write /self/ as /this/ in normal j
         }
     }
 
-  </script>
-    <div class="button-container">
-        <button class="button" onclick="self.sayHi()">Say hi</button>
-    </div>
-</template>
+  &lt;/<span style="color: #D9DAA2;">script</span>&gt;
+    &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"button-container"</span>&gt;
+        &lt;<span style="color: #D9DAA2;">button</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"button"</span> <span style="color: #85DDFF;">onclick</span>=<span style="color: #DB8E73;">"self.sayHi()"</span>&gt;Say hi&lt;/<span style="color: #D9DAA2;">button</span>&gt;
+    &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+&lt;/<span style="color: #D9DAA2;">template</span>&gt;
 
-<scriptcomponent></scriptcomponent>
-#+end_src
-#+begin_export html
+&lt;<span style="color: #D9DAA2;">scriptcomponent</span>&gt;&lt;/<span style="color: #D9DAA2;">scriptcomponent</span>&gt;
+</pre>
+</div>
 <template rapid-name="scriptcomponent">
   <script>
     class ScriptComponent extends Component{
@@ -143,36 +403,44 @@ To access the components instance in the html write /self/ as /this/ in normal j
 </template>
 
 <scriptcomponent></scriptcomponent>
-#+end_export
+</div>
+</div>
 
-** Accessing elements in code
+<div id="outline-container-org8ea276a" class="outline-3">
+<h3 id="org8ea276a"><span class="section-number-3">1.7.</span> Accessing elements in code</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
 To access elements use the child-id and run
-#+begin_src js
-let element = this.getChild(id);
-#+end_src
+</p>
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #339CDB;">let</span> <span style="color: #85DDFF;">element</span> = <span style="color: #339CDB;">this</span>.getChild(id);
+</pre>
+</div>
+<p>
 This will return an element which you can change.
+</p>
 
-#+begin_src html :tangle readme.html
-<template rapid-name="scriptcomponent2">
-  <script>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"scriptcomponent2"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">script</span>&gt;
     class ScriptComponent2 extends Component{
         sayHi(){
             this.getChild("text").innerHTML = "Hi!";
         }
     }
 
-  </script>
-  <div >
-    <div class="button-container">
-        <button class="button" onclick="self.sayHi()">Say hi</button>
-        <h1 child-id="text" ></h1>
-    </div>
-</template>
+  &lt;/<span style="color: #D9DAA2;">script</span>&gt;
+  &lt;<span style="color: #D9DAA2;">div</span> &gt;
+    &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"button-container"</span>&gt;
+        &lt;<span style="color: #D9DAA2;">button</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"button"</span> <span style="color: #85DDFF;">onclick</span>=<span style="color: #DB8E73;">"self.sayHi()"</span>&gt;Say hi&lt;/<span style="color: #D9DAA2;">button</span>&gt;
+        &lt;<span style="color: #D9DAA2;">h1</span> <span style="color: #85DDFF;">child-id</span>=<span style="color: #DB8E73;">"text"</span> &gt;&lt;/<span style="color: #D9DAA2;">h1</span>&gt;
+    &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+&lt;/<span style="color: #D9DAA2;">template</span>&gt;
 
-<scriptcomponent2></scriptcomponent2>
-#+end_src
+&lt;<span style="color: #D9DAA2;">scriptcomponent2</span>&gt;&lt;/<span style="color: #D9DAA2;">scriptcomponent2</span>&gt;
+</pre>
+</div>
 
-#+BEGIN_export html
 <template rapid-name="scriptcomponent2">
   <script>
     class ScriptComponent2 extends Component{
@@ -189,10 +457,41 @@ This will return an element which you can change.
 </template>
 
 <scriptcomponent2></scriptcomponent2>
-#+END_export
+</div>
+</div>
 
-** Popup for them haters
-#+begin_src html :tangle readme.html
+<div id="outline-container-orga1567d8" class="outline-3">
+<h3 id="orga1567d8"><span class="section-number-3">1.8.</span> Popup for them haters</h3>
+<div class="outline-text-3" id="text-1-8">
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">template</span> <span style="color: #85DDFF;">rapid-name</span>=<span style="color: #DB8E73;">"popup"</span>&gt;
+  &lt;<span style="color: #D9DAA2;">script</span> defer&gt;
+    class popup extends Component {
+      openModal() {
+        this.getChild("myModal").style.display = "flex";
+      }
+      closeModal() {
+        this.getChild("myModal").style.display = "none";
+      }
+    }
+  &lt;/<span style="color: #D9DAA2;">script</span>&gt;
+
+  &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"container"</span>&gt;
+    &lt;<span style="color: #D9DAA2;">button</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"button"</span> <span style="color: #85DDFF;">onclick</span>=<span style="color: #DB8E73;">"self.openModal()"</span>&gt;Say hi&lt;/<span style="color: #D9DAA2;">button</span>&gt;
+    &lt;<span style="color: #D9DAA2;">h1</span> <span style="color: #85DDFF;">id</span>=<span style="color: #DB8E73;">"text"</span>&gt;&lt;/<span style="color: #D9DAA2;">h1</span>&gt;
+  &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+  &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">child-id</span>=<span style="color: #DB8E73;">"myModal"</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"modal"</span>&gt;
+    &lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"modal-content"</span>&gt;
+      &lt;<span style="color: #D9DAA2;">span</span> <span style="color: #85DDFF;">class</span>=<span style="color: #DB8E73;">"close"</span> <span style="color: #85DDFF;">onclick</span>=<span style="color: #DB8E73;">"self.closeModal()"</span>&gt;x&lt;/<span style="color: #D9DAA2;">span</span>&gt;
+      &lt;<span style="color: #D9DAA2;">p</span>&gt;Hi there!&lt;/<span style="color: #D9DAA2;">p</span>&gt;
+      &lt;<span style="color: #D9DAA2;">p</span>&gt;Isn't this GREAT!&lt;/<span style="color: #D9DAA2;">p</span>&gt;
+    &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+  &lt;/<span style="color: #D9DAA2;">div</span>&gt;
+&lt;/<span style="color: #D9DAA2;">template</span>&gt;
+
+&lt;<span style="color: #D9DAA2;">popup</span>&gt;&lt;/<span style="color: #D9DAA2;">popup</span>&gt;
+</pre>
+</div>
 <template rapid-name="popup">
   <script defer>
     class popup extends Component {
@@ -219,71 +518,75 @@ This will return an element which you can change.
 </template>
 
 <popup></popup>
-#+end_src
-#+begin_export html
-<template rapid-name="popup">
-  <script defer>
-    class popup extends Component {
-      openModal() {
-        this.getChild("myModal").style.display = "flex";
-      }
-      closeModal() {
-        this.getChild("myModal").style.display = "none";
-      }
-    }
-  </script>
+</div>
+</div>
+</div>
 
-  <div class="container">
-    <button class="button" onclick="self.openModal()">Say hi</button>
-    <h1 id="text"></h1>
-  </div>
-  <div child-id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="self.closeModal()">x</span>
-      <p>Hi there!</p>
-      <p>Isn't this GREAT!</p>
-    </div>
-  </div>
-</template>
-
-<popup></popup>
-#+end_export
-
-* Components in seperate files
+<div id="outline-container-org2ac4f9f" class="outline-2">
+<h2 id="org2ac4f9f"><span class="section-number-2">2.</span> Components in seperate files</h2>
+<div class="outline-text-2" id="text-2">
+<p>
 To have components in seperate files you will have to have a webserver hosting your files. (Vscode go live works).
 To do this just run
+</p>
 
-#+begin_src html :tangle readme.html
-  include-html="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html"
-></div>
-<card name="test import"></card>
+<p>
+#+begin<sub>src</sub> html :tangle readme.html
+  include-html=&ldquo;<a href="https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html">https://raw.githubusercontent.com/spynetS/RapidElements/main/test/components.html</a>&rdquo;
+&gt;&lt;/div&gt;
+&lt;card name=&ldquo;test import&rdquo;&gt;&lt;/card&gt;
 c
-#+end_src<div
+#+end<sub>src</sub>&lt;div
+</p>
 
-#+begin_export html
 <card name="test import" ></card>
-#+end_export
+</div>
+</div>
 
-* Markdown support
+<div id="outline-container-org3305762" class="outline-2">
+<h2 id="org3305762"><span class="section-number-2">3.</span> Markdown support</h2>
+<div class="outline-text-2" id="text-3">
+<p>
 RapidElements have markdown support. You can either have markdown inside an element (innerHTML) and add the markdown attribute to the element.
-#+begin_src html
+</p>
+</div>
+<div id="outline-container-org3fd01a3" class="outline-3">
+<h3 id="org3fd01a3"><span class="section-number-3">3.1.</span> Directly</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">div</span> markdown&gt;
+  # title1
+  ## title2
+a image bellow
+![Alt text](https://picsum.photos/200/300 "my img")
+&lt;/<span style="color: #D9DAA2;">div</span>&gt;
+</pre>
+</div>
 <div markdown>
   # title1
   ## title2
-  - 1
-  - 2
+a image bellow
+![Alt text](https://picsum.photos/200/300 "my img")
 </div>
-#+end_src
-#+begin_export html
-<div markdown>
-  # title1
-  ## title2
-  - 1
-  - 2
 </div>
-#+end_export
-or you can inject whole markdown files using the /include-md/ attribute
-/(remeber that you will need a webserver for this to work)/
-#+begin_src html
-<div include-md="/path/to/markdown.md"></div>
-#+end_src
+</div>
+<div id="outline-container-orgd379b3f" class="outline-3">
+<h3 id="orgd379b3f"><span class="section-number-3">3.2.</span> Inject</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+or you can inject whole markdown files using the <i>include-md</i> attribute
+<i>(remeber that you will need a webserver for this to work)</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #D9DAA2;">div</span> <span style="color: #85DDFF;">include-md</span>=<span style="color: #DB8E73;">"/path/to/markdown.md"</span>&gt;&lt;/<span style="color: #D9DAA2;">div</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2024-05-18 Sat 01:36</p>
+</div>
+</body>
+</html>
