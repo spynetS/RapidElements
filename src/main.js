@@ -4,6 +4,7 @@
 class Component {
   constructor() {
     this.self = "asd";
+    this.props = {};
   }
   onComponentLoad() {}
   getChild(name) {
@@ -147,15 +148,16 @@ function includeHTML() {
       return;
     }
 
-    is_markdown = elmnt.getAttribute("markdown");
-    if(is_markdown == "1")
-    {
-      to_convert = elmnt.innerHTML;
-      elmnt.classList.add("no-tailwind")
-      converted = parseMd(to_convert);
-      elmnt.innerHTML = converted;
-    }
   }
+}
+
+function getPropsToJs(oldElement){
+  let propNames = oldElement.getAttributeNames();
+  let props = {};
+  for (let i = 0; i < propNames.length; i++) {
+    props[propNames[i]] = oldElement.getAttribute(propNames[i])
+  }
+  return props;
 }
 
 function replaceProps(oldElement, newHtml) {
@@ -183,7 +185,8 @@ function replaceProps(oldElement, newHtml) {
 
       element.setAttribute("child-id", oldElement.getAttribute(propNames[i]));
       newHtml = element.outerHTML;
-    } else {
+    }
+    else {
       newHtml = newHtml.replaceAll(
         `${start_prop}${propNames[i]}${end_prop}`,
         oldElement.getAttribute(propNames[i]),
@@ -214,11 +217,11 @@ function generateRandomString(length) {
   return result;
 }
 
-function addInstance(script, instanceName) {
+function addInstance(script, instanceName, props) {
   let className = getClassName(script.innerHTML);
   if (className != null) {
     const scriptElement = document.createElement("script");
-    scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}";${instanceName}.onComponentLoad()`;
+    scriptElement.textContent = `let ${instanceName} = new ${className}();${instanceName}.self = "${instanceName}";${instanceName}.props = ${JSON.stringify(props)};${instanceName}.onComponentLoad()`;
     document.body.appendChild(scriptElement);
   }
 }
@@ -263,6 +266,7 @@ function replaceComponents() {
 
       let content = replaceProps(components[j], componentDefinitions[i][1]);
 
+
       // add instance id to child ids
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, "text/html");
@@ -283,13 +287,27 @@ function replaceComponents() {
       // replace all selfs with the instance id
       content = replaceAll(content, "self", `${instanceName}`);
 
+      const props = getPropsToJs(components[j]);
       // replace the component
       components[j].outerHTML = content;
       // add instance of script
-      addInstance(script, instanceName);
+      addInstance(script, instanceName,props);
 
       j--; // we go back a step because we have to (i don't really know but it somehow also makes sense -_ö_-)
     }
+  }
+}
+
+// searches all elements with attribute markdown and replaces the markdown inside with
+// html code
+function replaceMd(){
+  let markdowns = document.querySelectorAll("[markdown]");
+  for(let i = 0; i < markdowns.length; i ++){
+    let elmnt = markdowns[i];
+    to_convert = elmnt.innerHTML;
+    elmnt.classList.add("no-tailwind")
+    converted = parseMd(to_convert);
+    elmnt.innerHTML = converted;
   }
 }
 
@@ -298,7 +316,9 @@ function main() {
   includeHTML();
   //replace all componments
   replaceComponents();
-  //creates a tailwind override class, to be applied to markdown defined elements.
+
+  replaceMd();
+  // creates a tailwind override class, to be applied to markdown defined elements.
   createNoTailwindClass();
 }
 
