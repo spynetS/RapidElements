@@ -76,6 +76,34 @@ function parseMd(md){
   
 }
 
+function createNoTailwindClass() {
+  const style = document.createElement('style');
+  style.innerHTML = `
+      .no-tailwind h1, 
+      .no-tailwind h2, 
+      .no-tailwind h3, 
+      .no-tailwind h4, 
+      .no-tailwind h5, 
+      .no-tailwind h6, 
+      .no-tailwind p, 
+      .no-tailwind div, 
+      .no-tailwind span, 
+      .no-tailwind a, 
+      .no-tailwind ul, 
+      .no-tailwind li, 
+      .no-tailwind table, 
+      .no-tailwind tr, 
+      .no-tailwind th, 
+      .no-tailwind td {
+          all: revert;
+          font-family: inherit;
+          color: inherit;
+          background-color: inherit;
+      }
+  `;
+  document.head.appendChild(style);
+}
+
 function includeHTML() {
   var z, i, elmnt, file, xhttp;
   /* Loop through a collection of all HTML elements: */
@@ -123,6 +151,7 @@ function includeHTML() {
     if(is_markdown == "1")
     {
       to_convert = elmnt.innerHTML;
+      elmnt.classList.add("no-tailwind")
       converted = parseMd(to_convert);
       elmnt.innerHTML = converted;
     }
@@ -193,6 +222,7 @@ function addInstance(script, instanceName) {
     document.body.appendChild(scriptElement);
   }
 }
+
 function replaceAll(string, find, replace) {
   // Create a regular expression with the 'g' flag to match all occurrences
   const regex = new RegExp(find, "g");
@@ -268,6 +298,8 @@ function main() {
   includeHTML();
   //replace all componments
   replaceComponents();
+  //creates a tailwind override class, to be applied to markdown defined elements.
+  createNoTailwindClass();
 }
 
 window.onload = main();
