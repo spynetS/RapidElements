@@ -9,7 +9,12 @@ body {
 }
 
 /* Header styling */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: bold;
     margin-top: 1.5em;
     margin-bottom: 0.5em;
@@ -61,7 +66,8 @@ a:hover {
 }
 
 /* Code blocks */
-pre, code {
+pre,
+code {
     font-family: "Courier New", Courier, monospace;
     background: #f4f4f4;
     padding: 0.5em;
@@ -117,7 +123,8 @@ code {
 }
 
 /* Lists */
-ul, ol {
+ul,
+ol {
     margin: 1em 0;
     padding-left: 2em;
 }
@@ -133,11 +140,14 @@ table {
     margin: 1.5em 0;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #eaeaea;
 }
 
-th, td {
+th,
+td {
     padding: 0.75em;
     text-align: left;
 }
@@ -188,4 +198,97 @@ img {
 .org-done {
     color: #5cb85c;
     font-weight: bold;
+}
+
+.card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px;
+    max-width: 400px;
+    border: 1px solid #e0e0e0;
+    font-family: Arial, sans-serif;
+}
+
+.card-title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.card-content {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.5;
+}
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+}
+
+.button {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2980b9;
+    transition-duration: 1s;
+    transform: scale(0.98);
+    transition: transform 0.3s ease-in-out;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
