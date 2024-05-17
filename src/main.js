@@ -20,7 +20,7 @@ const component_definition = "component-definition";
 const start_prop = "{";
 const end_prop = "}";
 
-function parseMd(md){
+function parseMd(markdown){
   // Convert headers
   markdown = markdown.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
   markdown = markdown.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
