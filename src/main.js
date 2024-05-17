@@ -20,7 +20,7 @@ const component_definition = "component-definition";
 const start_prop = "{";
 const end_prop = "}";
 
-function parseMd(markdown){
+function parseMd(markdown) {
   // Convert headers
   markdown = markdown.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
   markdown = markdown.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
@@ -30,22 +30,22 @@ function parseMd(markdown){
   markdown = markdown.replace(/^# (.*$)/gim, '<h1>$1</h1>');
 
   // Convert bold text
-  markdown = markdown.replace(/\*\*(.*)\*\*/gim, '<b>$1</b>');
-  markdown = markdown.replace(/__(.*)__/gim, '<b>$1</b>');
+  markdown = markdown.replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>');
+  markdown = markdown.replace(/__(.*?)__/gim, '<b>$1</b>');
 
   // Convert italic text
-  markdown = markdown.replace(/\*(.*)\*/gim, '<i>$1</i>');
-  markdown = markdown.replace(/_(.*)_/gim, '<i>$1</i>');
+  markdown = markdown.replace(/\*(.*?)\*/gim, '<i>$1</i>');
+  markdown = markdown.replace(/_(.*?)_/gim, '<i>$1</i>');
 
   // Convert links
   markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
 
   // Convert unordered lists
-  markdown = markdown.replace(/^\s*\n\* (.*)/gim, '<ul>\n* $1\n</ul>');
+  markdown = markdown.replace(/^\s*\n\* (.*)/gim, '<ul>\n<li>$1</li>\n</ul>');
   markdown = markdown.replace(/^\* (.*)/gim, '<li>$1</li>');
 
   // Convert ordered lists
-  markdown = markdown.replace(/^\s*\n\d\. (.*)/gim, '<ol>\n1. $1\n</ol>');
+  markdown = markdown.replace(/^\s*\n\d\. (.*)/gim, '<ol>\n<li>$1</li>\n</ol>');
   markdown = markdown.replace(/^\d\. (.*)/gim, '<li>$1</li>');
 
   // Convert blockquotes
@@ -55,8 +55,30 @@ function parseMd(markdown){
   markdown = markdown.replace(/\n$/gim, '<br />');
 
   return markdown.trim();
-  
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  const elmnt = document.querySelector('[include-md]');
+  const include_md = elmnt.getAttribute("include-md");
+  if (include_md) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4) {
+              if (this.status == 200) {
+                  elmnt.innerHTML = parseMd(this.responseText);
+                  elmnt.classList.add("no-tailwind");
+              }
+              if (this.status == 404) {
+                  elmnt.innerHTML = "Page not found.";
+              }
+          }
+      };
+      xhttp.open("GET", include_md, true);
+      xhttp.send();
+      /* Exit the function: */
+      return;
+  }
+});
 
 function createNoTailwindClass() {
   const style = document.createElement('style');
@@ -124,27 +146,6 @@ function includeHTML() {
         }
       };
       xhttp.open("GET", file, true);
-      xhttp.send();
-      /* Exit the function: */
-      return;
-    }
-
-    include_md = elmnt.getAttribute("include-md");
-    if(include_md)
-    {
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            elmnt.innerHTML = parseMd(this.responseText);
-            elmnt.classList.add("no-tailwind");
-          }
-          if (this.status == 404) {
-            elmnt.innerHTML = "Page not found.";
-          }
-        }
-      };
-      xhttp.open("GET", include_md, true);
       xhttp.send();
       /* Exit the function: */
       return;
