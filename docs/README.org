@@ -266,22 +266,24 @@ c
 
 * Markdown support
 RapidElements have markdown support. You can either have markdown inside an element (innerHTML) and add the markdown attribute to the element.
+** Directly
 #+begin_src html
 <div markdown>
   # title1
   ## title2
-  - 1
-  - 2
+a image bellow
+![Alt text](https://picsum.photos/200/300 "my img")
 </div>
 #+end_src
 #+begin_export html
 <div markdown>
   # title1
   ## title2
-  - 1
-  - 2
+a image bellow
+![Alt text](https://picsum.photos/200/300 "my img")
 </div>
 #+end_export
+** Inject
 or you can inject whole markdown files using the /include-md/ attribute
 /(remeber that you will need a webserver for this to work)/
 #+begin_src html
