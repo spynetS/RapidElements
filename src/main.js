@@ -148,6 +148,26 @@ function includeHTML() {
       return;
     }
 
+    include_md = elmnt.getAttribute("include-md");
+    if(include_md)
+    {
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            elmnt.innerHTML = parseMd(this.responseText);
+          }
+          if (this.status == 404) {
+            elmnt.innerHTML = "Page not found.";
+          }
+        }
+      };
+      xhttp.open("GET", include_md, true);
+      xhttp.send();
+      /* Exit the function: */
+      return;
+    }
+
   }
 }
 
