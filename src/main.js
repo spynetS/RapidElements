@@ -1,3 +1,4 @@
+
 /**
  * default component class which all component scripts have to extend
  * */
@@ -6,11 +7,34 @@ class Component {
     this.self = "asd";
     this.props = {};
   }
+
+  /**
+   * This function will be called when the component is loaded on the page
+   * use this as a constructor.
+   * */
   onComponentLoad() {}
+ /**
+  * This function returns the element with the child-id provided.
+  * REMEMEBER this function will not work before onComponentLoad is run
+  * */
   getChild(name) {
     return document.querySelectorAll(
       `[child-id="RAPID${this.self + name}"]`,
     )[0];
+  }
+ /**
+  * This function retusns instance of the child component if there is one otherwise undefined.
+  * REMEMEBER this function will not work before onComponentLoad is run
+  * */
+  getChildInstance(name){
+    let child = this.getChild(name);
+    if(child === undefined) return undefined;
+    let instanceName = child.getAttribute("instance")
+    if(instanceName === null) return undefined;
+
+    let instance = eval(`${instanceName}`)
+    return instance;
+
   }
 }
 
@@ -59,7 +83,7 @@ function parseMd(markdown) {
 
 document.addEventListener("DOMContentLoaded", function() {
   const elements = document.querySelectorAll('[include-md]');
-  
+
   elements.forEach(function(elmnt) {
     const include_md = elmnt.getAttribute("include-md");
     if (include_md) {
@@ -84,21 +108,21 @@ document.addEventListener("DOMContentLoaded", function() {
 function createNoTailwindClass() {
   const style = document.createElement('style');
   style.innerHTML = `
-      .no-tailwind h1, 
-      .no-tailwind h2, 
-      .no-tailwind h3, 
-      .no-tailwind h4, 
-      .no-tailwind h5, 
-      .no-tailwind h6, 
-      .no-tailwind p, 
-      .no-tailwind div, 
-      .no-tailwind span, 
-      .no-tailwind a, 
-      .no-tailwind ul, 
-      .no-tailwind li, 
-      .no-tailwind table, 
-      .no-tailwind tr, 
-      .no-tailwind th, 
+      .no-tailwind h1,
+      .no-tailwind h2,
+      .no-tailwind h3,
+      .no-tailwind h4,
+      .no-tailwind h5,
+      .no-tailwind h6,
+      .no-tailwind p,
+      .no-tailwind div,
+      .no-tailwind span,
+      .no-tailwind a,
+      .no-tailwind ul,
+      .no-tailwind li,
+      .no-tailwind table,
+      .no-tailwind tr,
+      .no-tailwind th,
       .no-tailwind td {
           all: revert;
           font-family: inherit;
@@ -187,8 +211,8 @@ function replaceProps(oldElement, newHtml) {
 
       var element = tempContainer.firstElementChild;
 
-      element.setAttribute("child-id", oldElement.getAttribute(propNames[i]));
-      newHtml = element.outerHTML;
+      tempContainer.setAttribute("child-id", oldElement.getAttribute(propNames[i]));
+      newHtml = tempContainer.outerHTML;
     }
     else {
       newHtml = newHtml.replaceAll(
@@ -274,6 +298,7 @@ function replaceComponents() {
       // add instance id to child ids
       var parser = new DOMParser();
       var doc = parser.parseFromString(content, "text/html");
+      doc.body.firstElementChild.setAttribute("instance",instanceName)
       // Step 3: Query for the desired element in the parsed document
       var childElement = doc.querySelectorAll(`[child-id]`);
       for (let i = 0; i < childElement.length; i++) {

@@ -14,23 +14,57 @@
     </head>
     <body class="flex flex-col gap-2 bg-gray-200 " >
 
+        <div include-html="../cosmic_popup.html" ></div>
+        <div include-html="../cosmic_button.html" ></div>
+        <div include-html="../cosmic_textfield.html" ></div>
+
+        <template rapid-name="bigtitle" >
+            <script type="text/javascript">
+             class bigtitle extends Component{
+                 onComponentLoad(){
+                     console.log("im loaded")
+                 }
+                 setValue(value){
+                     this.getChild("title").innerHTML = value;
+                 }
+             }
+            </script>
+
+            <h1 child-id="title" >This is a title</h1>
+        </template>
+
         <template rapid-name="card" >
             <script type="text/javascript">
              class card extends Component{
                  onComponentLoad(){
                      console.log("im loaded")
                  }
+                 click(){
+                     let instance = this.getChildInstance('popup');
+                     console.log(this)
+                     console.log(instance)
+                     instance.open();
+                 }
+                 save(){
+                     this.getChildInstance('title').setValue(this.value);
+                     this.getChildInstance('popup').close();
+                 }
              }
             </script>
-            <div class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}" >
-                <button onclick="console.log(ad)" >ad</button>
-                {children}
+            <div child-id="div" class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}" >
+                <bigtitle child-id="title" ></bigtitle>
+                <but child-id="but" onclick="self.click()" >Change</but>
             </div>
+            <popup child-id="popup" >
+                <cosmic_textfield placeholder="new content" setvalue="self.value = event.target.value" ></cosmic_textfield>
+                <but onclick="self.save()" >save</but>
+            </popup>
         </template>
 
         <card name="10" >
            Children is placed here
         </card>
+
 
     </body>
 </html>
