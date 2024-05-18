@@ -4,7 +4,7 @@ This library is for you who are tired to use big js frameworks to create a websi
 
 ## Installation
 To "install" just add the script link
-`<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" >`
+`<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/bin/RapidElements.js" >`
 
 ## Usage
 - Example
