@@ -1,70 +1,71 @@
 <!doctype html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Untitled</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Untitled</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Place favicon.ico in the root directory -->
-        <script defer type="text/javascript" src="../src/main.js" ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Place favicon.ico in the root directory -->
+    <!-- <script defer type="text/javascript" src="../main2.js"></script> -->
+    <script defer type="text/javascript" src="../bin/RapidElements.js"></script>
+  </head>
+  <body class="flex flex-col gap-2 bg-gray-200">
+    <div include-html="../cosmic_ui/cosmic_button.html"></div>
+    <div include-html="../cosmic_ui/cosmic_card.html"></div>
+    <div include-html="../cosmic_ui/cosmic_textfield.html"></div>
+    <div include-html="../cosmic_ui/cosmic_popup.html"></div>
 
-    </head>
-    <body class="flex flex-col gap-2 bg-gray-200 " >
+    <template rapid-name="bigtitle">
+      <script type="text/javascript">
+        class bigtitle extends Component {
+          onComponentLoad() {
+            console.log("im loaded");
+          }
+          setValue(value) {
+            this.getChild("title").innerHTML = value;
+          }
+        }
+      </script>
 
-        <div include-html="../cosmic_popup.html" ></div>
-        <div include-html="../cosmic_button.html" ></div>
-        <div include-html="../cosmic_textfield.html" ></div>
+      <h1 child-id="title">This is a title</h1>
+    </template>
 
-        <template rapid-name="bigtitle" >
-            <script type="text/javascript">
-             class bigtitle extends Component{
-                 onComponentLoad(){
-                     console.log("im loaded")
-                 }
-                 setValue(value){
-                     this.getChild("title").innerHTML = value;
-                 }
-             }
-            </script>
+    <template rapid-name="card">
+      <script type="text/javascript">
+        class card extends Component {
+          onComponentLoad() {
+            console.log("im loaded");
+          }
+          click() {
+            let instance = this.getChildInstance("mypopup");
+            instance.open();
+          }
+          save() {
+            this.getChildInstance("title").setValue(this.value);
+            this.getChildInstance("mypopup").close();
+          }
+        }
+      </script>
+      <div
+        child-id="div"
+        class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}"
+      >
+        <h1>{children}</h1>
+        <bigtitle child-id="title"></bigtitle>
+        <but child-id="but" onclick="self.click()">Change</but>
+        <popup child-id="mypopup">
+          <cosmic_textfield
+            setvalue="self.value = event.target.value"
+            placeholder="write the new title"
+          ></cosmic_textfield>
+          <but onclick="self.save()">save</but>
+        </popup>
+      </div>
+    </template>
 
-            <h1 child-id="title" >This is a title</h1>
-        </template>
-
-        <template rapid-name="card" >
-            <script type="text/javascript">
-             class card extends Component{
-                 onComponentLoad(){
-                     console.log("im loaded")
-                 }
-                 click(){
-                     let instance = this.getChildInstance('popup');
-                     console.log(this)
-                     console.log(instance)
-                     instance.open();
-                 }
-                 save(){
-                     this.getChildInstance('title').setValue(this.value);
-                     this.getChildInstance('popup').close();
-                 }
-             }
-            </script>
-            <div child-id="div" class="bg-green-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {name}" >
-                <bigtitle child-id="title" ></bigtitle>
-                <but child-id="but" onclick="self.click()" >Change</but>
-            </div>
-            <popup child-id="popup" >
-                <cosmic_textfield placeholder="new content" setvalue="self.value = event.target.value" ></cosmic_textfield>
-                <but onclick="self.save()" >save</but>
-            </popup>
-        </template>
-
-        <card name="10" >
-           Children is placed here
-        </card>
-
-
-    </body>
+    <card>what</card>
+  </body>
 </html>
