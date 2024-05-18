@@ -1,3 +1,46 @@
+/**
+ * default component class which all component scripts have to extend
+ * */
+class Component {
+  constructor() {
+    this.self = "asd";
+    this.props = {};
+  }
+
+  /**
+   * This function will be called when the component is loaded on the page
+   * use this as a constructor.
+   * */
+  onComponentLoad() {}
+  /**
+   * This function returns the element with the child-id provided.
+   * REMEMEBER this function will not work before onComponentLoad is run
+   * */
+  getChild(name) {
+    let res = document.querySelectorAll(
+      `[child-id="RAPID${this.self + name}"]`,
+    );
+    return res[0];
+  }
+  /**
+   * This function retusns instance of the child component if there is one otherwise undefined.
+   * REMEMEBER this function will not work before onComponentLoad is run
+   * */
+  getChildInstance(name) {
+    let child = document.querySelectorAll(
+      `[child-id="RAPID${this.self + name}"]`,
+    )[0];
+    if (child === undefined) return undefined;
+    let instanceName = child.getAttribute("instance");
+    if (instanceName === null) {
+      instanceName = child.firstElementChild.getAttribute("instance");
+      if (instanceName === null) return null;
+    }
+    let instance = eval(`${instanceName}`);
+    return instance;
+  }
+}
+
 function generateRandomString(length) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   let result = "";
@@ -304,46 +347,26 @@ function replaceMd() {
   }
 }
 
-/**
- * default component class which all component scripts have to extend
- * */
-class Component {
-  constructor() {
-    this.self = "asd";
-    this.props = {};
-  }
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = document.querySelectorAll("[include-md]");
 
-  /**
-   * This function will be called when the component is loaded on the page
-   * use this as a constructor.
-   * */
-  onComponentLoad() {}
-  /**
-   * This function returns the element with the child-id provided.
-   * REMEMEBER this function will not work before onComponentLoad is run
-   * */
-  getChild(name) {
-    let res = document.querySelectorAll(
-      `[child-id="RAPID${this.self + name}"]`,
-    );
-    return res[0];
-  }
-  /**
-   * This function retusns instance of the child component if there is one otherwise undefined.
-   * REMEMEBER this function will not work before onComponentLoad is run
-   * */
-  getChildInstance(name) {
-    let child = document.querySelectorAll(
-      `[child-id="RAPID${this.self + name}"]`,
-    )[0];
-    if (child === undefined) return undefined;
-    let instanceName = child.getAttribute("instance");
-    if (instanceName === null) {
-      instanceName = child.firstElementChild.getAttribute("instance");
-      if (instanceName === null) return null;
+  elements.forEach(function (elmnt) {
+    const include_md = elmnt.getAttribute("include-md");
+    if (include_md) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            elmnt.innerHTML = parseMd(this.responseText);
+            elmnt.classList.add("no-tailwind");
+          }
+          if (this.status == 404) {
+            elmnt.innerHTML = "Page not found.";
+          }
+        }
+      };
+      xhttp.open("GET", include_md, true);
+      xhttp.send();
     }
-    let instance = eval(`${instanceName}`);
-    return instance;
-  }
-}
-
+  });
+});
