@@ -147,6 +147,7 @@ class Comp {
 }
 
 function replaceComponents() {
+  console.log("replaceing");
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
   // dict that holds the templates and thier name
