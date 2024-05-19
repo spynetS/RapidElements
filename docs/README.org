@@ -1,5 +1,5 @@
 #+title: RapidElements documentation
-#+HTML_HEAD: <script defer type="text/javascript" src="../src/main.js" ></script>
+#+HTML_HEAD: <script defer type="text/javascript" src="https://spynets.github.io/RapidElements/bin/RapidElements.js" ></script>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./README.css" />
 
 #+begin_export html
@@ -15,7 +15,7 @@ Then you can only write the component name and use it as any other html tag.
 ** CDN
 To import the library you can include the js file or from CDN
 #+begin_src html :tangle readme.html
-<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/bin/RapidElements.js" ></script>
+<script defer type="text/javascript" src="./src/main.js" ></script>
 #+end_src
 
 
