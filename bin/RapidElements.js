@@ -345,6 +345,7 @@ function replaceMd() {
     elmnt.classList.add("no-tailwind");
     converted = parseMd(to_convert);
     elmnt.innerHTML = converted;
+    console.log(elmnt);
   }
 }
 

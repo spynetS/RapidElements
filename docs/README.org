@@ -268,7 +268,7 @@ c
 RapidElements have markdown support. You can either have markdown inside an element (innerHTML) and add the markdown attribute to the element.
 ** Directly
 #+begin_src html
-<div markdown>
+<div markdown="1">
   # title1
   ## title2
 a image bellow
@@ -276,7 +276,7 @@ a image bellow
 </div>
 #+end_src
 #+begin_export html
-<div markdown>
+<div markdown="1">
   # title1
   ## title2
 a image bellow
