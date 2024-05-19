@@ -175,38 +175,34 @@ function replaceComponents() {
 }
 
 // simple chatgpt say
-async function includeHTML() {
-  const elements = document.querySelectorAll("[include-html]");
-  const promises = [];
-
-  for (let element of elements) {
-    const file = element.getAttribute("include-html");
-    if (file) {
-      promises.push(
-        fetch(file)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.text();
-          })
-          .then((html) => {
-            element.outerHTML = html;
-            element.removeAttribute("include-html");
-          })
-          .catch((error) => {
-            element.innerHTML = "Content not found.";
-          }),
-      );
-    }
+function includeHTML() {
+  const element = document.querySelector("[include-html]");
+  const file = element.getAttribute("include-html");
+  if (file) {
+    fetch(file)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((html) => {
+        element.outerHTML = html;
+        replaceComponents();
+        includeHTML();
+      })
+      .catch((error) => {
+        element.innerHTML = "Content not found.";
+      });
   }
 
-  await Promise.all(promises);
+  return doc;
 }
 
 async function main() {
   //try to include html
-  await includeHTML();
+  includeHTML();
+  // document = doc;
 
   //replace all componments
   replaceComponents();

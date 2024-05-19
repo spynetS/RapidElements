@@ -1,46 +1,3 @@
-/**
- * default component class which all component scripts have to extend
- * */
-class Component {
-  constructor() {
-    this.self = "asd";
-    this.props = {};
-  }
-
-  /**
-   * This function will be called when the component is loaded on the page
-   * use this as a constructor.
-   * */
-  onComponentLoad() {}
-  /**
-   * This function returns the element with the child-id provided.
-   * REMEMEBER this function will not work before onComponentLoad is run
-   * */
-  getChild(name) {
-    let res = document.querySelectorAll(
-      `[child-id="RAPID${this.self + name}"]`,
-    );
-    return res[0];
-  }
-  /**
-   * This function retusns instance of the child component if there is one otherwise undefined.
-   * REMEMEBER this function will not work before onComponentLoad is run
-   * */
-  getChildInstance(name) {
-    let child = document.querySelectorAll(
-      `[child-id="RAPID${this.self + name}"]`,
-    )[0];
-    if (child === undefined) return undefined;
-    let instanceName = child.getAttribute("instance");
-    if (instanceName === null) {
-      instanceName = child.firstElementChild.getAttribute("instance");
-      if (instanceName === null) return null;
-    }
-    let instance = eval(`${instanceName}`);
-    return instance;
-  }
-}
-
 function generateRandomString(length) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   let result = "";
@@ -147,7 +104,6 @@ class Comp {
 }
 
 function replaceComponents() {
-  console.log("replaceing");
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
   // dict that holds the templates and thier name
@@ -227,38 +183,34 @@ function replaceComponents() {
 }
 
 // simple chatgpt say
-async function includeHTML() {
-  const elements = document.querySelectorAll("[include-html]");
-  const promises = [];
-
-  for (let element of elements) {
-    const file = element.getAttribute("include-html");
-    if (file) {
-      promises.push(
-        fetch(file)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.text();
-          })
-          .then((html) => {
-            element.outerHTML = html;
-            element.removeAttribute("include-html");
-          })
-          .catch((error) => {
-            element.innerHTML = "Content not found.";
-          }),
-      );
-    }
+function includeHTML() {
+  const element = document.querySelector("[include-html]");
+  const file = element.getAttribute("include-html");
+  if (file) {
+    fetch(file)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((html) => {
+        element.outerHTML = html;
+        replaceComponents();
+        includeHTML();
+      })
+      .catch((error) => {
+        element.innerHTML = "Content not found.";
+      });
   }
 
-  await Promise.all(promises);
+  return doc;
 }
 
 async function main() {
   //try to include html
-  await includeHTML();
+  includeHTML();
+  // document = doc;
 
   //replace all componments
   replaceComponents();
@@ -345,7 +297,6 @@ function replaceMd() {
     elmnt.classList.add("no-tailwind");
     converted = parseMd(to_convert);
     elmnt.innerHTML = converted;
-    console.log(elmnt);
   }
 }
 
@@ -372,3 +323,47 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+/**
+ * default component class which all component scripts have to extend
+ * */
+class Component {
+  constructor() {
+    this.self = "asd";
+    this.props = {};
+  }
+
+  /**
+   * This function will be called when the component is loaded on the page
+   * use this as a constructor.
+   * */
+  onComponentLoad() {}
+  /**
+   * This function returns the element with the child-id provided.
+   * REMEMEBER this function will not work before onComponentLoad is run
+   * */
+  getChild(name) {
+    let res = document.querySelectorAll(
+      `[child-id="RAPID${this.self + name}"]`,
+    );
+    return res[0];
+  }
+  /**
+   * This function retusns instance of the child component if there is one otherwise undefined.
+   * REMEMEBER this function will not work before onComponentLoad is run
+   * */
+  getChildInstance(name) {
+    let child = document.querySelectorAll(
+      `[child-id="RAPID${this.self + name}"]`,
+    )[0];
+    if (child === undefined) return undefined;
+    let instanceName = child.getAttribute("instance");
+    if (instanceName === null) {
+      instanceName = child.firstElementChild.getAttribute("instance");
+      if (instanceName === null) return null;
+    }
+    let instance = eval(`${instanceName}`);
+    return instance;
+  }
+}
+
