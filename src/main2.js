@@ -10,9 +10,14 @@ class Template {
   }
   /** Adds script to body */
   createScript() {
-    let script = document.createElement("script");
-    script.textContent = this.script.innerHTML;
-    document.body.appendChild(script);
+    if (
+      document.querySelector(`[rapid-script="${this.getClassName()}"]`) == null
+    ) {
+      let script = document.createElement("script");
+      script.setAttribute("rapid-script", this.getClassName());
+      script.textContent = this.script.innerHTML;
+      document.body.appendChild(script);
+    }
   }
   /** returns the classname from the script */
   getClassName(scriptContent) {
@@ -195,8 +200,6 @@ function includeHTML() {
         element.innerHTML = "Content not found.";
       });
   }
-
-  return doc;
 }
 
 async function main() {
