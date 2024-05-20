@@ -126,6 +126,7 @@ function replaceComponents() {
     //set the new template
     templates[template.name] = template;
   }
+  console.log(templates);
 
   // list that holds all components
   let components = [];
@@ -133,7 +134,8 @@ function replaceComponents() {
   for (let [name, template] of Object.entries(templates)) {
     // find all components that uses template name
     let htmlcomponents = document.getElementsByTagName(name);
-    //for each component that uses this template
+    console.log(htmlcomponents);
+    // for each component that uses this template
     for (let i = 0; i < htmlcomponents.length; i++) {
       let component = new Comp();
       component.defintion = htmlcomponents[i];
@@ -182,6 +184,7 @@ function replaceComponents() {
 // simple chatgpt say
 function includeHTML() {
   const element = document.querySelector("[include-html]");
+  if (element === null) return null;
   const file = element.getAttribute("include-html");
   if (file) {
     fetch(file)
@@ -203,7 +206,7 @@ function includeHTML() {
 }
 
 async function main() {
-  //try to include html
+  // try to include html
   includeHTML();
   // document = doc;
 

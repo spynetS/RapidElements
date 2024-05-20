@@ -1,3 +1,45 @@
+/**
+ * default component class which all component scripts have to extend
+ * */
+class Component {
+  constructor() {
+    this.self = "asd";
+    this.props = {};
+  }
+
+  /**
+   * This function will be called when the component is loaded on the page
+   * use this as a constructor.
+   * */
+  onComponentLoad() {}
+  /**
+   * This function returns the element with the child-id provided.
+   * REMEMEBER this function will not work before onComponentLoad is run
+   * */
+  getChild(name) {
+    let res = document.querySelectorAll(
+      `[child-id="RAPID${this.self + name}"]`,
+    );
+    return res[0];
+  }
+  /**
+   * This function retusns instance of the child component if there is one otherwise undefined.
+   * REMEMEBER this function will not work before onComponentLoad is run
+   * */
+  getChildInstance(name) {
+    let child = document.querySelectorAll(
+      `[child-id="RAPID${this.self + name}"]`,
+    )[0];
+    if (child === undefined) return undefined;
+    let instanceName = child.getAttribute("instance");
+    if (instanceName === null) {
+      instanceName = child.firstElementChild.getAttribute("instance");
+      if (instanceName === null) return null;
+    }
+    let instance = eval(`${instanceName}`);
+    return instance;
+  }
+}
 function generateRandomString(length) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   let result = "";
@@ -111,6 +153,8 @@ class Comp {
 function replaceComponents() {
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
+  console.log(htmltemplates);
+  console.log(htmltemplates.length);
   // dict that holds the templates and thier name
   let templates = new Object();
   // we loop though the templates down up so the templates
@@ -134,6 +178,7 @@ function replaceComponents() {
     //set the new template
     templates[template.name] = template;
   }
+  console.log(templates);
 
   // list that holds all components
   let components = [];
@@ -141,7 +186,8 @@ function replaceComponents() {
   for (let [name, template] of Object.entries(templates)) {
     // find all components that uses template name
     let htmlcomponents = document.getElementsByTagName(name);
-    //for each component that uses this template
+    console.log(htmlcomponents);
+    // for each component that uses this template
     for (let i = 0; i < htmlcomponents.length; i++) {
       let component = new Comp();
       component.defintion = htmlcomponents[i];
@@ -190,6 +236,7 @@ function replaceComponents() {
 // simple chatgpt say
 function includeHTML() {
   const element = document.querySelector("[include-html]");
+  if (element === null) return null;
   const file = element.getAttribute("include-html");
   if (file) {
     fetch(file)
@@ -211,7 +258,7 @@ function includeHTML() {
 }
 
 async function main() {
-  //try to include html
+  // try to include html
   includeHTML();
   // document = doc;
 
@@ -326,47 +373,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-
-/**
- * default component class which all component scripts have to extend
- * */
-class Component {
-  constructor() {
-    this.self = "asd";
-    this.props = {};
-  }
-
-  /**
-   * This function will be called when the component is loaded on the page
-   * use this as a constructor.
-   * */
-  onComponentLoad() {}
-  /**
-   * This function returns the element with the child-id provided.
-   * REMEMEBER this function will not work before onComponentLoad is run
-   * */
-  getChild(name) {
-    let res = document.querySelectorAll(
-      `[child-id="RAPID${this.self + name}"]`,
-    );
-    return res[0];
-  }
-  /**
-   * This function retusns instance of the child component if there is one otherwise undefined.
-   * REMEMEBER this function will not work before onComponentLoad is run
-   * */
-  getChildInstance(name) {
-    let child = document.querySelectorAll(
-      `[child-id="RAPID${this.self + name}"]`,
-    )[0];
-    if (child === undefined) return undefined;
-    let instanceName = child.getAttribute("instance");
-    if (instanceName === null) {
-      instanceName = child.firstElementChild.getAttribute("instance");
-      if (instanceName === null) return null;
-    }
-    let instance = eval(`${instanceName}`);
-    return instance;
-  }
-}
-
