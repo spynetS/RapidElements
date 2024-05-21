@@ -1,0 +1,104 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Untitled</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Place favicon.ico in the root directory -->
+    <script
+      defer
+      type="text/javascript"
+      src="https://spynets.github.io/RapidElements/bin/RapidElements.js"
+    ></script>
+  </head>
+
+  <script type="text/javascript"></script>
+
+  <script type="text/javascript"></script>
+  <body>
+    <template rapid-name="page">
+      <div id="page-{path}">{children}</div>
+    </template>
+
+    <template rapid-name="router">
+      <script type="text/javascript">
+        class router extends Component {
+          onComponentLoad() {
+            this.paths = ["home", "docs"];
+            console.log(this.getChild("inner").innerHTML);
+
+            // Initial page load handling based on the URL path
+            window.addEventListener("load", () => {
+              const path = window.location.pathname.replace("/", "");
+              if (
+                this.paths
+                  .map((p) => p.toLowerCase())
+                  .includes(path.toLowerCase())
+              ) {
+                this.showPageByPath(path);
+              } else {
+                this.showPageByPath(this.paths[0]); // Default to the first page
+              }
+            });
+
+            window.addEventListener("popstate", this.handlePopState);
+          }
+
+          showPageByPath(path) {
+            for (let index = 0; index < this.paths.length; index++) {
+              document.getElementById(
+                "page-" + this.paths[index],
+              ).style.display = "none";
+              if (this.paths[index].toLowerCase() === path.toLowerCase()) {
+                document.getElementById(
+                  "page-" + this.paths[index],
+                ).style.display = "block";
+                activeIndex = index;
+                window.history.pushState(
+                  { id: this.paths[index] },
+                  this.paths[index],
+                  "/" + this.paths[index].toLowerCase(),
+                );
+              }
+            }
+          }
+
+          handlePopState(event) {
+            const stateId = event.state ? event.state.id : null;
+            if (stateId) {
+              this.showPageByPath(stateId);
+            } else {
+              this.showPageByPath(this.paths[0]); // Default to the first page
+            }
+          }
+
+          navPage(a) {
+            this.showPageByPath(this.paths[a].toLowerCase());
+          }
+        }
+      </script>
+
+      <div child-id="inner">{children}</div>
+    </template>
+
+    <a href="/home">home</a>
+    <a href="/docs">docs</a>
+
+    <router>
+      <page path="home">
+        <div class="bg-red-400 p-2">
+          <h1>Page 1</h1>
+        </div>
+      </page>
+
+      <page path="docs">
+        <div class="bg-red-400 p-2">
+          <h1>Page 2</h1>
+        </div>
+      </page>
+    </router>
+  </body>
+</html>

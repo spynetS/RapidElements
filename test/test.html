@@ -6,56 +6,85 @@
     <title>Untitled</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Place favicon.ico in the root directory -->
-    <script defer type="text/javascript" src="../src/main.js"></script>
+    <script defer type="text/javascript" src="../bin/RapidElements.js"></script>
   </head>
 
-  <body class="flex flex-col gap-2 w-screen h-screen bg-gray-700">
+  <script type="text/javascript">
+    const paths = ["Home", "Docs"];
 
-    <div include-html="../cosmic_button.html"></div>
-    <div include-html="../cosmic_textfield.html"></div>
-    <div include-html="../cosmic_card.html"></div>
-    <div include-html="../cosmic_popup.html"></div>
+    function showPageByPath(path) {
+      for (let index = 0; index < paths.length; index++) {
+        document.getElementById(paths[index]).style.display = "none";
+        if (paths[index].toLowerCase() === path.toLowerCase()) {
+          document.getElementById(paths[index]).style.display = "block";
+          activeIndex = index;
+          window.history.pushState(
+            { id: paths[index] },
+            paths[index],
+            "/" + paths[index].toLowerCase(),
+          );
+        }
+      }
+    }
 
-    <template rapid-name="app">
-      <script type="text/javascript">
-       class app extends Component{
-         setTitle(value){
-           this.getChild("popup-title").innerHTML=value;
-         }
-         closePopup(save){
-           document.getElementById("popup").style.display='none';
-           if(save)
-             this.getChild('result').innerHTML = this.value;
+    function handlePopState(event) {
+      const stateId = event.state ? event.state.id : null;
+      if (stateId) {
+        showPageByPath(stateId);
+      } else {
+        showPageByPath(paths[0]); // Default to the first page
+      }
+    }
 
-         }
-       }
-      </script>
-      <div class="flex flex-col items-center" >
-        <popup id="popup">
-          <div class="flex flex-col items-center justify-between gap-5 p-5 text-white">
-            <cosmic_textfield placeholder="Write the new title" setvalue="self.value = (event.target.value)" ></cosmic_textfield>
-            <div class="flex flex-row justify-center gap-2">
-              <but onclick="self.closePopup(true)">Save</but>
-              <but onclick="self.closePopup(false)">close</but>
-            </div>
-          </div>
-        </popup>
+    // Initial page load handling based on the URL path
+    window.addEventListener("load", () => {
+      const path = window.location.pathname.replace("/", "");
+      if (paths.map((p) => p.toLowerCase()).includes(path.toLowerCase())) {
+        showPageByPath(path);
+      } else {
+        showPageByPath(paths[0]); // Default to the first page
+      }
+    });
 
-        <h1 class="text-white text-lg" child-id="result" >This is the title</h1>
+    window.addEventListener("popstate", handlePopState);
 
-        <but onclick="document.getElementById('popup').style.display = 'flex'"
-          >Change the title
-        </but>
+    // Function to navigate between pages programmatically
+    function navPage(a) {
+      showPageByPath(paths[a].toLowerCase());
+    }
 
-      </div>
+    // Ensure initial state is set correctly
+    window.history.replaceState(
+      { id: paths[0] },
+      paths[0],
+      "/" + paths[0].toLowerCase(),
+    );
+  </script>
 
-
+  <script type="text/javascript"></script>
+  <body>
+    <template rapid-name="router"> {children} </template>
+    <template rapid-name="page">
+      <div id="{path}">{children}</div>
     </template>
 
-    <app></app>
+    <button onclick="navPage(0)">1</button>
+    <button onclick="navPage(1)">2</button>
 
+    <router>
+      <page path="Home">
+        <div class="bg-red-400 p-2">
+          <h1>Page 1</h1>
+        </div>
+      </page>
+
+      <page path="Docs">
+        <div class="bg-red-400 p-2">
+          <h1>Page 2</h1>
+        </div>
+      </page>
+    </router>
   </body>
 </html>
