@@ -1,3 +1,11 @@
+function generateRandomString(length) {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
 /**
  * default component class which all component scripts have to extend
  * */
@@ -40,14 +48,7 @@ class Component {
     return instance;
   }
 }
-function generateRandomString(length) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
+
 const start_prop = "{";
 const end_prop = "}";
 
@@ -153,8 +154,6 @@ class Comp {
 function replaceComponents() {
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
-  console.log(htmltemplates);
-  console.log(htmltemplates.length);
   // dict that holds the templates and thier name
   let templates = new Object();
   // we loop though the templates down up so the templates
@@ -255,6 +254,12 @@ function includeHTML() {
         element.innerHTML = "Content not found.";
       });
   }
+}
+/**
+ * this function recompiles new components added to the dom
+ * */
+function rapidRefresh() {
+  replaceComponents();
 }
 
 async function main() {
@@ -373,3 +378,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+

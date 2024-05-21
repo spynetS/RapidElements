@@ -204,6 +204,12 @@ function includeHTML() {
       });
   }
 }
+/**
+ * this function recompiles new components added to the dom
+ * */
+function rapidRefresh() {
+  replaceComponents();
+}
 
 async function main() {
   // try to include html
