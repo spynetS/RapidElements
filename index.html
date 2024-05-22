@@ -73,7 +73,15 @@
       <script type="text/javascript">
         class Router extends Component {
           onComponentLoad() {
-            console.log(this.props);
+            this.paths = [];
+            let children = this.getChild("inner").children;
+            for (let child of children) {
+              let instance = eval(`${child.getAttribute("instance")}`);
+              if (instance != null) {
+                this.paths.push(instance.props.path);
+              }
+            }
+            console.log(this.paths);
           }
           static navigate(path) {
             console.log(path);
