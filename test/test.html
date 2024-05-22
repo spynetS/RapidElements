@@ -65,13 +65,22 @@
 
   <script type="text/javascript"></script>
   <body>
-    <template rapid-name="router"> {children} </template>
+    <template rapid-name="router">
+      <script type="text/javascript">
+        class Router extends Component {
+          static navigate(path) {
+            console.log(path);
+          }
+        }
+      </script>
+      <div>{children}</div>
+    </template>
     <template rapid-name="page">
-      <div id="{path}">{children}</div>
+      <div id="rapid-page-{path}">{children}</div>
     </template>
 
-    <button onclick="navPage(0)">1</button>
-    <button onclick="navPage(1)">2</button>
+    <button onclick="router.navigate('home')">1</button>
+    <button onclick="router.navigate('docs')">2</button>
 
     <router>
       <page path="Home">

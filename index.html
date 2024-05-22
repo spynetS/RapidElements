@@ -15,86 +15,88 @@
     ></script>
   </head>
 
-  <script type="text/javascript"></script>
+  <script type="text/javascript">
+    const paths = ["Home", "Docs"];
+
+    function showPageByPath(path) {
+      for (let index = 0; index < paths.length; index++) {
+        document.getElementById(paths[index]).style.display = "none";
+        if (paths[index].toLowerCase() === path.toLowerCase()) {
+          document.getElementById(paths[index]).style.display = "block";
+          activeIndex = index;
+          window.history.pushState(
+            { id: paths[index] },
+            paths[index],
+            "/" + paths[index].toLowerCase(),
+          );
+        }
+      }
+    }
+
+    function handlePopState(event) {
+      const stateId = event.state ? event.state.id : null;
+      if (stateId) {
+        showPageByPath(stateId);
+      } else {
+        showPageByPath(paths[0]); // Default to the first page
+      }
+    }
+
+    // Initial page load handling based on the URL path
+    window.addEventListener("load", () => {
+      const path = window.location.pathname.replace("/", "");
+      if (paths.map((p) => p.toLowerCase()).includes(path.toLowerCase())) {
+        showPageByPath(path);
+      } else {
+        showPageByPath(paths[0]); // Default to the first page
+      }
+    });
+
+    window.addEventListener("popstate", handlePopState);
+
+    // Function to navigate between pages programmatically
+    function navPage(a) {
+      showPageByPath(paths[a].toLowerCase());
+    }
+
+    // Ensure initial state is set correctly
+    window.history.replaceState(
+      { id: paths[0] },
+      paths[0],
+      "/" + paths[0].toLowerCase(),
+    );
+  </script>
 
   <script type="text/javascript"></script>
   <body>
-    <template rapid-name="page">
-      <div id="page-{path}">{children}</div>
-    </template>
-
     <template rapid-name="router">
       <script type="text/javascript">
-        class router extends Component {
+        class Router extends Component {
           onComponentLoad() {
-            this.paths = ["home", "docs"];
-            console.log(this.getChild("inner").innerHTML);
-
-            // Initial page load handling based on the URL path
-            window.addEventListener("load", () => {
-              const path = window.location.pathname.replace("/", "");
-              if (
-                this.paths
-                  .map((p) => p.toLowerCase())
-                  .includes(path.toLowerCase())
-              ) {
-                this.showPageByPath(path);
-              } else {
-                this.showPageByPath(this.paths[0]); // Default to the first page
-              }
-            });
-
-            window.addEventListener("popstate", this.handlePopState);
+            console.log(this.props);
           }
-
-          showPageByPath(path) {
-            for (let index = 0; index < this.paths.length; index++) {
-              document.getElementById(
-                "page-" + this.paths[index],
-              ).style.display = "none";
-              if (this.paths[index].toLowerCase() === path.toLowerCase()) {
-                document.getElementById(
-                  "page-" + this.paths[index],
-                ).style.display = "block";
-                activeIndex = index;
-                window.history.pushState(
-                  { id: this.paths[index] },
-                  this.paths[index],
-                  "/" + this.paths[index].toLowerCase(),
-                );
-              }
-            }
-          }
-
-          handlePopState(event) {
-            const stateId = event.state ? event.state.id : null;
-            if (stateId) {
-              this.showPageByPath(stateId);
-            } else {
-              this.showPageByPath(this.paths[0]); // Default to the first page
-            }
-          }
-
-          navPage(a) {
-            this.showPageByPath(this.paths[a].toLowerCase());
+          static navigate(path) {
+            console.log(path);
           }
         }
       </script>
-
-      <div child-id="inner">{children}</div>
+      <div>{children}</div>
+    </template>
+    <template rapid-name="page">
+      <div id="rapid-page-{path}">{children}</div>
     </template>
 
-    <a href="/home">home</a>
-    <a href="/docs">docs</a>
+    <button onclick="Router.navigate('home')">1</button>
+    <button onclick="Router.navigate('docs')">2</button>
 
     <router>
-      <page path="home">
+      <page path="Home">
         <div class="bg-red-400 p-2">
           <h1>Page 1</h1>
         </div>
       </page>
 
-      <page path="docs">
+      <page path="Docs">
         <div class="bg-red-400 p-2">
           <h1>Page 2</h1>
         </div>
