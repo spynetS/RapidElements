@@ -13,7 +13,7 @@ To "install" just add the script link
 <html class="no-js" lang="">
     <head>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script defer type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" ></script>
+        <script defer type="text/javascript" src="https://spynets.github.io/RapidElements/bin/RapidElements.js" ></script>
 
     </head>
     <body class="flex flex-col gap-2" >
@@ -73,7 +73,7 @@ index.html
 <html class="no-js" lang="">
     <head>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script defer type="text/javascript" src="https://spynets.github.io/RapidElements/src/main.js" ></script>
+        <script defer type="text/javascript" src="https://spynets.github.io/RapidElements/bin/RapidElements.js" ></script>
 
     </head>
     <body class="flex flex-col gap-2" >
