@@ -105,7 +105,9 @@ And then everytime we comeacross a element with that tagname replaces the outerH
 ## SPA (Single page application)
 RapidElements supports single page application with the router and page component
 
-Try it by running `node server.js`
+Try it by running 
+`cd SPA`
+`node server.js`
 
 ``` html
 	<!-- imports the router -->
