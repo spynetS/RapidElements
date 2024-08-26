@@ -102,5 +102,38 @@ This also enables the creation of public component librarys.
 RapidElements is just replacing the outerHTML with the component definitions by saving all component definitions (the elements containg rapid-name).
 And then everytime we comeacross a element with that tagname replaces the outerHTML with the definition and replacing the props
 
+## SPA (Single page application)
+RapidElements supports single page application with the router and page component
+
+Try it by running `node server.js`
+
+``` html
+	<!-- imports the router -->
+	<div include-html="http://localhost:8080/Router.html"></div>
+
+	<!-- navigating the pages -->
+	<div class="flex flex-row p-2 rounded-lg w-screen bg-slate-100 gap-4">
+	  <but onclick="Router.navigate('home')">Home</but>
+	  <but onclick="Router.navigate('about')">About</but>
+	</div>
+
+	<!-- router compontent with pages as children -->
+	<router>
+	  <!-- home page -->
+	  <page path="home">
+		<div class="flex items-center justify-center bg-red-400 p-2">
+		  <h1>This is the {path} page</h1>
+		</div>
+	  </page>
+	  <!-- about page -->
+	  <page path="about">
+		<div class="flex items-center justify-center bg-blue-400 p-2 h-screen">
+		  <h1>This is the {path} page</h1>
+		</div>
+	  </page>
+	</router>
+```
+
+
 ## TODO
 - [ ] Find a way to define components outside the same html (global componts) without developer server

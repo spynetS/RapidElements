@@ -1,0 +1,31 @@
+<script defer type="text/javascript" src="../src/main.js"></script>
+
+<template rapid-name="popup">
+  <script defer>
+    class popup extends Component() {
+      onComponentLoad() {
+        alert("what");
+      }
+      openModal() {
+        this.getChild("myModal").style.display = "flex";
+      }
+      closeModal() {
+        alert("what");
+        this.getChild("myModal").style.display = "none";
+      }
+    }
+  </script>
+
+  <div class="container">
+    <button class="button" onclick="self.openModal()">Say hi</button>
+    <h1 id="text"></h1>
+  </div>
+  <div child-id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="self.closeModal()"></span>
+      <p>Hi there!</p>
+    </div>
+  </div>
+</template>
+
+<popup></popup>
