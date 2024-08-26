@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+# this program combindes all js files into one js file for easier imports
 import os
-
 
 path = "./src/"
 output = "./bin/RapidElements.js"
