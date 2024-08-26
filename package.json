@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js",
-    "build:prod": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js --minify --sourcemap"
+    "build:prod": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js --minify --sourcemap",
+    "package": "tar -czvf package-$(npm pkg get version | tr -d '\"').tar.gz ./bin/RapidElements.js ./components"
   },
   "keywords": [],
   "author": "",
