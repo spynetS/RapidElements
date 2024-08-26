@@ -1,7 +1,7 @@
 /**
  * default component class which all component scripts have to extend
  * */
-class Component {
+export default class Component {
   constructor() {
     this.self = "asd";
     this.props = {};

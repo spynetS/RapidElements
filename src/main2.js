@@ -1,3 +1,10 @@
+import { generateRandomString } from "./utils.js";
+import Component from "./Component.js";
+
+window.Component = Component;
+
+import * as md from "./md.js";
+
 const start_prop = "{";
 const end_prop = "}";
 
@@ -100,7 +107,7 @@ class Comp {
   }
 }
 
-function replaceComponents() {
+window.replaceComponents = () => {
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
   // dict that holds the templates and thier name
@@ -179,7 +186,7 @@ function replaceComponents() {
       document.body.appendChild(script);
     }
   }
-}
+};
 
 // simple chatgpt say
 function includeHTML() {
@@ -207,9 +214,9 @@ function includeHTML() {
 /**
  * this function recompiles new components added to the dom
  * */
-function rapidRefresh() {
+window.rapidRefresh = () => {
   replaceComponents();
-}
+};
 
 async function main() {
   // try to include html
@@ -219,17 +226,17 @@ async function main() {
   //replace all componments
   replaceComponents();
 
-  replaceMd();
+  md.replaceMd();
   // creates a tailwind override class, to be applied to markdown defined elements.
-  createNoTailwindClass();
+  md.createNoTailwindClass();
 }
 
-function getInstanceById(id) {
+window.getInstanceById = (id) => {
   let el = document.getElementById(id);
   return getInstance(el);
-}
+};
 
-function getInstance(element) {
+window.getInstance = (element) => {
   console.log(element);
   if (element.getAttribute("instance")) {
     let instanceName = element.getAttribute("instance");
@@ -242,6 +249,6 @@ function getInstance(element) {
   } else {
     return getInstance(element.parentElement);
   }
-}
+};
 
 window.onload = main();

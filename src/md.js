@@ -1,4 +1,4 @@
-function createNoTailwindClass() {
+export function createNoTailwindClass() {
   const style = document.createElement("style");
   style.innerHTML = `
       .no-tailwind h1,
@@ -26,7 +26,7 @@ function createNoTailwindClass() {
   document.head.appendChild(style);
 }
 
-function parseMd(markdown) {
+export function parseMd(markdown) {
   // Convert headers
   markdown = markdown.replace(/^###### (.*$)/gim, "<h6>$1</h6>");
   markdown = markdown.replace(/^##### (.*$)/gim, "<h5>$1</h5>");
@@ -65,7 +65,7 @@ function parseMd(markdown) {
 
 // searches all elements with attribute markdown and replaces the markdown inside with
 // html code
-function replaceMd() {
+export function replaceMd() {
   let markdowns = document.querySelectorAll("[markdown]");
   for (let i = 0; i < markdowns.length; i++) {
     let elmnt = markdowns[i];

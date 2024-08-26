@@ -28,12 +28,11 @@
         // Initial page load handling based on the URL path
         const path = window.location.pathname.replace("/", "");
         console.log("Loaded path is", path);
-        if (
-          Router.paths.map((p) => p.toLowerCase()).includes(path.toLowerCase())
-        ) {
+        if (Router.paths.map((p) => p.toLowerCase()).includes(path.toLowerCase())) {
           Router.showPageByPath(path, false); // Pass false to avoid pushing state initially
         } else {
           Router.showPageByPath(Router.paths[0], false); // Default to the first page
+
         }
 
         window.addEventListener("popstate", Router.handlePopState);
