@@ -10,8 +10,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "esbuild src/main2.js --bundle --outfile=dist/bundle.js",
-    "build:prod": "esbuild src/main2.js --bundle --outfile=dist/bundle.js --minify --sourcemap"
+    "build": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js",
+    "build:prod": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js --minify --sourcemap"
   },
   "keywords": [],
   "author": "",
