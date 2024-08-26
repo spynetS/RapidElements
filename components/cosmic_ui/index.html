@@ -1,0 +1,64 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Untitled</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+		<script defer type="text/javascript" src="../bin/RapidElements.js" ></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+		<template rapid-name="cosmic_card">
+			<div
+			class=" flex flex-col gap-2 p-2 min-h-[180px] h-full min-w-[140px] w-full rounded-xl bg-white dark:bg-zinc-900 shadow-md shadow-[#FFFFFF08] outline outline-offset-1 outline-1 -inset-px outline-[#00000004] dark:outline-[#FFFFFF14] border-zinc-900 dark:border-zinc-200 "
+			>
+			{children}
+			</div>
+		</template>
+		<template rapid-name="popup">
+		<script type="text/javascript">
+			class popup extends Component {
+				onComponentLoad() {
+					this.getChild("popup").style.display = "none";
+				}
+				open() {
+					this.getChild("popup").style.display = "flex";
+				}
+				close() {
+					this.getChild("popup").style.display = "none";
+				}
+			}
+		</script>
+		<div>
+
+			<div
+				id="{id}"
+				child-id="popup"
+				style="display: none"
+				class="fixed top-0 right-0 z-40 bg-[#00000030] w-screen h-full items-center justify-center flex transition-opacity"
+			>
+				<div class="absolute w-full h-full" onclick="self.close()"></div>
+				<div
+				class="min-w-[240px] h-fit min-h-[320px] max-w-fit mb-[200px] mx-4 z-50"
+				>
+					<cosmic_card> {children} </cosmic_card>
+				</div>
+			</div>
+		</div>
+		</template>
+
+		<button onclick="getInstanceById('popup').open()" >
+			open
+		</button>
+
+		<popup id="popup" >
+			HELLO
+		</popup>
+
+    </body>
+</html>

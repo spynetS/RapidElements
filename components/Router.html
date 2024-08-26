@@ -1,0 +1,87 @@
+<template rapid-name="page">
+  <script type="text/javascript">
+    class page extends Component {
+      onComponentLoad() {
+        console.log("loaded page");
+      }
+    }
+  </script>
+  <div id="rapid-page-{path}">{children}</div>
+</template>
+
+<template rapid-name="router">
+  <script type="text/javascript">
+    class Router extends Component {
+      static paths = [];
+      static activeIndex = 0;
+
+      onComponentLoad() {
+        console.log("loaded router");
+        let children = this.getChild("inner").children;
+        for (let child of children) {
+          let instance = eval(`${child.getAttribute("instance")}`);
+          if (instance != null) {
+            Router.paths.push(instance.props.path);
+          }
+        }
+
+        // Initial page load handling based on the URL path
+        const path = window.location.pathname.replace("/", "");
+        console.log("Loaded path is", path);
+        if (
+          Router.paths.map((p) => p.toLowerCase()).includes(path.toLowerCase())
+        ) {
+          Router.showPageByPath(path, false); // Pass false to avoid pushing state initially
+        } else {
+          Router.showPageByPath(Router.paths[0], false); // Default to the first page
+        }
+
+        window.addEventListener("popstate", Router.handlePopState);
+      }
+
+      static handlePopState(event) {
+        const stateId = event.state ? event.state.id : null;
+        if (stateId) {
+          Router.showPageByPath(stateId); // Pass false to avoid pushing state during popstate
+        } else {
+          Router.showPageByPath(Router.paths[0]); // Default to the first page
+        }
+      }
+
+      static showPageByPath(path, pushState = true) {
+        let foundPage = false;
+        for (let index = 0; index < Router.paths.length; index++) {
+          console.log("end", "rapid-page-" + Router.paths[index]);
+
+          document.getElementById("rapid-page-" + Router.paths[index],).style.display = "none";
+
+          if (Router.paths[index].toLowerCase() === path.toLowerCase()) {
+            console.log("start", "rapid-page-" + Router.paths[index]);
+            document.getElementById("rapid-page-" + Router.paths[index],).style.display = "block";
+            Router.activeIndex = index;
+            if (pushState) {
+              window.history.pushState(
+                { id: Router.paths[index] },
+                Router.paths[index],
+                "/" + Router.paths[index].toLowerCase(),
+              );
+            }
+            foundPage = true;
+          }
+        }
+        if(!foundPage){
+          alert("404")
+        }
+      }
+
+      static get_active(){
+        return Router.paths[Router.activeIndex];
+      }
+
+      static navigate(path) {
+        Router.showPageByPath(path);
+      }
+    }
+  </script>
+  <div child-id="inner">{children}</div>
+</template>
