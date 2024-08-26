@@ -103,7 +103,7 @@ RapidElements is just replacing the outerHTML with the component definitions by 
 And then everytime we comeacross a element with that tagname replaces the outerHTML with the definition and replacing the props
 
 ## SPA (Single page application)
-RapidElements supports single page application with the router and page component
+RapidElements supports single page application with the router and page component. As long as 404 page redirects to index.html
 
 Try it by running 
 `cd examples/SPA`
