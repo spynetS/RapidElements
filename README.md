@@ -3,7 +3,7 @@ RapidElements is a very small library that enables you to easily create componte
 This library is for you who are tired to use big js frameworks to create a website but want the convinence of components.
 
 ## Installation
-To "install" just add the script link
+To "install" just add the script link **don't forget the defer tag**
 `<script defer type="text/javascript" src="https://spynets.github.io/RapidElements/bin/RapidElements.js" ></script>`
 
 ## Usage
@@ -106,7 +106,7 @@ And then everytime we comeacross a element with that tagname replaces the outerH
 RapidElements supports single page application with the router and page component
 
 Try it by running 
-`cd SPA`
+`cd examples/SPA`
 `node server.js`
 
 ``` html
