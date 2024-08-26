@@ -31,12 +31,7 @@ class Component {
       `[child-id="RAPID${this.self + name}"]`,
     )[0];
     if (child === undefined) return undefined;
-    let instanceName = child.getAttribute("instance");
-    if (instanceName === null) {
-      instanceName = child.firstElementChild.getAttribute("instance");
-      if (instanceName === null) return null;
-    }
-    let instance = eval(`${instanceName}`);
-    return instance;
+
+    return getInstance(child);
   }
 }

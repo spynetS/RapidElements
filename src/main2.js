@@ -224,4 +224,24 @@ async function main() {
   createNoTailwindClass();
 }
 
+function getInstanceById(id) {
+  let el = document.getElementById(id);
+  return getInstance(el);
+}
+
+function getInstance(element) {
+  console.log(element);
+  if (element.getAttribute("instance")) {
+    let instanceName = element.getAttribute("instance");
+    if (instanceName === null) {
+      instanceName = element.firstElementChild.getAttribute("instance");
+      if (instanceName === null) return null;
+    }
+    let instance = eval(`${instanceName}`);
+    return instance;
+  } else {
+    return getInstance(element.parentElement);
+  }
+}
+
 window.onload = main();
