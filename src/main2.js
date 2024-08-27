@@ -8,6 +8,9 @@ import * as md from "./md.js";
 const start_prop = "{";
 const end_prop = "}";
 
+const start_js = "{%";
+const end_js = "%}";
+
 class Template {
   constructor() {
     this.className = "";
@@ -163,6 +166,7 @@ window.replaceComponents = () => {
 
       component.replaceProps();
       component.replaceSelf();
+      // component.replaceJs();
 
       //update dom with the new html
       htmlcomponents[i].outerHTML = component.html;
@@ -186,6 +190,7 @@ window.replaceComponents = () => {
       document.body.appendChild(script);
     }
   }
+  replaceJs();
 };
 
 // simple chatgpt say
@@ -249,6 +254,32 @@ window.getInstance = (element) => {
   } else {
     return getInstance(element.parentElement);
   }
+};
+window.replaceJs = () => {
+  console.log("REPLACE JS");
+  // Regular expression to match {%...%} pattern
+  const pattern = /\{%\s*.*?\s*%\}/g;
+
+  let html = document.documentElement.innerHTML;
+
+  const matches = html.match(pattern);
+  console.log(matches);
+  for (let i = 0; i < matches.length; i++) {
+    console.log(matches[i]);
+    let js = matches[i].replaceAll(start_js, "");
+    js = js.replaceAll(end_js, "");
+    js = js.replaceAll("&gt;", ">");
+    js = js.replaceAll("&lt;", "<");
+    console.log(js);
+    try {
+      let js_value = eval(js);
+      console.log(js_value);
+      html = html.replaceAll(matches[i], js_value);
+      console.log("replaced");
+      console.log(html);
+    } catch (exceprtion) {}
+  }
+  document.documentElement.innerHTML = html;
 };
 
 window.onload = main();

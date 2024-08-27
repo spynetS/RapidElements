@@ -1,0 +1,41 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Testing</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+		<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
+    </head>
+    <body>
+
+		<script type="text/javascript">
+		 function myName(){
+			 return "Alfred"
+		 }
+		</script>
+
+		<template rapid-name="but" >
+			<script type="text/javascript">
+			 class but extends Component{
+
+			 }
+			</script>
+			<button onclick="{onclick}" class="bg-gray-200 rounded-lg p-4 hover:bg-gray-300" >
+				{children}
+				<!-- {% (self.props.age > 10 ) ? "GAMMAL" | "UNG" %} -->
+				{% self.props.age >= 10 ? 1 : 2 %}
+				{% self.props.age <= 10 ? 10 : 20 %}
+			</button>
+		</template>
+
+		<but age="10" >
+			Knapp1
+		</but>
+
+    </body>
+</html>
