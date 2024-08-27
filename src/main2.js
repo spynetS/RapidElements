@@ -8,8 +8,8 @@ import * as md from "./md.js";
 const start_prop = "{";
 const end_prop = "}";
 
-const start_js = "{";
-const end_js = "}";
+const start_js = "{%";
+const end_js = "%}";
 
 class Template {
   constructor() {
@@ -257,7 +257,7 @@ window.getInstance = (element) => {
 };
 window.replaceJs = () => {
   // Regular expression to match {%...%} pattern
-  const pattern = /\{\s*.*?\s*\}/g;
+  const pattern = /\{%\s*.*?\s*\%}/g;
 
   let html = document.documentElement.innerHTML;
 
@@ -270,7 +270,9 @@ window.replaceJs = () => {
     try {
       let js_value = eval(js);
       html = html.replaceAll(matches[i], js_value);
-    } catch (exceprtion) {}
+    } catch (exceprtion) {
+      html = html.replaceAll(matches[i], "undefined");
+    }
   }
   document.documentElement.innerHTML = html;
 };
