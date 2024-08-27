@@ -8,6 +8,9 @@ import * as md from "./md.js";
 const start_prop = "{";
 const end_prop = "}";
 
+const start_js = "{";
+const end_js = "}";
+
 class Template {
   constructor() {
     this.className = "";
@@ -163,6 +166,7 @@ window.replaceComponents = () => {
 
       component.replaceProps();
       component.replaceSelf();
+      // component.replaceJs();
 
       //update dom with the new html
       htmlcomponents[i].outerHTML = component.html;
@@ -186,6 +190,7 @@ window.replaceComponents = () => {
       document.body.appendChild(script);
     }
   }
+  replaceJs();
 };
 
 // simple chatgpt say
@@ -249,6 +254,25 @@ window.getInstance = (element) => {
   } else {
     return getInstance(element.parentElement);
   }
+};
+window.replaceJs = () => {
+  // Regular expression to match {%...%} pattern
+  const pattern = /\{\s*.*?\s*\}/g;
+
+  let html = document.documentElement.innerHTML;
+
+  const matches = html.match(pattern);
+  for (let i = 0; i < matches.length; i++) {
+    let js = matches[i].replaceAll(start_js, "");
+    js = js.replaceAll(end_js, "");
+    js = js.replaceAll("&gt;", ">");
+    js = js.replaceAll("&lt;", "<");
+    try {
+      let js_value = eval(js);
+      html = html.replaceAll(matches[i], js_value);
+    } catch (exceprtion) {}
+  }
+  document.documentElement.innerHTML = html;
 };
 
 window.onload = main();

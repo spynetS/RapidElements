@@ -289,3 +289,30 @@ or you can inject whole markdown files using the /include-md/ attribute
 #+begin_src html
 <div include-md="/path/to/markdown.md"></div>
 #+end_src
+
+* Js interactions
+In RapidElements you can run javascript and the results will be replaced. Like this
+
+Lets say you have a component with a prop and you want to add hello before it
+#+begin_src html
+
+<template rapid-name="component" >
+        <!-- You have to add a class to access self.props -->
+        <script type="text/javascript">
+                class component extends Component{}
+        </script>
+
+        <!-- if it is only the prop inside the curly braces it will be replaced by the value -->
+        <!-- otherwise it will run as js -->
+        <h1>Your age ({age}) + 10 is {parseInt(self.props.age) + 10}</h1>
+</template>
+
+<component age="10" ></component>
+<component age="100" ></component>
+
+#+end_src
+which will become
+#+begin_src html
+<h1>Your age (10) + 10 is 20</h1>
+<h1>Your age (100) + 10 is 110</h1>
+#+end_src
