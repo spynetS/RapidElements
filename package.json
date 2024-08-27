@@ -12,12 +12,14 @@
   "scripts": {
     "build": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js",
     "build:prod": "esbuild src/main2.js --bundle --outfile=bin/RapidElements.js --minify --sourcemap",
-    "package": "tar -czvf package-$(npm pkg get version | tr -d '\"').tar.gz ./bin/RapidElements.js ./components"
+    "package": "tar -czvf package-$(npm pkg get version | tr -d '\"').tar.gz ./bin/RapidElements.js ./components",
+    "watch": "nodemon --watch src --exec 'npm run build'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "esbuild": "^0.23.1"
+    "esbuild": "^0.23.1",
+    "nodemon": "^3.1.4"
   }
 }
