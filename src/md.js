@@ -27,13 +27,13 @@ export function createNoTailwindClass() {
 }
 
 export function parseMd(markdown) {
-  // Convert headers
-  markdown = markdown.replace(/^###### (.*$)/gim, "<h6>$1</h6>");
-  markdown = markdown.replace(/^##### (.*$)/gim, "<h5>$1</h5>");
-  markdown = markdown.replace(/^#### (.*$)/gim, "<h4>$1</h4>");
-  markdown = markdown.replace(/^### (.*$)/gim, "<h3>$1</h3>");
-  markdown = markdown.replace(/^## (.*$)/gim, "<h2>$1</h2>");
-  markdown = markdown.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+  // Convert headers, allowing for leading whitespace
+  markdown = markdown.replace(/^\s*######\s+(.*)$/gim, "<h6>$1</h6>");
+  markdown = markdown.replace(/^\s*#####\s+(.*)$/gim, "<h5>$1</h5>");
+  markdown = markdown.replace(/^\s*####\s+(.*)$/gim, "<h4>$1</h4>");
+  markdown = markdown.replace(/^\s*###\s+(.*)$/gim, "<h3>$1</h3>");
+  markdown = markdown.replace(/^\s*##\s+(.*)$/gim, "<h2>$1</h2>");
+  markdown = markdown.replace(/^\s*#\s+(.*)$/gim, "<h1>$1</h1>");
 
   // Convert bold text
   markdown = markdown.replace(/\*\*(.*?)\*\*/gim, "<b>$1</b>");
@@ -46,16 +46,25 @@ export function parseMd(markdown) {
   // Convert links
   markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
 
-  // Convert unordered lists
-  markdown = markdown.replace(/^\s*\n\* (.*)/gim, "<ul>\n<li>$1</li>\n</ul>");
-  markdown = markdown.replace(/^\* (.*)/gim, "<li>$1</li>");
+  // Convert unordered lists, allowing for leading whitespace
+  markdown = markdown.replace(/^\s*\* (.*)/gim, "<ul>\n<li>$1</li>\n</ul>");
+  markdown = markdown.replace(/^\s*\n\*\s+(.*)/gim, "<ul>\n<li>$1</li>\n</ul>");
 
-  // Convert ordered lists
-  markdown = markdown.replace(/^\s*\n\d\. (.*)/gim, "<ol>\n<li>$1</li>\n</ol>");
-  markdown = markdown.replace(/^\d\. (.*)/gim, "<li>$1</li>");
+  // Convert ordered lists, allowing for leading whitespace
+  markdown = markdown.replace(
+    /^\s*\d+\.\s+(.*)/gim,
+    "<ol>\n<li>$1</li>\n</ol>",
+  );
+  markdown = markdown.replace(
+    /^\s*\n\d+\.\s+(.*)/gim,
+    "<ol>\n<li>$1</li>\n</ol>",
+  );
 
-  // Convert blockquotes
-  markdown = markdown.replace(/^\> (.*)/gim, "<blockquote>$1</blockquote>");
+  // Convert blockquotes, allowing for leading whitespace
+  markdown = markdown.replace(
+    /^\s*\>\s+(.*)/gim,
+    "<blockquote>$1</blockquote>",
+  );
 
   // Convert line breaks
   markdown = markdown.replace(/\n$/gim, "<br />");
@@ -66,12 +75,16 @@ export function parseMd(markdown) {
 // searches all elements with attribute markdown and replaces the markdown inside with
 // html code
 export function replaceMd() {
+  console.log("replace md");
+  console.log(document.body.innerHTML);
   let markdowns = document.querySelectorAll("[markdown]");
+  console.log(markdowns);
   for (let i = 0; i < markdowns.length; i++) {
     let elmnt = markdowns[i];
-    to_convert = elmnt.innerHTML;
+    let to_convert = elmnt.innerHTML;
     elmnt.classList.add("no-tailwind");
-    converted = parseMd(to_convert);
+    console.log(to_convert);
+    let converted = parseMd(to_convert);
     elmnt.innerHTML = converted;
   }
 }

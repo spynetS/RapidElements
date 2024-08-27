@@ -1,4 +1,70 @@
-(()=>{var o=(e,t)=>()=>(e&&(t=e(e=0)),t);var v=(e,t)=>()=>(t||e((t={exports:{}}).exports,t),t.exports);function f(e){let t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",n="";for(let i=0;i<e;i++)n+=t.charAt(Math.floor(Math.random()*t.length));return n}var g=o(()=>{});var a,$=o(()=>{a=class{constructor(){this.self="asd",this.props={}}onComponentLoad(){}getChild(t){return document.querySelectorAll(`[child-id="RAPID${this.self+t}"]`)[0]}getChildInstance(t){let n=document.querySelectorAll(`[child-id="RAPID${this.self+t}"]`)[0];if(n!==void 0)return getInstance(n)}}});function M(){let e=document.createElement("style");e.innerHTML=`
+(() => {
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __esm = (fn, res) => function __init() {
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+  };
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  };
+
+  // src/utils.js
+  function generateRandomString(length) {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
+  var init_utils = __esm({
+    "src/utils.js"() {
+    }
+  });
+
+  // src/Component.js
+  var Component;
+  var init_Component = __esm({
+    "src/Component.js"() {
+      Component = class {
+        constructor() {
+          this.self = "asd";
+          this.props = {};
+        }
+        /**
+         * This function will be called when the component is loaded on the page
+         * use this as a constructor.
+         * */
+        onComponentLoad() {
+        }
+        /**
+         * This function returns the element with the child-id provided.
+         * REMEMEBER this function will not work before onComponentLoad is run
+         * */
+        getChild(name) {
+          let res = document.querySelectorAll(
+            `[child-id="RAPID${this.self + name}"]`
+          );
+          return res[0];
+        }
+        /**
+         * This function retusns instance of the child component if there is one otherwise undefined.
+         * REMEMEBER this function will not work before onComponentLoad is run
+         * */
+        getChildInstance(name) {
+          let child = document.querySelectorAll(
+            `[child-id="RAPID${this.self + name}"]`
+          )[0];
+          if (child === void 0) return void 0;
+          return getInstance(child);
+        }
+      };
+    }
+  });
+
+  // src/md.js
+  function createNoTailwindClass() {
+    const style = document.createElement("style");
+    style.innerHTML = `
       .no-tailwind h1,
       .no-tailwind h2,
       .no-tailwind h3,
@@ -20,9 +86,279 @@
           color: inherit;
           background-color: inherit;
       }
-  `,document.head.appendChild(e)}function b(e){return e=e.replace(/^###### (.*$)/gim,"<h6>$1</h6>"),e=e.replace(/^##### (.*$)/gim,"<h5>$1</h5>"),e=e.replace(/^#### (.*$)/gim,"<h4>$1</h4>"),e=e.replace(/^### (.*$)/gim,"<h3>$1</h3>"),e=e.replace(/^## (.*$)/gim,"<h2>$1</h2>"),e=e.replace(/^# (.*$)/gim,"<h1>$1</h1>"),e=e.replace(/\*\*(.*?)\*\*/gim,"<b>$1</b>"),e=e.replace(/__(.*?)__/gim,"<b>$1</b>"),e=e.replace(/\*(.*?)\*/gim,"<i>$1</i>"),e=e.replace(/_(.*?)_/gim,"<i>$1</i>"),e=e.replace(/\[(.*?)\]\((.*?)\)/gim,'<a href="$2">$1</a>'),e=e.replace(/^\s*\n\* (.*)/gim,`<ul>
-<li>$1</li>
-</ul>`),e=e.replace(/^\* (.*)/gim,"<li>$1</li>"),e=e.replace(/^\s*\n\d\. (.*)/gim,`<ol>
-<li>$1</li>
-</ol>`),e=e.replace(/^\d\. (.*)/gim,"<li>$1</li>"),e=e.replace(/^\> (.*)/gim,"<blockquote>$1</blockquote>"),e=e.replace(/\n$/gim,"<br />"),e.trim()}function N(){let e=document.querySelectorAll("[markdown]");for(let t=0;t<e.length;t++){let n=e[t];to_convert=n.innerHTML,n.classList.add("no-tailwind"),converted=b(to_convert),n.innerHTML=converted}}var L=o(()=>{document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("[include-md]").forEach(function(t){let n=t.getAttribute("include-md");if(n){let i=new XMLHttpRequest;i.onreadystatechange=function(){this.readyState==4&&(this.status==200&&(t.innerHTML=b(this.responseText),t.classList.add("no-tailwind")),this.status==404&&(t.innerHTML="Page not found."))},i.open("GET",n,!0),i.send()}})})});var I=v((C,H)=>{g();$();L();window.Component=a;var y="{",T="}",h=class{constructor(){this.className="",this.name="",this.script=null,this.html=null}createScript(){if(document.querySelector(`[rapid-script="${this.getClassName()}"]`)==null){let t=document.createElement("script");t.setAttribute("rapid-script",this.getClassName()),t.textContent=this.script.innerHTML,document.body.appendChild(t)}}getClassName(t){if(this.script==null)return null;let n=this.script.innerHTML.match(/class\s+([^\s{]+)/);return n&&n.length>1?n[1]:null}},m=class{constructor(){this.instanceName,this.defintion,this.props,this.html}replaceProps(){this.html=this.html.replaceAll(`${y}children${T}`,this.defintion.innerHTML);for(let i of Object.entries(this.props)){let l=i[0],r=i[1];if(l==="child-id"){var t=document.createElement("div");t.innerHTML=this.html;var n=t.firstElementChild;t.setAttribute("child-id",r),this.html=t.outerHTML}else this.html=this.html.replaceAll(`${y}${l}${T}`,r)}}replaceSelf(){this.html=this.html.replaceAll("self",this.instanceName)}replaceChildId(){var t=new DOMParser,n=t.parseFromString(this.html,"text/html"),i=n.querySelectorAll("[child-id]");for(let l=0;l<i.length;l++){let r=i[l].getAttribute("child-id");r.includes("RAPID")||i[l].setAttribute("child-id","RAPIDself"+r)}this.html=n.body.innerHTML}setInstance(){if(this.instanceName=f(10),this.html!=null){var t=new DOMParser,n=t.parseFromString(this.html,"text/html");n.body.firstElementChild.setAttribute("instance",this.instanceName),this.html=n.body.innerHTML}}};window.replaceComponents=()=>{let e=document.getElementsByTagName("template"),t=new Object;for(let i=e.length-1;i>=0;i--){let l=new h;l.name=e[i].getAttribute("rapid-name"),l.script=e[i].content.querySelector("script"),l.script!==null?(l.html=e[i].innerHTML.replace(l.script.outerHTML,""),l.createScript()):l.html=e[i].innerHTML,t[l.name]=l}console.log(t);let n=[];for(let[i,l]of Object.entries(t)){let r=document.getElementsByTagName(i);console.log(r);for(let c=0;c<r.length;c++){let s=new m;s.defintion=r[c];let d=document.createElement("div");d.innerHTML=l.html,s.html=d.outerHTML,s.className=l.getClassName(),s.props=Array.from(r[c].attributes).reduce((p,u)=>(p[u.name]=u.value,p),{}),s.setInstance(),s.replaceChildId(),s.replaceProps(),s.replaceSelf(),r[c].outerHTML=s.html,n.push(s),c--}}for(let i=n.length-1;i>=0;i--){let l=n[i];if(l.className!=null){let r=`let ${l.instanceName} = new ${l.className}();`;r+=`${l.instanceName}.self = '${l.instanceName}';`,r+=`${l.instanceName}.props = ${JSON.stringify(l.props)};`,r+=`${l.instanceName}.onComponentLoad();`;let c=document.createElement("script");c.textContent=r,document.body.appendChild(c)}}};function A(){let e=document.querySelector("[include-html]");if(e===null)return null;let t=e.getAttribute("include-html");t&&fetch(t).then(n=>{if(!n.ok)throw new Error("Network response was not ok");return n.text()}).then(n=>{e.outerHTML=n,replaceComponents(),A()}).catch(n=>{e.innerHTML="Content not found."})}window.rapidRefresh=()=>{replaceComponents()};async function E(){A(),replaceComponents(),N(),M()}window.getInstanceById=e=>{let t=document.getElementById(e);return getInstance(t)};window.getInstance=element=>{if(console.log(element),element.getAttribute("instance")){let instanceName=element.getAttribute("instance");if(instanceName===null&&(instanceName=element.firstElementChild.getAttribute("instance"),instanceName===null))return null;let instance=eval(`${instanceName}`);return instance}else return getInstance(element.parentElement)};window.onload=E()});I();})();
-//# sourceMappingURL=RapidElements.js.map
+  `;
+    document.head.appendChild(style);
+  }
+  function parseMd(markdown) {
+    markdown = markdown.replace(/^\s*######\s+(.*)$/gim, "<h6>$1</h6>");
+    markdown = markdown.replace(/^\s*#####\s+(.*)$/gim, "<h5>$1</h5>");
+    markdown = markdown.replace(/^\s*####\s+(.*)$/gim, "<h4>$1</h4>");
+    markdown = markdown.replace(/^\s*###\s+(.*)$/gim, "<h3>$1</h3>");
+    markdown = markdown.replace(/^\s*##\s+(.*)$/gim, "<h2>$1</h2>");
+    markdown = markdown.replace(/^\s*#\s+(.*)$/gim, "<h1>$1</h1>");
+    markdown = markdown.replace(/\*\*(.*?)\*\*/gim, "<b>$1</b>");
+    markdown = markdown.replace(/__(.*?)__/gim, "<b>$1</b>");
+    markdown = markdown.replace(/\*(.*?)\*/gim, "<i>$1</i>");
+    markdown = markdown.replace(/_(.*?)_/gim, "<i>$1</i>");
+    markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
+    markdown = markdown.replace(/^\s*\* (.*)/gim, "<ul>\n<li>$1</li>\n</ul>");
+    markdown = markdown.replace(/^\s*\n\*\s+(.*)/gim, "<ul>\n<li>$1</li>\n</ul>");
+    markdown = markdown.replace(
+      /^\s*\d+\.\s+(.*)/gim,
+      "<ol>\n<li>$1</li>\n</ol>"
+    );
+    markdown = markdown.replace(
+      /^\s*\n\d+\.\s+(.*)/gim,
+      "<ol>\n<li>$1</li>\n</ol>"
+    );
+    markdown = markdown.replace(
+      /^\s*\>\s+(.*)/gim,
+      "<blockquote>$1</blockquote>"
+    );
+    markdown = markdown.replace(/\n$/gim, "<br />");
+    return markdown.trim();
+  }
+  function replaceMd() {
+    console.log("replace md");
+    console.log(document.body.innerHTML);
+    let markdowns = document.querySelectorAll("[markdown]");
+    console.log(markdowns);
+    for (let i = 0; i < markdowns.length; i++) {
+      let elmnt = markdowns[i];
+      let to_convert = elmnt.innerHTML;
+      elmnt.classList.add("no-tailwind");
+      console.log(to_convert);
+      let converted = parseMd(to_convert);
+      elmnt.innerHTML = converted;
+    }
+  }
+  var init_md = __esm({
+    "src/md.js"() {
+      document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.querySelectorAll("[include-md]");
+        elements.forEach(function(elmnt) {
+          const include_md = elmnt.getAttribute("include-md");
+          if (include_md) {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4) {
+                if (this.status == 200) {
+                  elmnt.innerHTML = parseMd(this.responseText);
+                  elmnt.classList.add("no-tailwind");
+                }
+                if (this.status == 404) {
+                  elmnt.innerHTML = "Page not found.";
+                }
+              }
+            };
+            xhttp.open("GET", include_md, true);
+            xhttp.send();
+          }
+        });
+      });
+    }
+  });
+
+  // src/main2.js
+  var require_main2 = __commonJS({
+    "src/main2.js"(exports, module) {
+      init_utils();
+      init_Component();
+      init_md();
+      window.Component = Component;
+      var start_prop = "{";
+      var end_prop = "}";
+      var Template = class {
+        constructor() {
+          this.className = "";
+          this.name = "";
+          this.script = null;
+          this.html = null;
+        }
+        /** Adds script to body */
+        createScript() {
+          if (document.querySelector(`[rapid-script="${this.getClassName()}"]`) == null) {
+            let script = document.createElement("script");
+            script.setAttribute("rapid-script", this.getClassName());
+            script.textContent = this.script.innerHTML;
+            document.body.appendChild(script);
+          }
+        }
+        /** returns the classname from the script */
+        getClassName(scriptContent) {
+          if (this.script == null) return null;
+          const classNameMatch = this.script.innerHTML.match(/class\s+([^\s{]+)/);
+          if (classNameMatch && classNameMatch.length > 1) {
+            return classNameMatch[1];
+          } else {
+            return null;
+          }
+        }
+      };
+      var Comp = class {
+        constructor() {
+          this.instanceName;
+          this.defintion;
+          this.props;
+          this.html;
+        }
+        replaceProps() {
+          this.html = this.html.replaceAll(
+            `${start_prop}children${end_prop}`,
+            this.defintion.innerHTML
+          );
+          for (let prop of Object.entries(this.props)) {
+            let key = prop[0];
+            let value = prop[1];
+            if (key === "child-id") {
+              var tempContainer = document.createElement("div");
+              tempContainer.innerHTML = this.html;
+              var element2 = tempContainer.firstElementChild;
+              tempContainer.setAttribute("child-id", value);
+              this.html = tempContainer.outerHTML;
+            } else {
+              this.html = this.html.replaceAll(
+                `${start_prop}${key}${end_prop}`,
+                value
+              );
+            }
+          }
+        }
+        /** rreplace all selfs with instance name */
+        replaceSelf() {
+          this.html = this.html.replaceAll("self", this.instanceName);
+        }
+        /** adds instance id to child-id id */
+        replaceChildId() {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(this.html, "text/html");
+          var childElement = doc.querySelectorAll(`[child-id]`);
+          for (let i = 0; i < childElement.length; i++) {
+            const was = childElement[i].getAttribute("child-id");
+            if (!was.includes("RAPID")) {
+              childElement[i].setAttribute("child-id", "RAPIDself" + was);
+            }
+          }
+          this.html = doc.body.innerHTML;
+        }
+        /** Adds instance attriubte to the compnent first child */
+        setInstance() {
+          this.instanceName = generateRandomString(10);
+          if (this.html != null) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(this.html, "text/html");
+            doc.body.firstElementChild.setAttribute("instance", this.instanceName);
+            this.html = doc.body.innerHTML;
+          }
+        }
+      };
+      window.replaceComponents = () => {
+        let htmltemplates = document.getElementsByTagName("template");
+        let templates = new Object();
+        for (let i = htmltemplates.length - 1; i >= 0; i--) {
+          let template = new Template();
+          template.name = htmltemplates[i].getAttribute("rapid-name");
+          template.script = htmltemplates[i].content.querySelector("script");
+          if (template.script !== null) {
+            template.html = htmltemplates[i].innerHTML.replace(
+              template.script.outerHTML,
+              ""
+            );
+            template.createScript();
+          } else {
+            template.html = htmltemplates[i].innerHTML;
+          }
+          templates[template.name] = template;
+        }
+        console.log(templates);
+        let components = [];
+        for (let [name, template] of Object.entries(templates)) {
+          let htmlcomponents = document.getElementsByTagName(name);
+          console.log(htmlcomponents);
+          for (let i = 0; i < htmlcomponents.length; i++) {
+            let component = new Comp();
+            component.defintion = htmlcomponents[i];
+            let d = document.createElement("div");
+            d.innerHTML = template.html;
+            component.html = d.outerHTML;
+            component.className = template.getClassName();
+            component.props = Array.from(htmlcomponents[i].attributes).reduce(
+              (acc, attr) => {
+                acc[attr.name] = attr.value;
+                return acc;
+              },
+              {}
+            );
+            component.setInstance();
+            component.replaceChildId();
+            component.replaceProps();
+            component.replaceSelf();
+            htmlcomponents[i].outerHTML = component.html;
+            components.push(component);
+            i--;
+          }
+        }
+        for (let i = components.length - 1; i >= 0; i--) {
+          let component = components[i];
+          if (component.className != null) {
+            let js = `let ${component.instanceName} = new ${component.className}();`;
+            js += `${component.instanceName}.self = '${component.instanceName}';`;
+            js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
+            js += `${component.instanceName}.onComponentLoad();`;
+            let script = document.createElement("script");
+            script.textContent = js;
+            document.body.appendChild(script);
+          }
+        }
+      };
+      function includeHTML() {
+        const element2 = document.querySelector("[include-html]");
+        if (element2 === null) return null;
+        const file = element2.getAttribute("include-html");
+        if (file) {
+          fetch(file).then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          }).then((html) => {
+            element2.outerHTML = html;
+            replaceComponents();
+            includeHTML();
+          }).catch((error) => {
+            element2.innerHTML = "Content not found.";
+          });
+        }
+      }
+      window.rapidRefresh = () => {
+        replaceComponents();
+      };
+      async function main() {
+        includeHTML();
+        replaceComponents();
+        replaceMd();
+        createNoTailwindClass();
+      }
+      window.getInstanceById = (id) => {
+        let el = document.getElementById(id);
+        return getInstance(el);
+      };
+      window.getInstance = (element) => {
+        console.log(element);
+        if (element.getAttribute("instance")) {
+          let instanceName = element.getAttribute("instance");
+          if (instanceName === null) {
+            instanceName = element.firstElementChild.getAttribute("instance");
+            if (instanceName === null) return null;
+          }
+          let instance = eval(`${instanceName}`);
+          return instance;
+        } else {
+          return getInstance(element.parentElement);
+        }
+      };
+      window.onload = main();
+    }
+  });
+  require_main2();
+})();
