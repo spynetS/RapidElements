@@ -256,27 +256,20 @@ window.getInstance = (element) => {
   }
 };
 window.replaceJs = () => {
-  console.log("REPLACE JS");
   // Regular expression to match {%...%} pattern
   const pattern = /\{\s*.*?\s*\}/g;
 
   let html = document.documentElement.innerHTML;
 
   const matches = html.match(pattern);
-  console.log(matches);
   for (let i = 0; i < matches.length; i++) {
-    console.log(matches[i]);
     let js = matches[i].replaceAll(start_js, "");
     js = js.replaceAll(end_js, "");
     js = js.replaceAll("&gt;", ">");
     js = js.replaceAll("&lt;", "<");
-    console.log(js);
     try {
       let js_value = eval(js);
-      console.log(js_value);
       html = html.replaceAll(matches[i], js_value);
-      console.log("replaced");
-      console.log(html);
     } catch (exceprtion) {}
   }
   document.documentElement.innerHTML = html;
