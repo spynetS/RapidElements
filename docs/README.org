@@ -304,7 +304,7 @@ Lets say you have a component with a prop and you want to add hello before it
 
         <!-- if it is only the prop inside the curly braces it will be replaced by the value -->
         <!-- otherwise it will run as js -->
-        <h1>Your age ({age}) + 10 is {parseInt(self.props.age) + 10}</h1>
+        <h1>Your age ({age}) + 10 is {%parseInt(self.props.age) + 10%}</h1>
 </template>
 
 <component age="10" ></component>

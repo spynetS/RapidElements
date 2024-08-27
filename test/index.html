@@ -12,32 +12,18 @@
 		<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
     </head>
     <body>
+		<template rapid-name="component" >
+				<!-- You have to add a class to access self.props -->
+				<script type="text/javascript">
+						class component extends Component{}
+				</script>
 
-		<script type="text/javascript">
-		 function myName(){
-			 return "Alfred"
-		 }
-		</script>
-
-		<template rapid-name="but" >
-			<script type="text/javascript">
-			 class but extends Component{
-				get_age() {
-					return this.props.age;
-				}
-			 }
-			</script>
-			<button onclick="{onclick}" class="{ (self.props.age == 10) ? 'bg-red-200' : 'bg-blue-200'} rounded-lg p-4 hover:bg-gray-300" >
-				{self.props.age+10}
-			</button>
+				<!-- if it is only the prop inside the curly braces it will be replaced by the value -->
+				<!-- otherwise it will run as js -->
+				<h1>Your age ({age}) + 10 is {%parseInt(self.props.age) + 10%}</h1>
 		</template>
 
-		<but age="10" >
-			Knapp1
-		</but>
-		<but age="1" >
-			Knapp1
-		</but>
-
+		<component age="10" ></component>
+		<component age="100" ></component>
     </body>
 </html>
