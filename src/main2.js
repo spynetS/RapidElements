@@ -52,6 +52,11 @@ class Comp {
   }
   replaceProps() {
     //replace the the {children} with the components innerhtml
+    try {
+      this.props.children = this.defintion.innerHTML;
+    } catch (exception) {
+      console.log(exception);
+    }
     this.html = this.html.replaceAll(
       `${start_prop}children${end_prop}`,
       this.defintion.innerHTML,
@@ -262,19 +267,21 @@ window.replaceJs = () => {
   let html = document.documentElement.innerHTML;
 
   const matches = html.match(pattern);
-  for (let i = 0; i < matches.length; i++) {
-    let js = matches[i].replaceAll(start_js, "");
-    js = js.replaceAll(end_js, "");
-    js = js.replaceAll("&gt;", ">");
-    js = js.replaceAll("&lt;", "<");
-    try {
-      let js_value = eval(js);
-      html = html.replaceAll(matches[i], js_value);
-    } catch (exceprtion) {
-      html = html.replaceAll(matches[i], "undefined");
+  if (matches != null) {
+    for (let i = 0; i < matches.length; i++) {
+      let js = matches[i].replaceAll(start_js, "");
+      js = js.replaceAll(end_js, "");
+      js = js.replaceAll("&gt;", ">");
+      js = js.replaceAll("&lt;", "<");
+      try {
+        let js_value = eval(js);
+        html = html.replaceAll(matches[i], js_value);
+      } catch (exceprtion) {
+        html = html.replaceAll(matches[i], "undefined");
+      }
     }
+    document.documentElement.innerHTML = html;
   }
-  document.documentElement.innerHTML = html;
 };
 
 window.onload = main();
