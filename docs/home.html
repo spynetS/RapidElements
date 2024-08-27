@@ -1,0 +1,131 @@
+    <style>
+        .keyword {
+            color: #ff79c6; /* pinkish */
+        }
+        .tag {
+            color: #8be9fd; /* light blue */
+        }
+        .attribute {
+            color: #50fa7b; /* green */
+        }
+        .value {
+            color: #f1fa8c; /* yellow */
+        }
+        .comment {
+            color: #6272a4; /* grayish blue */
+        }
+    </style>
+
+	<div include-html="./components/codeblock.html" >
+	</div>
+
+	<template rapid-name="sec">
+		<section id="{id}" class="snap-center flex flex-col items-center gap-4 bg-base-{base} min-h-screen pt-12" >
+			{children}
+		</section>
+	</template>
+
+<template rapid-name="checklist" >
+	<script type="text/javascript">
+	 class checklist extends Component{
+		 onComponentLoad(){
+
+		 }
+		 getList(){
+			 let items = "";
+			 this.props.items = eval(this.props.items)
+			 for(let i = 0; i < this.props.items.length; i ++){
+				 items+=`
+					<li class="flex items-center space-x-3 rtl:space-x-reverse">
+						<svg class="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+						</svg>
+						<span>${this.props.items[i]}</span>
+					</li>
+				`
+			 }
+			 return items;
+		 }
+	 }
+	</script>
+	<ul class="space-y-4 text-left text-gray-500 dark:text-gray-400">
+		{% self.getList() %}
+	</ul>
+</template>
+
+<template rapid-name='homepage' >
+	<div style="height: calc(100vh - 68px);" class="fixed top-[68px] right-0 w-full snap-y snap-proximity overflow-scroll">
+		<div class="snap-center hero bg-base-200 h-[600px]">
+			<div class="hero-content text-center">
+				<div class="flex flex-col items-center max-w-md">
+					<img src="./rapidelements.png" alt="" />
+					<h1 class="text-5xl font-bold">RapidElements</h1>
+					<p class="text-lg py-6">
+					RapidElements is a very small library that enables you to easily create components with plain html.
+					</p>
+					<div class="flex flex-row gap-3 justify-center" >
+						<a href='tutorial.html' class="btn btn-primary">Get Started </a>
+						<a href='https://github.com/spynets/RapidElements' class="btn btn-primary">Check it out <br /> on github</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<sec id="#light" base="300" >
+			<h1 class=" text-center text-5xl font-bold">Light as a feather <br />but packed with functionality</h1>
+			<div>
+				<p >RapidElements is a very light javascript library which uses a completly different method then other js frameworks.</p>
+				<p >Instead of using a virtual dom and using state management rapid just replaces component definitions with calls</p>
+			</div>
+			<div class="flex flex-row justify-center gap-12 container mx-auto p-2" >
+				<codeblock>
+	&lt;script defer src="./RapidElements.js" type="text/javascript"&gt;&lt;/script&gt;
+
+	<template rapid-name="component" >
+		<script type="text/javascript">
+		class comp extends Component{
+			say_hi(){
+				alert("hi")
+			}
+			onComponentLoad(){
+				this.age = 10;
+			}
+		}
+		</script>
+		<h1>This is a component!</h1>
+		<div>
+			<p>You can have much in it</p>
+			<div markdown=true>
+				# Me
+				## Age {% self.age %}
+			</div>
+			<button onclick={onclick}>
+				{buttonvalue}
+			</button>
+		</div>
+	</template>
+
+	&lt;component onclick="alert('My compontent!')" buttonvalue="Click me" &gt; &lt;/component&gt;
+				</codeblock>
+
+				<div class="flex flex-col gap-4">
+					<div class="stats shadow">
+						<div class="stat">
+							<div class="stat-title">RapidElement size</div>
+							<div class="stat-value">6.8Kb</div>
+							<div class="stat-desc">5% of react</div>
+						</div>
+					</div>
+					<checklist items='["Component sytem", "Props","Compontent scripting", "Inline javascipt in html", "Markdown parser","Single page application", "No node needed"]' ></checklist>
+				</div>
+			</div>
+		</sec>
+		<sec id="" base="200 text-center" >
+			<h1 class=" text-center text-5xl font-bold">Help to contribute</h1>
+			<div>
+				<p >RapidElements is a very small project and would really appricate contribution in every form</p>
+				<p >It could be adding <a href="https://github.com/spynetS/RapidElements/issues" class="link link-primary">issues</a> or contribute code it is very appricated</p>
+			</div>
+		</sec>
+	</div>
+</template>

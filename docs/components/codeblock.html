@@ -1,0 +1,33 @@
+<template rapid-name="codeblock" >
+	<script type="text/javascript">
+	 	class codeblock extends Component{
+			escapeHTML(html) {
+				return html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+			}
+			highlightHTML(html) {
+				// Escape HTML characters
+				html = this.escapeHTML(html);
+
+				// Highlight comments
+				html = html.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="comment">$1</span>');
+
+				// Highlight tags and content separately
+				html = html.replace(/(&lt;\/?[\w-]+)(.*?)(\/?&gt;)/g,
+					'<span class="tag">$1</span><span class="attribute">$2</span><span class="tag">$3</span>');
+
+				// Highlight attribute values
+				html = html.replace(/(\s+[\w-]+)=(&quot;.*?&quot;)/g,
+					'<span class="attribute">$1</span>=<span class="value">$2</span>');
+
+				return html;
+			}
+			onComponentLoad(){
+				this.getChild("code").innerHTML = this.highlightHTML(this.props.children)
+			}
+		}
+	</script>
+		<div class="mockup-code">
+			<pre ><code child-id="code" ></code></pre>
+		</div>
+</template>

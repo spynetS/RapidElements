@@ -2,10 +2,10 @@
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: #e0e0e0; /* Light text color for dark theme */
     margin: 0;
     padding: 0;
-    background: #f9f9f9;
+    background: #121212; /* Dark background */
 }
 
 /* Header styling */
@@ -18,18 +18,18 @@ h6 {
     font-weight: bold;
     margin-top: 1.5em;
     margin-bottom: 0.5em;
-    color: #2c3e50;
+    color: #e0e0e0; /* Light text color for headers */
 }
 
 h1 {
     font-size: 2.5em;
-    border-bottom: 2px solid #eaeaea;
+    border-bottom: 2px solid #333; /* Darker border for dark theme */
     padding-bottom: 0.3em;
 }
 
 h2 {
     font-size: 2em;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #333; /* Darker border for dark theme */
     padding-bottom: 0.2em;
 }
 
@@ -47,7 +47,7 @@ h5 {
 
 h6 {
     font-size: 1em;
-    color: #7f8c8d;
+    color: #b0b0b0; /* Slightly lighter text for h6 */
 }
 
 /* Paragraphs */
@@ -57,7 +57,7 @@ p {
 
 /* Links */
 a {
-    color: #3498db;
+    color: #1e90ff; /* Bright link color */
     text-decoration: none;
 }
 
@@ -69,7 +69,8 @@ a:hover {
 pre,
 code {
     font-family: "Courier New", Courier, monospace;
-    background: #f4f4f4;
+    background: #1e1e1e; /* Dark background for code blocks */
+    color: #dcdcdc; /* Light text color for code blocks */
     padding: 0.5em;
     border-radius: 4px;
 }
@@ -78,17 +79,16 @@ pre {
     overflow: auto;
     padding: 1em;
     margin: 1.5em 0;
-    background: #2d2d2d;
-    color: #f8f8f2;
-    border: 1px solid #eaeaea;
+    background: #1e1e1e; /* Consistent dark background */
+    border: 1px solid #333; /* Darker border for dark theme */
     border-radius: 8px;
 }
 
 /* Enhanced src block styling */
 pre.src {
     position: relative;
-    background: #282c34;
-    color: #abb2bf;
+    background: #1e1e1e;
+    color: #dcdcdc;
     padding: 1em;
     border-radius: 8px;
     border: 1px solid #333;
@@ -102,8 +102,8 @@ pre.src:before {
     top: -1.2em;
     left: 1em;
     font-size: 0.75em;
-    color: #61dafb;
-    background: #282c34;
+    color: #61afef; /* Light blue for "Source Code" label */
+    background: #1e1e1e;
     padding: 0 0.5em;
 }
 
@@ -116,10 +116,10 @@ pre code {
 
 /* Inline code */
 code {
-    background: #f9f9f9;
+    background: #2c2c2c; /* Slightly lighter dark background */
     padding: 0.2em 0.4em;
     border-radius: 4px;
-    border: 1px solid #eaeaea;
+    border: 1px solid #333; /* Dark border for inline code */
 }
 
 /* Lists */
@@ -143,33 +143,34 @@ table {
 table,
 th,
 td {
-    border: 1px solid #eaeaea;
+    border: 1px solid #333; /* Darker border for tables */
 }
 
 th,
 td {
     padding: 0.75em;
     text-align: left;
+    color: #e0e0e0; /* Light text color for table cells */
 }
 
 th {
-    background: #f2f2f2;
+    background: #2c2c2c; /* Darker background for table headers */
 }
 
 /* Blockquotes */
 blockquote {
     margin: 1.5em 0;
     padding: 0.5em 1em;
-    border-left: 5px solid #eaeaea;
-    background: #f9f9f9;
-    color: #7f8c8d;
+    border-left: 5px solid #333; /* Darker border for blockquotes */
+    background: #1e1e1e; /* Consistent dark background */
+    color: #b0b0b0; /* Lighter text color for blockquotes */
 }
 
 /* Horizontal rules */
 hr {
     border: 0;
     height: 1px;
-    background: #eaeaea;
+    background: #333; /* Darker background for horizontal rules */
     margin: 2em 0;
 }
 
@@ -182,60 +183,61 @@ img {
 /* Org-mode specific classes */
 .org-title {
     font-weight: bold;
+    color: #e0e0e0; /* Light text color for org titles */
 }
 
 .org-meta {
-    color: #7f8c8d;
+    color: #b0b0b0; /* Lighter text color for org meta */
     font-size: 0.9em;
     margin-bottom: 1.5em;
 }
 
 .org-todo {
-    color: #d9534f;
+    color: #ff6f6f; /* Red for todo items */
     font-weight: bold;
 }
 
 .org-done {
-    color: #5cb85c;
+    color: #98c379; /* Green for done items */
     font-weight: bold;
 }
 
 .card {
-    background: #f8f9fa;
+    background: #1e1e1e; /* Dark background for cards */
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Darker shadow */
     padding: 20px;
     margin: 20px;
     max-width: 400px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #333; /* Darker border for cards */
     font-family: Arial, sans-serif;
 }
 
 .card-title {
     font-size: 1.5em;
-    color: #333;
+    color: #e0e0e0; /* Light text color for card titles */
     margin-bottom: 10px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #333; /* Darker border for card titles */
     padding-bottom: 10px;
 }
 
 .card-content {
     font-size: 1em;
-    color: #666;
+    color: #b0b0b0; /* Light text color for card content */
     line-height: 1.5;
 }
+
 .button-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
-    background-color: #f9f9f9;
+    background-color: #121212; /* Dark background for button container */
     font-family: Arial, sans-serif;
 }
 
 .button {
-    background-color: #3498db;
+    background-color: #007acc; /* Bright blue for button */
     border: none;
     color: white;
     padding: 15px 30px;
@@ -250,11 +252,12 @@ img {
 }
 
 .button:hover {
-    background-color: #2980b9;
+    background-color: #005f99; /* Darker blue on hover */
     transition-duration: 1s;
     transform: scale(0.98);
     transition: transform 0.3s ease-in-out;
 }
+
 .modal {
     display: none;
     position: fixed;
@@ -264,23 +267,23 @@ img {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #1e1e1e; /* Dark background for modal content */
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: 1px solid #333; /* Darker border for modal content */
     width: 80%;
     max-width: 500px;
     border-radius: 8px;
 }
 
 .close {
-    color: #aaa;
+    color: #888; /* Lighter color for close button */
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -288,7 +291,7 @@ img {
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: #fff; /* White on hover */
     text-decoration: none;
     cursor: pointer;
 }
