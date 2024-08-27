@@ -8,8 +8,8 @@ import * as md from "./md.js";
 const start_prop = "{";
 const end_prop = "}";
 
-const start_js = "{%";
-const end_js = "%}";
+const start_js = "{";
+const end_js = "}";
 
 class Template {
   constructor() {
@@ -258,7 +258,7 @@ window.getInstance = (element) => {
 window.replaceJs = () => {
   console.log("REPLACE JS");
   // Regular expression to match {%...%} pattern
-  const pattern = /\{%\s*.*?\s*%\}/g;
+  const pattern = /\{\s*.*?\s*\}/g;
 
   let html = document.documentElement.innerHTML;
 

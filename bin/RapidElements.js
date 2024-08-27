@@ -155,8 +155,8 @@
       window.Component = Component;
       var start_prop = "{";
       var end_prop = "}";
-      var start_js = "{%";
-      var end_js = "%}";
+      var start_js = "{";
+      var end_js = "}";
       var Template = class {
         constructor() {
           this.className = "";
@@ -349,7 +349,7 @@
       };
       window.replaceJs = () => {
         console.log("REPLACE JS");
-        const pattern = /\{%\s*.*?\s*%\}/g;
+        const pattern = /\{\s*.*?\s*\}/g;
         let html = document.documentElement.innerHTML;
         const matches = html.match(pattern);
         console.log(matches);

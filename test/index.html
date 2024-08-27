@@ -22,18 +22,20 @@
 		<template rapid-name="but" >
 			<script type="text/javascript">
 			 class but extends Component{
-
+				get_age() {
+					return this.props.age;
+				}
 			 }
 			</script>
-			<button onclick="{onclick}" class="bg-gray-200 rounded-lg p-4 hover:bg-gray-300" >
-				{children}
-				<!-- {% (self.props.age > 10 ) ? "GAMMAL" | "UNG" %} -->
-				{% self.props.age >= 10 ? 1 : 2 %}
-				{% self.props.age <= 10 ? 10 : 20 %}
+			<button onclick="{onclick}" class="{ (self.props.age == 10) ? 'bg-red-200' : 'bg-blue-200'} rounded-lg p-4 hover:bg-gray-300" >
+				{self.props.age+10}
 			</button>
 		</template>
 
 		<but age="10" >
+			Knapp1
+		</but>
+		<but age="1" >
 			Knapp1
 		</but>
 
