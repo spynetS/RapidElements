@@ -181,7 +181,7 @@ window.replaceComponents = () => {
         // parse attributes to a object
         component.props = Array.from(htmlcomponents[i].attributes).reduce(
           (acc, attr) => {
-            acc[attr.name] = attr.value;
+            acc[attr.name] = eval(attr.value);
             return acc;
           },
           {},
