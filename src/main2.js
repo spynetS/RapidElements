@@ -114,6 +114,18 @@ class Comp {
     }
   }
 }
+window.isInsideCompontent = (element, attributeName, value) => {
+  let currentElement = element;
+
+  while (currentElement) {
+    if (currentElement.getAttribute(attributeName) === value) {
+      return true;
+    }
+    currentElement = currentElement.parentElement; // Move up to the parent element
+  }
+
+  return false; // No parent has the attribute
+};
 
 window.replaceComponents = () => {
   // find all templates
@@ -127,7 +139,7 @@ window.replaceComponents = () => {
     template.name = htmltemplates[i].getAttribute("rapid-name");
     template.script = htmltemplates[i].content.querySelector("script");
 
-    // if the template does not have a script we dont want to remove it
+    // if the template does not have a script we dont want to remove it from the html
     // or create a script
     if (template.script !== null) {
       template.html = htmltemplates[i].innerHTML.replace(
@@ -138,7 +150,7 @@ window.replaceComponents = () => {
     } else {
       template.html = htmltemplates[i].innerHTML;
     }
-    //set the new template
+    //set the new template in dictonary
     templates[template.name] = template;
   }
   console.log(templates);
@@ -149,34 +161,44 @@ window.replaceComponents = () => {
   for (let [name, template] of Object.entries(templates)) {
     // find all components that uses template name
     let htmlcomponents = document.getElementsByTagName(name);
-    console.log(htmlcomponents);
+    console.log("comp", htmlcomponents);
     // for each component that uses this template
     for (let i = 0; i < htmlcomponents.length; i++) {
-      let component = new Comp();
-      component.defintion = htmlcomponents[i];
-      let d = document.createElement("div");
-      d.innerHTML = template.html;
-      component.html = d.outerHTML;
-      component.className = template.getClassName();
-      // parse attributes to a object
-      component.props = Array.from(htmlcomponents[i].attributes).reduce(
-        (acc, attr) => {
-          acc[attr.name] = attr.value;
-          return acc;
-        },
-        {},
-      );
-      component.setInstance();
-      component.replaceChildId();
+      // If the compontent found has a parent with the attribute
+      // rapid-compontent and its value is the compontent we try to compile
+      // we will ignore it because it is part of the the compontent which is compiled
+      if (!isInsideCompontent(htmlcomponents[i], "rapid-component", name)) {
+        let component = new Comp();
+        component.defintion = htmlcomponents[i];
 
-      component.replaceProps();
-      component.replaceSelf();
-      // component.replaceJs();
+        let d = document.createElement("div");
+        d.innerHTML = template.html;
+        // set the name of the compiled compontent (used in the if-statement above)
+        d.setAttribute("rapid-component", name);
+        component.html = d.outerHTML;
+        component.className = template.getClassName();
 
-      //update dom with the new html
-      htmlcomponents[i].outerHTML = component.html;
-      components.push(component);
-      i--;
+        // parse attributes to a object
+        component.props = Array.from(htmlcomponents[i].attributes).reduce(
+          (acc, attr) => {
+            acc[attr.name] = attr.value;
+            return acc;
+          },
+          {},
+        );
+        component.setInstance();
+        component.replaceChildId();
+
+        component.replaceProps();
+        component.replaceSelf();
+        // component.replaceJs();
+
+        //update dom with the new html
+        htmlcomponents[i].outerHTML = component.html;
+        components.push(component);
+        // we goback to look for more components to compile
+        i--;
+      }
     }
   }
 
