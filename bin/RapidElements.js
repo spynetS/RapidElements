@@ -60,6 +60,7 @@
         }
         copyAttributes(target, source) {
           Array.from(source.attributes).forEach((attr) => {
+            console.log(attr.name, attr.value);
             target.setAttribute(attr.name, attr.value);
           });
         }
@@ -74,13 +75,22 @@
           comp.replaceSelf();
           comp.html = replaceJs(comp.html);
           let div = document.querySelectorAll(`[instance="${this.self}"]`)[0];
-          console.log(comp.html);
           var doc = new DOMParser().parseFromString(comp.html, "text/html");
-          console.log("elements");
-          for (let i2 = 0; i2 < doc.body.children.length; i2++) {
-            div.children[i2].innerHTML = doc.body.children[i2].innerHTML;
-            this.copyAttributes(div.children[i2], doc.body.children[i2]);
+          let s = this;
+          function rerender_comp(old, newhtml) {
+            for (let i2 = 0; i2 < old.length; i2++) {
+              s.copyAttributes(old[i2], newhtml[i2]);
+              console.log("inner", newhtml[i2].innerHTML);
+              if (!newhtml[i2].innerHTML.includes("input")) {
+                old[i2].innerHTML = newhtml[i2].innerHTML;
+              }
+              if (old[i2].children.length > 0) {
+                rerender_comp(old[i2].children, newhtml[i2].children);
+              }
+            }
           }
+          rerender_comp(div.children, doc.body.children);
+          rapidRefresh();
         }
       };
     }

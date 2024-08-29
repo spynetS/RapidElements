@@ -37,11 +37,13 @@ export default class Component {
   }
   copyAttributes(target, source) {
     Array.from(source.attributes).forEach((attr) => {
+      console.log(attr.name, attr.value);
       target.setAttribute(attr.name, attr.value);
     });
   }
 
   rerender() {
+    // create a component to update the template
     let comp = new Comp();
     comp.html = this.template;
     comp.className = this.className;
@@ -52,14 +54,32 @@ export default class Component {
     comp.replaceSelf();
 
     comp.html = replaceJs(comp.html);
+    // get the compontent holder
     let div = document.querySelectorAll(`[instance="${this.self}"]`)[0];
-    console.log(comp.html);
+    // parse elements from the parsed html
     var doc = new DOMParser().parseFromString(comp.html, "text/html");
-    console.log("elements");
 
-    for (let i = 0; i < doc.body.children.length; i++) {
-      div.children[i].innerHTML = doc.body.children[i].innerHTML;
-      this.copyAttributes(div.children[i], doc.body.children[i]);
+    let s = this; // use this as this in function under
+    // function for recursivly updateing the elements inside
+    function rerender_comp(old, newhtml) {
+      for (let i = 0; i < old.length; i++) {
+        // update attributes
+        s.copyAttributes(old[i], newhtml[i]);
+
+        // We dont replace innerhtml if it is a input because then the focus will disspear
+        // TODO: better check if the input contains elements
+        console.log("inner", newhtml[i].innerHTML);
+        if (!newhtml[i].innerHTML.includes("input")) {
+          old[i].innerHTML = newhtml[i].innerHTML;
+        }
+
+        // if there is more children run this again
+        if (old[i].children.length > 0) {
+          rerender_comp(old[i].children, newhtml[i].children);
+        }
+      }
     }
+    rerender_comp(div.children, doc.body.children);
+    rapidRefresh();
   }
 }
