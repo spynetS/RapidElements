@@ -128,6 +128,7 @@ window.isInsideCompontent = (element, attributeName, value) => {
 };
 
 window.replaceComponents = () => {
+  var t0 = performance.now();
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
   // dict that holds the templates and thier name
@@ -153,7 +154,6 @@ window.replaceComponents = () => {
     //set the new template in dictonary
     templates[template.name] = template;
   }
-  console.log(templates);
 
   // list that holds all components
   let components = [];
@@ -161,7 +161,6 @@ window.replaceComponents = () => {
   for (let [name, template] of Object.entries(templates)) {
     // find all components that uses template name
     let htmlcomponents = document.getElementsByTagName(name);
-    console.log("comp", htmlcomponents);
     // for each component that uses this template
     for (let i = 0; i < htmlcomponents.length; i++) {
       // If the compontent found has a parent with the attribute
@@ -218,58 +217,60 @@ window.replaceComponents = () => {
     }
   }
   replaceJs();
+  var t1 = performance.now();
+  console.log("replace took " + (t1 - t0) + " milliseconds.");
 };
 
 // simple chatgpt say
-function includeHTML() {
+async function includeHTML() {
   const element = document.querySelector("[include-html]");
-  if (element === null) return null;
+  if (!element) return;
+
   const file = element.getAttribute("include-html");
   if (file) {
-    fetch(file)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.text();
-      })
-      .then((html) => {
-        element.outerHTML = html;
-        replaceComponents();
-        includeHTML();
-      })
-      .catch((error) => {
-        element.innerHTML = "Content not found.";
-      });
+    try {
+      const response = await fetch(file);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const html = await response.text();
+      element.outerHTML = html;
+
+      // replaceComponents(); // if we use this line the compontents will load in one at a time
+      // Recursively call includeHTML to handle any new elements with include-html attribute
+      await includeHTML();
+    } catch (error) {
+      element.innerHTML = "Content not found.";
+    }
   }
 }
+
+async function main() {
+  // Attempt to include HTML
+  await includeHTML();
+
+  // Replace all components
+  replaceComponents();
+
+  // Handle Markdown replacement
+  md.replaceMd();
+
+  // Create Tailwind override class for Markdown elements
+  md.createNoTailwindClass();
+}
+
 /**
  * this function recompiles new components added to the dom
  * */
 window.rapidRefresh = () => {
   replaceComponents();
 };
-
-async function main() {
-  // try to include html
-  includeHTML();
-  // document = doc;
-
-  //replace all componments
-  replaceComponents();
-
-  md.replaceMd();
-  // creates a tailwind override class, to be applied to markdown defined elements.
-  md.createNoTailwindClass();
-}
-
 window.getInstanceById = (id) => {
   let el = document.getElementById(id);
   return getInstance(el);
 };
 
 window.getInstance = (element) => {
-  console.log(element);
   if (element.getAttribute("instance")) {
     let instanceName = element.getAttribute("instance");
     if (instanceName === null) {
