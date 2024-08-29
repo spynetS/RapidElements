@@ -5,6 +5,7 @@ export default class Component {
   constructor() {
     this.self = "asd";
     this.props = {};
+    this.className = "Component";
   }
 
   /**
@@ -34,21 +35,31 @@ export default class Component {
 
     return getInstance(child);
   }
+  copyAttributes(target, source) {
+    Array.from(source.attributes).forEach((attr) => {
+      target.setAttribute(attr.name, attr.value);
+    });
+  }
+
   rerender() {
     let comp = new Comp();
     comp.html = this.template;
-    console.log(comp.html);
-    comp.className = "counter";
+    comp.className = this.className;
     comp.props = this.props;
     comp.instanceName = this.self;
     comp.replaceChildId();
     comp.replaceProps();
     comp.replaceSelf();
-    console.log(comp.html);
-    let html = replaceJs(comp.html);
-    console.log(html);
+
+    comp.html = replaceJs(comp.html);
     let div = document.querySelectorAll(`[instance="${this.self}"]`)[0];
-    console.log(div);
-    div.innerHTML = html;
+    console.log(comp.html);
+    var doc = new DOMParser().parseFromString(comp.html, "text/html");
+    console.log("elements");
+
+    for (let i = 0; i < doc.body.children.length; i++) {
+      div.children[i].innerHTML = doc.body.children[i].innerHTML;
+      this.copyAttributes(div.children[i], doc.body.children[i]);
+    }
   }
 }

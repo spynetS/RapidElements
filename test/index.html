@@ -18,15 +18,25 @@
 
 				 onComponentLoad(){
 					 this.value = 0;
+					 this.checked = false
 				 }
 				 setvalue(e){
 					 console.log(e)
 					 this.value=e.target.value
+					 this.rerender()
+				 }
+				 change(e){
+					console.log(e)
+					this.checked = e.target.checked
+					this.rerender()
 				 }
 			 }
 			</script>
-			<button child-id="but" onclick="self.rerender() ">{{self.value}}</button>
-			<input oninput="self.setvalue(event);self.rerender()" value="{{self.value}}" />
+
+			<button child-id="but" onclick="alert(self.value)" style="background-color:{{self.checked ? self.value : blue}}" >{{self.value}}</button>
+			<input child-id="input" oninput="self.setvalue(event)" value="{{self.value}}" />
+			<input type="checkbox" onchange="self.change(event)" />
+			<h1>{{self.checked}}</h1>
 		</template>
 
 		<counter >Tryck mig</counter>

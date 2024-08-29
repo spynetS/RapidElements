@@ -1,6 +1,5 @@
 import { generateRandomString } from "./utils.js";
 import Component from "./Component.js";
-import jsxToString from "jsx-to-string";
 
 window.Component = Component;
 
@@ -195,7 +194,8 @@ window.replaceComponents = () => {
       js += `${component.instanceName}.self = '${component.instanceName}';`;
       js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
       js += `${component.instanceName}.onComponentLoad();`;
-      js += `${component.instanceName}.template= '${component.template.replaceAll("\n", "")}'`;
+      js += `${component.instanceName}.template = '${component.template.replaceAll("\n", "")}';`;
+      js += `${component.instanceName}.className = '${component.className}';`;
 
       let script = document.createElement("script");
       script.textContent = js;
@@ -232,8 +232,6 @@ function includeHTML() {
   }
 }
 
-window.rerender = () => {};
-
 /**
  * this function recompiles new components added to the dom
  * */
@@ -241,8 +239,7 @@ window.rapidRefresh = () => {
   replaceComponents();
 };
 
-async function main() {
-  var startTime = performance.now();
+function main() {
   // try to include html
   includeHTML();
   // document = doc;
@@ -252,9 +249,7 @@ async function main() {
   md.replaceMd();
   // creates a tailwind override class, to be applied to markdown defined elements.
   md.createNoTailwindClass();
-  var endTime = performance.now();
-
-  console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+  console.log("ehere");
 }
 
 window.getInstanceById = (id) => {
