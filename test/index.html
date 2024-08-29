@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
@@ -6,24 +6,30 @@
         <title>Testing</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 		<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
     </head>
     <body>
-		<template rapid-name="component" >
-				<!-- You have to add a class to access self.props -->
-				<script type="text/javascript">
-						class component extends Component{}
-				</script>
+		<template rapid-name='counter' >
+			<script type="text/javascript">
+			 class counter extends Component{
 
-				<!-- if it is only the prop inside the curly braces it will be replaced by the value -->
-				<!-- otherwise it will run as js -->
-				<h1>Your age ({age}) + 10 is {%parseInt(self.props.age) + 10%}</h1>
+				 onComponentLoad(){
+					 this.value = 0;
+				 }
+				 setvalue(e){
+					 console.log(e)
+					 this.value=e.target.value
+				 }
+			 }
+			</script>
+			<button child-id="but" onclick="self.rerender() ">{{self.value}}</button>
+			<input oninput="self.setvalue(event);self.rerender()" value="{{self.value}}" />
 		</template>
 
-		<component age="10" ></component>
-		<component age="100" ></component>
+		<counter >Tryck mig</counter>
+
     </body>
 </html>

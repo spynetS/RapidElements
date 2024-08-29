@@ -1,5 +1,6 @@
 import { generateRandomString } from "./utils.js";
 import Component from "./Component.js";
+import jsxToString from "jsx-to-string";
 
 window.Component = Component;
 
@@ -49,6 +50,7 @@ class Comp {
     this.defintion;
     this.props;
     this.html;
+    this.template = "";
   }
   replaceProps() {
     //replace the the {children} with the components innerhtml
@@ -57,11 +59,15 @@ class Comp {
     } catch (exception) {
       console.log(exception);
     }
-    this.html = this.html.replaceAll(
-      `${start_prop}children${end_prop}`,
-      this.defintion.innerHTML,
-    );
 
+    try {
+      this.html = this.html.replaceAll(
+        `${start_prop}children${end_prop}`,
+        this.defintion.innerHTML,
+      );
+    } catch (exception) {
+      console.log(exception);
+    }
     // for each prop replace it with the value
     for (let prop of Object.entries(this.props)) {
       let key = prop[0];
@@ -141,7 +147,6 @@ window.replaceComponents = () => {
     //set the new template
     templates[template.name] = template;
   }
-  console.log(templates);
 
   // list that holds all components
   let components = [];
@@ -157,6 +162,7 @@ window.replaceComponents = () => {
       let d = document.createElement("div");
       d.innerHTML = template.html;
       component.html = d.outerHTML;
+      component.template = d.innerHTML;
       component.className = template.getClassName();
       // parse attributes to a object
       component.props = Array.from(htmlcomponents[i].attributes).reduce(
@@ -189,13 +195,17 @@ window.replaceComponents = () => {
       js += `${component.instanceName}.self = '${component.instanceName}';`;
       js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
       js += `${component.instanceName}.onComponentLoad();`;
+      js += `${component.instanceName}.template= '${component.template.replaceAll("\n", "")}'`;
 
       let script = document.createElement("script");
       script.textContent = js;
       document.body.appendChild(script);
     }
   }
-  replaceJs();
+
+  document.documentElement.innerHTML = replaceJs(
+    document.documentElement.innerHTML,
+  );
 };
 
 // simple chatgpt say
@@ -221,6 +231,9 @@ function includeHTML() {
       });
   }
 }
+
+window.rerender = () => {};
+
 /**
  * this function recompiles new components added to the dom
  * */
@@ -229,16 +242,19 @@ window.rapidRefresh = () => {
 };
 
 async function main() {
+  var startTime = performance.now();
   // try to include html
   includeHTML();
   // document = doc;
-
   //replace all componments
   replaceComponents();
 
   md.replaceMd();
   // creates a tailwind override class, to be applied to markdown defined elements.
   md.createNoTailwindClass();
+  var endTime = performance.now();
+
+  console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
 }
 
 window.getInstanceById = (id) => {
@@ -247,7 +263,6 @@ window.getInstanceById = (id) => {
 };
 
 window.getInstance = (element) => {
-  console.log(element);
   if (element.getAttribute("instance")) {
     let instanceName = element.getAttribute("instance");
     if (instanceName === null) {
@@ -260,11 +275,9 @@ window.getInstance = (element) => {
     return getInstance(element.parentElement);
   }
 };
-window.replaceJs = () => {
+window.replaceJs = (html) => {
   // Regular expression to match {%...%} pattern
   const pattern = /\{{\s*.*?\s*\}}/g;
-
-  let html = document.documentElement.innerHTML;
 
   const matches = html.match(pattern);
   if (matches != null) {
@@ -280,10 +293,12 @@ window.replaceJs = () => {
         html = html.replaceAll(matches[i], "undefined");
       }
     }
-    document.documentElement.innerHTML = html;
   }
+  return html;
 };
 
 window.onload = main();
 
 window.replaceMd = md.replaceMd;
+
+window.Comp = Comp;

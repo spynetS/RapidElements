@@ -75,15 +75,11 @@ export function parseMd(markdown) {
 // searches all elements with attribute markdown and replaces the markdown inside with
 // html code
 export function replaceMd() {
-  console.log("replace md");
-  console.log(document.body.innerHTML);
   let markdowns = document.querySelectorAll("[markdown]");
-  console.log(markdowns);
   for (let i = 0; i < markdowns.length; i++) {
     let elmnt = markdowns[i];
     let to_convert = elmnt.innerHTML;
     elmnt.classList.add("no-tailwind");
-    console.log(to_convert);
     let converted = parseMd(to_convert);
     elmnt.innerHTML = converted;
   }

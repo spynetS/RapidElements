@@ -34,4 +34,21 @@ export default class Component {
 
     return getInstance(child);
   }
+  rerender() {
+    let comp = new Comp();
+    comp.html = this.template;
+    console.log(comp.html);
+    comp.className = "counter";
+    comp.props = this.props;
+    comp.instanceName = this.self;
+    comp.replaceChildId();
+    comp.replaceProps();
+    comp.replaceSelf();
+    console.log(comp.html);
+    let html = replaceJs(comp.html);
+    console.log(html);
+    let div = document.querySelectorAll(`[instance="${this.self}"]`)[0];
+    console.log(div);
+    div.innerHTML = html;
+  }
 }
