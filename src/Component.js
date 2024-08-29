@@ -42,6 +42,19 @@ export default class Component {
     });
   }
 
+  setState(state) {
+    this.state = state;
+    this.rerender();
+  }
+
+  /**   function to rerender this compotent
+   * it works by taking the template and change it
+   * then it creates elements of it and replace
+   * the props from the generated elements with the
+   * elements in dom. It will also change the inner html
+   * if it isnt a input because inputs will lose focus
+   * otherwise.
+   */
   rerender() {
     // create a component to update the template
     let comp = new Comp();
@@ -53,7 +66,7 @@ export default class Component {
     comp.replaceProps();
     comp.replaceSelf();
 
-    comp.html = replaceJs(comp.html);
+    comp.html = replaceJs(comp.html); //replace the inline js
     // get the compontent holder
     let div = document.querySelectorAll(`[instance="${this.self}"]`)[0];
     // parse elements from the parsed html
@@ -80,6 +93,5 @@ export default class Component {
       }
     }
     rerender_comp(div.children, doc.body.children);
-    rapidRefresh();
   }
 }
