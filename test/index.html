@@ -12,12 +12,15 @@
 		<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
     </head>
     <body>
+		<template rapid-name="but" >
+			<button onclick={onclick} >BUT: {children}</button>
+		</template>
 		<template rapid-name="lii" >
 			<li>
 				<p>{children}</p>
-				<button onclick="{onclick}" >
+				<but onclick="{onclick}" >
 					tabort
-				</button>
+				</but>
 			</li>
 		</template>
 
@@ -31,7 +34,8 @@
 				 getList(){
 					 let list = ""
 					 for(let i = 0; i < this.names.length;i++){
-						 list+=`<lii  onclick="${this.self}.names.pop();${this.self}.rerender()" >${this.names[i]}</lii>\n`
+						 list+=`<lii  onclick="${this.self}.names.splice(${i},1);${this.self}.rerender();replaceComponentTagName('lii')" >${this.names[i]}</lii>\n`
+
 					 }
 					 console.log("list",list)
 					 return list;
@@ -42,11 +46,9 @@
 				 down(event){
 					 if (event.key === 'Enter') {
 						 event.preventDefault(); // Optional: Prevent the default action (e.g., form submission)
-						 console.log('Enter key pressed!');
-						 this.names.push(this.value)
-						 this.value = ""
+						 this.names.push(this.value);
 						 this.rerender()
-						 //rapidRefresh();
+						 replaceComponentTagName("lii")
 						 event.target.value = ""
 					}
 
@@ -56,7 +58,7 @@
 
 			<div style="display:flex;flex-direction:column" >
 				<input onkeydown="self.down(event)" oninput="self.setvalue(event)" />
-				<button onclick="self.names.push(self.value);self.value=0;self.rerender()" >
+				<button onclick="self.rerender()" >
 					Laggtill
 				</button>
 			</div>

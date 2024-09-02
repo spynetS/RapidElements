@@ -119,46 +119,53 @@ class Comp {
     }
   }
 }
+window.isInsideCompontent = (element, attributeName, value) => {
+  let currentElement = element;
 
-window.replaceComponents = () => {
-  // find all templates
-  let htmltemplates = document.getElementsByTagName("template");
-  // dict that holds the templates and thier name
-  let templates = new Object();
-  // we loop though the templates down up so the templates
-  // down can use the templates above
-  for (let i = htmltemplates.length - 1; i >= 0; i--) {
-    let template = new Template();
-    template.name = htmltemplates[i].getAttribute("rapid-name");
-    template.script = htmltemplates[i].content.querySelector("script");
-
-    // if the template does not have a script we dont want to remove it
-    // or create a script
-    if (template.script !== null) {
-      template.html = htmltemplates[i].innerHTML.replace(
-        template.script.outerHTML,
-        "",
-      );
-      template.createScript();
-    } else {
-      template.html = htmltemplates[i].innerHTML;
+  while (currentElement) {
+    if (currentElement.getAttribute(attributeName) === value) {
+      return true;
     }
-    //set the new template
-    templates[template.name] = template;
+    currentElement = currentElement.parentElement; // Move up to the parent element
   }
 
-  // list that holds all components
+  return false; // No parent has the attribute
+};
+
+window.replaceComponentTagName = (tagName) => {
+  let template = document.querySelector(`[rapid-name="${tagName}"]`);
+  // TODO add all templates which are dependences for this compontent
+  replaceComponentTemplate(template);
+};
+
+window.replaceComponentTemplate = (template_element) => {
+  let template = new Template();
+  template.name = template_element.getAttribute("rapid-name");
+  template.script = template_element.content.querySelector("script");
+
+  if (template.script !== null) {
+    template.html = template_element.innerHTML.replace(
+      template.script.outerHTML,
+      "",
+    );
+    template.createScript();
+  } else {
+    template.html = template_element.innerHTML;
+  }
+
+  let name = template.name;
   let components = [];
-  // for each template
-  for (let [name, template] of Object.entries(templates)) {
-    // find all components that uses template name
-    let htmlcomponents = document.getElementsByTagName(name);
-    console.log(htmlcomponents);
-    // for each component that uses this template
-    for (let i = 0; i < htmlcomponents.length; i++) {
+  let htmlcomponents = document.getElementsByTagName(name);
+  // for each component that uses this template
+  for (let i = 0; i < htmlcomponents.length; i++) {
+    // If the compontent found has a parent with the attribute
+    // rapid-compontent and its value is the compontent we try to compile
+    // we will ignore it because it is part of the the compontent which is compiled
+    if (!isInsideCompontent(htmlcomponents[i], "rapid-component", name)) {
       let component = new Comp();
       component.defintion = htmlcomponents[i];
       let d = document.createElement("div");
+      d.setAttribute("rapid-component", name);
       d.innerHTML = template.html;
       component.html = d.outerHTML;
       component.template = d.innerHTML;
@@ -173,7 +180,6 @@ window.replaceComponents = () => {
       );
       component.setInstance();
       component.replaceChildId();
-
       component.replaceProps();
       component.replaceSelf();
       // component.replaceJs();
@@ -181,6 +187,7 @@ window.replaceComponents = () => {
       //update dom with the new html
       htmlcomponents[i].outerHTML = component.html;
       components.push(component);
+      // we goback to look for more components to compile
       i--;
     }
   }
@@ -201,6 +208,15 @@ window.replaceComponents = () => {
       script.textContent = js;
       document.body.appendChild(script);
     }
+  }
+};
+
+window.replaceComponents = () => {
+  // find all templates
+  let htmltemplates = document.getElementsByTagName("template");
+
+  for (let i = 0; i < htmltemplates.length; i++) {
+    replaceComponentTemplate(htmltemplates[i]);
   }
 
   document.documentElement.innerHTML = replaceJs(
