@@ -37,7 +37,6 @@ export default class Component {
   }
   copyAttributes(target, source) {
     Array.from(source.attributes).forEach((attr) => {
-      console.log(attr.name, attr.value);
       target.setAttribute(attr.name, attr.value);
     });
   }
@@ -87,7 +86,6 @@ export default class Component {
 
         // We dont replace innerhtml if it is a input because then the focus will disspear
         // TODO: better check if the input contains elements
-        console.log("inner", newhtml[i].innerHTML);
         if (!newhtml[i].innerHTML.includes("input")) {
           old[i].innerHTML = newhtml[i].innerHTML;
         }

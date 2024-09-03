@@ -184,29 +184,24 @@ window.replaceComponentTemplate = (template_element) => {
       component.replaceSelf();
       // component.replaceJs();
 
+      if (component.className != null) {
+        let js = `let ${component.instanceName} = new ${component.className}();`;
+        js += `${component.instanceName}.self = '${component.instanceName}';`;
+        js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
+        js += `${component.instanceName}.onComponentLoad();`;
+        js += `${component.instanceName}.template = '${component.template.replaceAll("\n", "")}';`;
+        js += `${component.instanceName}.className = '${component.className}';`;
+
+        let script = document.createElement("script");
+        script.setAttribute("instance", component.instanceName);
+        script.textContent = js;
+        document.body.appendChild(script);
+      }
       //update dom with the new html
-      htmlcomponents[i].outerHTML = component.html;
+      htmlcomponents[i].outerHTML = replaceJs(component.html);
       components.push(component);
       // we goback to look for more components to compile
       i--;
-    }
-  }
-
-  // Instantiate the components instancess
-  for (let i = components.length - 1; i >= 0; i--) {
-    // for (let i = 0; i < components.length; i++) {
-    let component = components[i];
-    if (component.className != null) {
-      let js = `let ${component.instanceName} = new ${component.className}();`;
-      js += `${component.instanceName}.self = '${component.instanceName}';`;
-      js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
-      js += `${component.instanceName}.onComponentLoad();`;
-      js += `${component.instanceName}.template = '${component.template.replaceAll("\n", "")}';`;
-      js += `${component.instanceName}.className = '${component.className}';`;
-
-      let script = document.createElement("script");
-      script.textContent = js;
-      document.body.appendChild(script);
     }
   }
 };
@@ -215,13 +210,9 @@ window.replaceComponents = () => {
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
 
-  for (let i = 0; i < htmltemplates.length; i++) {
+  for (let i = htmltemplates.length - 1; i >= 0; i--) {
     replaceComponentTemplate(htmltemplates[i]);
   }
-
-  document.documentElement.innerHTML = replaceJs(
-    document.documentElement.innerHTML,
-  );
 };
 
 // simple chatgpt say

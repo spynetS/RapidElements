@@ -60,12 +60,15 @@
         }
         copyAttributes(target, source) {
           Array.from(source.attributes).forEach((attr) => {
-            console.log(attr.name, attr.value);
             target.setAttribute(attr.name, attr.value);
           });
         }
         setState(state) {
-          this.state = state;
+          for (let key in state) {
+            if (this.state[key] !== void 0) {
+              this.state[key] = state[key];
+            }
+          }
           this.rerender();
         }
         /**   function to rerender this compotent
@@ -92,7 +95,6 @@
           function rerender_comp(old, newhtml) {
             for (let i2 = 0; i2 < old.length; i2++) {
               s.copyAttributes(old[i2], newhtml[i2]);
-              console.log("inner", newhtml[i2].innerHTML);
               if (!newhtml[i2].innerHTML.includes("input")) {
                 old[i2].innerHTML = newhtml[i2].innerHTML;
               }
@@ -102,6 +104,7 @@
             }
           }
           rerender_comp(div.children, doc.body.children);
+          rapidRefresh();
         }
       };
     }
@@ -357,34 +360,29 @@
             component.replaceChildId();
             component.replaceProps();
             component.replaceSelf();
-            htmlcomponents[i2].outerHTML = component.html;
+            if (component.className != null) {
+              let js2 = `let ${component.instanceName} = new ${component.className}();`;
+              js2 += `${component.instanceName}.self = '${component.instanceName}';`;
+              js2 += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
+              js2 += `${component.instanceName}.onComponentLoad();`;
+              js2 += `${component.instanceName}.template = '${component.template.replaceAll("\n", "")}';`;
+              js2 += `${component.instanceName}.className = '${component.className}';`;
+              let script = document.createElement("script");
+              script.setAttribute("instance", component.instanceName);
+              script.textContent = js2;
+              document.body.appendChild(script);
+            }
+            htmlcomponents[i2].outerHTML = replaceJs(component.html);
             components.push(component);
             i2--;
-          }
-        }
-        for (let i2 = components.length - 1; i2 >= 0; i2--) {
-          let component = components[i2];
-          if (component.className != null) {
-            let js2 = `let ${component.instanceName} = new ${component.className}();`;
-            js2 += `${component.instanceName}.self = '${component.instanceName}';`;
-            js2 += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
-            js2 += `${component.instanceName}.onComponentLoad();`;
-            js2 += `${component.instanceName}.template = '${component.template.replaceAll("\n", "")}';`;
-            js2 += `${component.instanceName}.className = '${component.className}';`;
-            let script = document.createElement("script");
-            script.textContent = js2;
-            document.body.appendChild(script);
           }
         }
       };
       window.replaceComponents = () => {
         let htmltemplates = document.getElementsByTagName("template");
-        for (let i2 = 0; i2 < htmltemplates.length; i2++) {
+        for (let i2 = htmltemplates.length - 1; i2 >= 0; i2--) {
           replaceComponentTemplate(htmltemplates[i2]);
         }
-        document.documentElement.innerHTML = replaceJs(
-          document.documentElement.innerHTML
-        );
       };
       function includeHTML() {
         const element2 = document.querySelector("[include-html]");
