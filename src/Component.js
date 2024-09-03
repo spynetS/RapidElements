@@ -43,7 +43,13 @@ export default class Component {
   }
 
   setState(state) {
-    this.state = state;
+    for (let key in state) {
+      if (this.state[key] !== undefined) {
+        // Check if the value in obj1 is an array, replace it with the array's first element
+        this.state[key] = state[key];
+      }
+    }
+
     this.rerender();
   }
 
@@ -93,5 +99,8 @@ export default class Component {
       }
     }
     rerender_comp(div.children, doc.body.children);
+
+    //compile new added components
+    rapidRefresh();
   }
 }
