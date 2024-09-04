@@ -89,7 +89,8 @@ class Comp {
   }
   /** rreplace all selfs with instance name */
   replaceSelf() {
-    this.html = this.html.replaceAll("self", this.instanceName);
+    this.html = this.html.replaceAll("self.", this.instanceName + ".");
+    this.html = this.html.replaceAll("this.", this.instanceName + ".");
   }
   /** adds instance id to child-id id */
   replaceChildId() {
