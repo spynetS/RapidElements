@@ -119,15 +119,11 @@
     return markdown.trim();
   }
   function replaceMd() {
-    console.log("replace md");
-    console.log(document.body.innerHTML);
     let markdowns = document.querySelectorAll("[markdown]");
-    console.log(markdowns);
     for (let i2 = 0; i2 < markdowns.length; i2++) {
       let elmnt = markdowns[i2];
       let to_convert = elmnt.innerHTML;
       elmnt.classList.add("no-tailwind");
-      console.log(to_convert);
       let converted = parseMd(to_convert);
       elmnt.innerHTML = converted;
     }
@@ -233,7 +229,6 @@
         }
         /** rreplace all selfs with instance name */
         replaceSelf() {
-          console.log("html", this.html);
           this.html = this.html.replaceAll("self", this.instanceName);
           this.html = this.html.replaceAll("this.", this.instanceName + ".");
         }

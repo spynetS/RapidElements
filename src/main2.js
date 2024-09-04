@@ -84,7 +84,6 @@ class Comp {
   }
   /** rreplace all selfs with instance name */
   replaceSelf() {
-    console.log("html", this.html);
     this.html = this.html.replaceAll("self", this.instanceName);
     this.html = this.html.replaceAll("this.", this.instanceName + ".");
   }
