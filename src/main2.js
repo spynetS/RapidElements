@@ -49,6 +49,7 @@ class Comp {
     this.defintion;
     this.props;
     this.html;
+    this.template = "";
   }
   replaceProps() {
     //replace the the {children} with the components innerhtml
@@ -57,11 +58,15 @@ class Comp {
     } catch (exception) {
       console.log(exception);
     }
-    this.html = this.html.replaceAll(
-      `${start_prop}children${end_prop}`,
-      this.defintion.innerHTML,
-    );
 
+    try {
+      this.html = this.html.replaceAll(
+        `${start_prop}children${end_prop}`,
+        this.defintion.innerHTML,
+      );
+    } catch (exception) {
+      console.log(exception);
+    }
     // for each prop replace it with the value
     for (let prop of Object.entries(this.props)) {
       let key = prop[0];
@@ -128,97 +133,87 @@ window.isInsideCompontent = (element, attributeName, value) => {
   return false; // No parent has the attribute
 };
 
+window.replaceComponentTagName = (tagName) => {
+  let template = document.querySelector(`[rapid-name="${tagName}"]`);
+  // TODO add all templates which are dependences for this compontent
+  replaceComponentTemplate(template);
+};
+
+window.replaceComponentTemplate = (template_element) => {
+  let template = new Template();
+  template.name = template_element.getAttribute("rapid-name");
+  template.script = template_element.content.querySelector("script");
+
+  if (template.script !== null) {
+    template.html = template_element.innerHTML.replace(
+      template.script.outerHTML,
+      "",
+    );
+    template.createScript();
+  } else {
+    template.html = template_element.innerHTML;
+  }
+
+  let name = template.name;
+  let components = [];
+  let htmlcomponents = document.getElementsByTagName(name);
+  // for each component that uses this template
+  for (let i = 0; i < htmlcomponents.length; i++) {
+    // If the compontent found has a parent with the attribute
+    // rapid-compontent and its value is the compontent we try to compile
+    // we will ignore it because it is part of the the compontent which is compiled
+    if (!isInsideCompontent(htmlcomponents[i], "rapid-component", name)) {
+      let component = new Comp();
+      component.defintion = htmlcomponents[i];
+      let d = document.createElement("div");
+      d.setAttribute("rapid-component", name);
+      d.innerHTML = template.html;
+      component.html = d.outerHTML;
+      component.template = d.innerHTML;
+      component.className = template.getClassName();
+      // parse attributes to a object
+      component.props = Array.from(htmlcomponents[i].attributes).reduce(
+        (acc, attr) => {
+          acc[attr.name] = attr.value;
+          return acc;
+        },
+        {},
+      );
+      component.setInstance();
+      component.replaceChildId();
+      component.replaceProps();
+      component.replaceSelf();
+      // component.replaceJs();
+
+      if (component.className != null) {
+        let js = `let ${component.instanceName} = new ${component.className}();`;
+        js += `${component.instanceName}.self = '${component.instanceName}';`;
+        js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
+        js += `${component.instanceName}.onComponentLoad();`;
+        js += `${component.instanceName}.template = '${component.template.replaceAll("\n", "")}';`;
+        js += `${component.instanceName}.className = '${component.className}';`;
+
+        let script = document.createElement("script");
+        script.setAttribute("instance", component.instanceName);
+        script.textContent = js;
+        document.body.appendChild(script);
+      }
+      //update dom with the new html
+      htmlcomponents[i].outerHTML = replaceJs(component.html);
+      components.push(component);
+      // we goback to look for more components to compile
+      i--;
+    }
+  }
+};
+
 window.replaceComponents = () => {
   // find all templates
   let htmltemplates = document.getElementsByTagName("template");
-  // dict that holds the templates and thier name
-  let templates = new Object();
-  // we loop though the templates down up so the templates
-  // down can use the templates above
+
   for (let i = htmltemplates.length - 1; i >= 0; i--) {
-    let template = new Template();
-    template.name = htmltemplates[i].getAttribute("rapid-name");
-    template.script = htmltemplates[i].content.querySelector("script");
-
-    // if the template does not have a script we dont want to remove it from the html
-    // or create a script
-    if (template.script !== null) {
-      template.html = htmltemplates[i].innerHTML.replace(
-        template.script.outerHTML,
-        "",
-      );
-      template.createScript();
-    } else {
-      template.html = htmltemplates[i].innerHTML;
-    }
-    //set the new template in dictonary
-    templates[template.name] = template;
+    replaceComponentTemplate(htmltemplates[i]);
   }
-  console.log(templates);
-
-  // list that holds all components
-  let components = [];
-  // for each template
-  for (let [name, template] of Object.entries(templates)) {
-    // find all components that uses template name
-    let htmlcomponents = document.getElementsByTagName(name);
-    console.log("comp", htmlcomponents);
-    // for each component that uses this template
-    for (let i = 0; i < htmlcomponents.length; i++) {
-      // If the compontent found has a parent with the attribute
-      // rapid-compontent and its value is the compontent we try to compile
-      // we will ignore it because it is part of the the compontent which is compiled
-      if (!isInsideCompontent(htmlcomponents[i], "rapid-component", name)) {
-        let component = new Comp();
-        component.defintion = htmlcomponents[i];
-
-        let d = document.createElement("div");
-        d.innerHTML = template.html;
-        // set the name of the compiled compontent (used in the if-statement above)
-        d.setAttribute("rapid-component", name);
-        component.html = d.outerHTML;
-        component.className = template.getClassName();
-
-        // parse attributes to a object
-        component.props = Array.from(htmlcomponents[i].attributes).reduce(
-          (acc, attr) => {
-            acc[attr.name] = attr.value;
-            return acc;
-          },
-          {},
-        );
-        component.setInstance();
-        component.replaceChildId();
-
-        component.replaceProps();
-        component.replaceSelf();
-        // component.replaceJs();
-
-        //update dom with the new html
-        htmlcomponents[i].outerHTML = component.html;
-        components.push(component);
-        // we goback to look for more components to compile
-        i--;
-      }
-    }
-  }
-
-  // Instantiate the components instancess
-  for (let i = components.length - 1; i >= 0; i--) {
-    // for (let i = 0; i < components.length; i++) {
-    let component = components[i];
-    if (component.className != null) {
-      let js = `let ${component.instanceName} = new ${component.className}();`;
-      js += `${component.instanceName}.self = '${component.instanceName}';`;
-      js += `${component.instanceName}.props = ${JSON.stringify(component.props)};`;
-      js += `${component.instanceName}.onComponentLoad();`;
-
-      let script = document.createElement("script");
-      script.textContent = js;
-      document.body.appendChild(script);
-    }
-  }
-  replaceJs();
 };
 
 // simple chatgpt say
@@ -244,6 +239,7 @@ function includeHTML() {
       });
   }
 }
+
 /**
  * this function recompiles new components added to the dom
  * */
@@ -251,17 +247,17 @@ window.rapidRefresh = () => {
   replaceComponents();
 };
 
-async function main() {
+function main() {
   // try to include html
   includeHTML();
   // document = doc;
-
   //replace all componments
   replaceComponents();
 
   md.replaceMd();
   // creates a tailwind override class, to be applied to markdown defined elements.
   md.createNoTailwindClass();
+  console.log("ehere");
 }
 
 window.getInstanceById = (id) => {
@@ -270,7 +266,6 @@ window.getInstanceById = (id) => {
 };
 
 window.getInstance = (element) => {
-  console.log(element);
   if (element.getAttribute("instance")) {
     let instanceName = element.getAttribute("instance");
     if (instanceName === null) {
@@ -283,11 +278,9 @@ window.getInstance = (element) => {
     return getInstance(element.parentElement);
   }
 };
-window.replaceJs = () => {
+window.replaceJs = (html) => {
   // Regular expression to match {%...%} pattern
   const pattern = /\{{\s*.*?\s*\}}/g;
-
-  let html = document.documentElement.innerHTML;
 
   const matches = html.match(pattern);
   if (matches != null) {
@@ -303,10 +296,12 @@ window.replaceJs = () => {
         html = html.replaceAll(matches[i], "undefined");
       }
     }
-    document.documentElement.innerHTML = html;
   }
+  return html;
 };
 
 window.onload = main();
 
 window.replaceMd = md.replaceMd;
+
+window.Comp = Comp;

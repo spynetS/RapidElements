@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
@@ -6,24 +6,67 @@
         <title>Testing</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 		<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
     </head>
     <body>
-		<template rapid-name="component" >
-				<!-- You have to add a class to access self.props -->
-				<script type="text/javascript">
-						class component extends Component{}
-				</script>
-
-				<!-- if it is only the prop inside the curly braces it will be replaced by the value -->
-				<!-- otherwise it will run as js -->
-				<h1>Your age ({age}) + 10 is {%parseInt(self.props.age) + 10%}</h1>
+		<template rapid-name="but" >
+			<button onclick={onclick} >BUT: {children}</button>
+		</template>
+		<template rapid-name="lii" >
+			<li>
+				<p>{children}</p>
+				<but onclick="{onclick}" >
+					tabort
+				</but>
+			</li>
 		</template>
 
-		<component age="10" ></component>
-		<component age="100" ></component>
+		<template rapid-name='counter' >
+			<script type="text/javascript">
+			 class counter extends Component{
+				 onComponentLoad(){
+					 this.names = [];
+					 this.value = "";
+				 }
+				 getList(){
+					 let list = ""
+					 for(let i = 0; i < this.names.length;i++){
+						 list+=`<lii  onclick="${this.self}.names.splice(${i},1);${this.self}.rerender();replaceComponentTagName('lii')" >${this.names[i]}</lii>\n`
+
+					 }
+					 console.log("list",list)
+					 return list;
+				 }
+				 setvalue(e){
+					 this.value=e.target.value;
+				 }
+				 down(event){
+					 if (event.key === 'Enter') {
+						 event.preventDefault(); // Optional: Prevent the default action (e.g., form submission)
+						 this.names.push(this.value);
+						 this.rerender()
+						 event.target.value = ""
+					 }
+
+				}
+			 }
+			</script>
+
+			<div style="display:flex;flex-direction:column" >
+				<input onkeydown="self.down(event)" oninput="self.setvalue(event)" />
+				<button onclick="self.rerender()" >
+					Laggtill
+				</button>
+			</div>
+			<ul>
+				{{self.getList()}}
+			</ul>
+		</template>
+
+		<counter >Tryck mig</counter>
+
     </body>
 </html>
