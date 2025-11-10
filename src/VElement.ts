@@ -16,7 +16,8 @@ export class VElement {
 	props: { [key: string]: any };
 	children: Array<VElement | string>;
 	dom?: HTMLElement | Text; // optional reference to real DOM node
-
+	
+		
 	constructor(
 		type: string,
 		props: { [key: string]: any } = {},
@@ -51,6 +52,8 @@ export class VElement {
 		return el;
 	}
 }
+
+
 
 export function interpolate(templateString: string, props: Record<string, any>): string {
 	return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {

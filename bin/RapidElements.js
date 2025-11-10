@@ -93,6 +93,8 @@
   }
 
   // src/Component.ts
+  var Component = class {
+  };
   var TemplateComponent = class {
     template;
     component;
@@ -136,6 +138,27 @@
       components.push(tc);
     });
   });
+  var CounterButton = class extends Component {
+    state = { count: 0 };
+    render() {
+      return new VElement("button", { onclick: () => this.increment() }, [
+        `Count: ${this.state.count}`
+      ]);
+    }
+    increment() {
+      this.state.count++;
+      update();
+    }
+  };
+  components.push(new CounterButton());
+  function update() {
+    const vdom2 = new VElement("div", { id: "app" }, components.map((component) => component.render()));
+    const root2 = document.getElementById("root");
+    if (root2) {
+      root2.innerHTML = "";
+      root2.appendChild(vdom2.render());
+    }
+  }
   var vdom = new VElement("div", { id: "app" }, components.map((component) => component.render()));
   var root = document.getElementById("root");
   if (root) root.appendChild(vdom.render());
