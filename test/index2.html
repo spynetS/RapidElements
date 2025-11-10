@@ -4,27 +4,26 @@
 	</head>
 
 
-	<script type="text/javascript">
-   function counter(){
-			 return {
-					 state:{count:0}
-			 }
-	 }
-	</script>
 	
 	<body>
 
-		<template rapid-data='{"count":0}' rapid-name="counter">
-			<button onclick="console.log(this.count++)">
-				click me
+		<template rapid-data="Counter" state='{"count":0}' rapid-name="counter">
+			<button :onclick="console.log(this.count++)" >
+					{{this.count}}
 			</button>
-			<input name="" type="text" value=""/>
 		</template>
 
 		
-		<counter></counter>
+		<counter click="Click Me" ></counter>
 		
 		
-			<div id="root"></div>
+		<div id="root"></div>
+
+		<script type="text/javascript">
+		 class Counter {
+				 count = 0
+		 }
+		</script>
+		
 	</body>
 </html>

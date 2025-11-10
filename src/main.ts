@@ -1,6 +1,6 @@
 import {Component, TemplateComponent} from "./Component"
 import {VElement} from "./VElement"
-
+import {useState} from "./useState"
 
 
 let components: [Component] = [];
@@ -18,9 +18,14 @@ templates.forEach((t: HTMLTemplateElement) => {
 		
 });
 
+const vdom = new VElement('div', { id: 'app' }, components.map(component=>component.render()));
+
+
+ const root = document.getElementById('root');
+ if (root) root.appendChild(vdom.render());
+
 // TODO FIX A REAL UPDATE
-function update(){
-		const vdom = new VElement('div', { id: 'app' }, components.map(component => component.render()));
+window.update = () => {
 		const root = document.getElementById('root');
 		if (root) {
 				root.innerHTML = "";
@@ -28,7 +33,3 @@ function update(){
 		}
 }
 
-const vdom = new VElement('div', { id: 'app' }, components.map(component=>component.render()));
-
-const root = document.getElementById('root');
-if (root) root.appendChild(vdom.render());

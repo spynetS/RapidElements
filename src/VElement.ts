@@ -1,3 +1,4 @@
+
 import { TemplateComponent } from "./Component";
 
 export const componentRegistry: Record<string, HTMLTemplateElement> = {};
@@ -12,50 +13,57 @@ templates.forEach(t => {
 });
 
 export class VElement {
-		type: string;
-		props: { [key: string]: any };
-		children: Array<VElement | string>;
-		dom?: HTMLElement | Text; // optional reference to real DOM node
-		data : {};
+  type: string;
+  props: { [key: string]: any };
+  children: Array<VElement | string>;
+  dom?: HTMLElement | Text;
+	instance: string;
 		
-		constructor(type: string,	props: { [key: string]: any } = {},	children: Array<VElement | string> = [], data:any = {}	) {
-				this.type = type;
-				this.props = props;
-				this.children = children;
-				this.data = data;
-		}
-		
-		// render the VElement to a real DOM node
-		render(): Node {
-				if (typeof this === 'string') return document.createTextNode(this as any); // for text nodes
-				
-				const el = document.createElement(this.type);
-				
-				// replace props
-				for (const [key, value] of Object.entries(this.props)) {
-						if (key.startsWith('on') && typeof value === 'function') {
-								el.addEventListener(key.substring(2).toLowerCase(), value);
-						} else {
-								el.setAttribute(key, value);
-						}
-				}
-				this.children.forEach(child => {
-						const childNode = child instanceof VElement ? child.render() : document.createTextNode(child);
-						el.appendChild(childNode);
-				});
-				
-				this.dom = el; // keep reference
-				return el;
-		}
+  constructor(
+    type: string,
+    props: { [key: string]: any } = {},
+			children: Array<VElement | string> = [],
+			instance:string
+  ) {
+			this.type = type;
+			this.props = props;
+			this.children = children;
+			this.instance = instance;
+  }
+
+  render(): Node {
+			if (typeof this === 'string') return document.createTextNode(this as any);
+
+			const el = document.createElement(this.type);
+			// Apply props
+			for (const [key, value] of Object.entries(this.props)) {
+					el.setAttribute(key, value);
+					if (key.startsWith("on") && typeof value === "function") {
+							// Attach event listener
+							const eventName = key.slice(2).toLowerCase(); // "onClick" → "click"
+							el.addEventListener(eventName, value);
+					} else {
+							el.setAttribute(key, value);
+					}
+			}
+			
+			// Render children recursively
+			this.children.forEach(child => {
+					const childNode = child instanceof VElement ? child.render() : document.createTextNode(child);
+					el.appendChild(childNode);
+			});
+			
+			this.dom = el;
+			return el;
+  }
 }
 
-
-
-export function interpolate(templateString: string, props: Record<string, any>): string {
+export function interpolate(templateString: string, props: Record<string, any>, instance=""): string {
 		return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
 				try {
 						// Evaluate the expression in the context of props
 						// Using new Function to safely access props
+						expr = expr.replace("this",instance)
 						return new Function('props', `return ${expr.trim()}`)(props);
 				} catch (e) {
 						console.warn(`Failed to evaluate expression: ${expr}`, e);
@@ -89,16 +97,16 @@ export function domToVElement(node: Node): VElement | string {
 }
 
 
-export function fragmentToVElement(fragment: DocumentFragment, props: Record<string, any>): VElement[] {
+export function fragmentToVElement(fragment: DocumentFragment, props: Record<string, any>, instance = ""): VElement[] {
 		const vels: VElement[] = [];
 		
 		Array.from(fragment.children).forEach(el => {
 				// it is a component
-				const html = interpolate(el.outerHTML, props);
+				const html = interpolate(el.outerHTML, props, instance);
 				// Create a temporary container to parse the string
 				const temp = document.createElement('div');
 				temp.innerHTML = html;
-				
+
 				// Convert parsed element(s) to VElement
 				Array.from(temp.children).forEach(newEl => {
 						let tc = createComponent(newEl)
@@ -107,6 +115,7 @@ export function fragmentToVElement(fragment: DocumentFragment, props: Record<str
 								return;
 						}
 						const vel = domToVElement(newEl as HTMLElement) as VElement;
+						vel.instance = instance;
 						vels.push(vel);
 				});
 		});

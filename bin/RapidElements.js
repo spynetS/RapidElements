@@ -14,21 +14,21 @@
     props;
     children;
     dom;
-    // optional reference to real DOM node
-    data;
-    constructor(type, props = {}, children = [], data = {}) {
+    instance;
+    constructor(type, props2 = {}, children = [], instance) {
       this.type = type;
-      this.props = props;
+      this.props = props2;
       this.children = children;
-      this.data = data;
+      this.instance = instance;
     }
-    // render the VElement to a real DOM node
     render() {
       if (typeof this === "string") return document.createTextNode(this);
       const el = document.createElement(this.type);
       for (const [key, value] of Object.entries(this.props)) {
+        el.setAttribute(key, value);
         if (key.startsWith("on") && typeof value === "function") {
-          el.addEventListener(key.substring(2).toLowerCase(), value);
+          const eventName = key.slice(2).toLowerCase();
+          el.addEventListener(eventName, value);
         } else {
           el.setAttribute(key, value);
         }
@@ -41,10 +41,11 @@
       return el;
     }
   };
-  function interpolate(templateString, props) {
+  function interpolate(templateString, props2, instance = "") {
     return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
       try {
-        return new Function("props", `return ${expr.trim()}`)(props);
+        expr = expr.replace("this", instance);
+        return new Function("props", `return ${expr.trim()}`)(props2);
       } catch (e) {
         console.warn(`Failed to evaluate expression: ${expr}`, e);
         return "";
@@ -57,19 +58,19 @@
     }
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node;
-      const props = {};
+      const props2 = {};
       Array.from(el.attributes).forEach((attr) => {
-        props[attr.name] = attr.value;
+        props2[attr.name] = attr.value;
       });
       const children = Array.from(el.childNodes).map(domToVElement);
-      return new VElement(el.tagName.toLowerCase(), props, children);
+      return new VElement(el.tagName.toLowerCase(), props2, children);
     }
     return "";
   }
-  function fragmentToVElement(fragment, props) {
+  function fragmentToVElement(fragment, props2, instance = "") {
     const vels = [];
     Array.from(fragment.children).forEach((el) => {
-      const html = interpolate(el.outerHTML, props);
+      const html = interpolate(el.outerHTML, props2, instance);
       const temp = document.createElement("div");
       temp.innerHTML = html;
       Array.from(temp.children).forEach((newEl) => {
@@ -79,6 +80,7 @@
           return;
         }
         const vel = domToVElement(newEl);
+        vel.instance = instance;
         vels.push(vel);
       });
     });
@@ -94,38 +96,44 @@
   }
 
   // src/Component.ts
+  var Component = class {
+  };
   var TemplateComponent = class {
     template;
     component;
     props;
-    data;
+    instance;
+    state;
     constructor(template, component, props = []) {
       this.template = template;
       this.component = component;
       this.props = props;
       const dataStr = template.getAttribute("rapid-data");
       if (dataStr) {
-        this.data = JSON.parse(dataStr);
-      } else {
-        this.data = {};
+        this.instance = "blabla";
+        const str = `new ${dataStr}()`;
+        window[this.instance] = eval(str);
       }
+      this.state = JSON.parse(template.getAttribute("state"));
     }
     render() {
+      let element = new VElement("div", {}, []);
       const attrs = {};
       Array.from(this.component.attributes).forEach((attr) => {
-        attrs[attr.name] = interpolate(attr.value, this.props);
+        attrs[attr.name] = interpolate(attr.value, this.props, this.instance);
       });
-      let element = new VElement("div", {}, []);
       Array.from(this.component.children).forEach((child) => {
         let comp = createComponent(child);
         if (comp) {
+          comp.instance = this.instance;
           element.children.push(comp.render());
         } else {
-          element.children.push(domToVElement(child));
+          const element2 = domToVElement(child);
+          element2.children.push(element2);
         }
       });
       attrs["children"] = element.render().innerHTML;
-      const children = fragmentToVElement(this.template.content, attrs);
+      const children = fragmentToVElement(this.template.content, attrs, this.instance);
       const vel = new VElement("div", attrs, children, this.data);
       return vel;
     }
@@ -142,7 +150,14 @@
       components.push(tc);
     });
   });
-  var vdom = new VElement("div", { id: "app" }, components.map((component) => component.render()));
+  var vdom = new VElement("div", { id: "app" }, components.map((component2) => component2.render()));
   var root = document.getElementById("root");
   if (root) root.appendChild(vdom.render());
+  window.update = () => {
+    const root2 = document.getElementById("root");
+    if (root2) {
+      root2.innerHTML = "";
+      root2.appendChild(vdom.render());
+    }
+  };
 })();

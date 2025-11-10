@@ -5,54 +5,63 @@ export abstract class Component {
 		abstract render(): VElement;
 }
 
+
+
 export class TemplateComponent {
 		template: HTMLTemplateElement;
 		component: Element;
 		props: [];
-		data:{};
-
+		instance: string;
+		state:{}
 		constructor(template:HTMLTemplateElement, component: Element, props:[] = []){
-
+				
 				this.template = template;
 				this.component = component;
 				this.props = props;
+				
+				const dataStr = template.getAttribute("rapid-data");
+				if (dataStr) {
+						this.instance = "blabla";
+						const str = `new ${dataStr}()`;
+						window[this.instance] = eval(str);
+				}
 
-			const dataStr = template.getAttribute("rapid-data");
-			if (dataStr) {
-				this.data = JSON.parse(dataStr); // now it's an object
-			} else {
-				this.data = {};
-			}
+				this.state = JSON.parse(template.getAttribute("state"));
 				
 		}
-
+		
     render(): VElement {
+				let element = new VElement('div',{},[]);
+
         // Convert component attributes to a plain object
         const attrs: Record<string, any> = {};
         Array.from(this.component.attributes).forEach(attr => {
-            attrs[attr.name] = interpolate(attr.value,this.props);
+            attrs[attr.name] = interpolate(attr.value,this.props,this.instance);
         });
 
-				let element = new VElement('div',{},[]);
+				// parse all the innerHtml in the component definition
 				Array.from(this.component.children).forEach((child) => {
-						let comp = createComponent(child);
+						// if it is a component
+						let comp:TemplateComponent|false = createComponent(child);
 						if(comp){
+								comp.instance = this.instance;
 								element.children.push(comp.render());
 						}
 						else{
-								element.children.push(domToVElement(child));
+								const element:VElement = domToVElement(child);
+								element.children.push(element);
 						}
 				});
-
+				// set the props children
 				attrs['children'] = (element.render() as Element).innerHTML;
-//				attrs['children'] = interpolate(this.component.innerHTML,attrs);
 
         // Assuming fragmentToVElement exists
-        const children = fragmentToVElement(this.template.content, attrs);
+				// parsing elements inside the template
+        const children = fragmentToVElement(this.template.content, attrs,this.instance);
 				
         const vel = new VElement('div', attrs, children,this.data);
         return vel;
     }
-
+		
 }
- 
+
