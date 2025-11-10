@@ -7,21 +7,31 @@
 	
 	<body>
 
-		<template rapid-data="Counter" state='{"count":0}' rapid-name="counter">
-			<button :onclick="console.log(this.count++)" >
+		<template rapid-data="Counter" rapid-name="counter">
+			<button onclick="{{props.click}}" >
 					{{this.count}}
 			</button>
+			<input name="" type="text" value="" onkeypress="{{props.onkeyup}}" /> 
+			<p>{{this.text}}</p>
 		</template>
 
 		
-		<counter click="Click Me" ></counter>
-		
+		<counter :onkeyup="this.text=(event.target.value);update()" :click="this.count++;console.log(this.text); window.update()" ></counter>
+		<counter :onkeyup="this.text=(event.target.value);update()" :click="this.log()" ></counter>
+
 		
 		<div id="root"></div>
 
 		<script type="text/javascript">
 		 class Counter {
+				 text = ""
 				 count = 0
+
+				 log(){
+						 this.count++;
+						 console.log(this.text);
+						 window.update()
+				 }
 		 }
 		</script>
 		

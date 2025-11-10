@@ -1,7 +1,7 @@
 import {Component, TemplateComponent} from "./Component"
 import {VElement} from "./VElement"
 import {useState} from "./useState"
-
+import {diff} from "./rerender"
 
 let components: [Component] = [];
 
@@ -18,18 +18,18 @@ templates.forEach((t: HTMLTemplateElement) => {
 		
 });
 
-const vdom = new VElement('div', { id: 'app' }, components.map(component=>component.render()));
 
+const root = document.getElementById('root');
+let oldVNode: VElement | null = null;
 
- const root = document.getElementById('root');
- if (root) root.appendChild(vdom.render());
+window.render = (vnode: VElement) => {
+  oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
+  if (!oldVNode.dom) root.appendChild(vnode.render());
+}
 
 // TODO FIX A REAL UPDATE
 window.update = () => {
-		const root = document.getElementById('root');
-		if (root) {
-				root.innerHTML = "";
-				root.appendChild(vdom.render());
-		}
+		render(new VElement('div', { id: 'app' }, components.map(component=>component.render()))); 
 }
 
+update()

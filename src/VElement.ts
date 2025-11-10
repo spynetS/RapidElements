@@ -56,6 +56,22 @@ export class VElement {
 			this.dom = el;
 			return el;
   }
+
+	removeChild(child: VElement | string) {
+		if (child instanceof VElement && child.dom && this.dom) {
+			this.dom.removeChild(child.dom);
+			this.children = this.children.filter(c => c !== child);
+		} else if (typeof child === "string" && this.dom) {
+			// Find matching text node
+			const textNode = Array.from(this.dom.childNodes).find(n => n.nodeType === 3 && n.nodeValue === child);
+			if (textNode) {
+				this.dom.removeChild(textNode);
+				this.children = this.children.filter(c => c !== child);
+			}
+		}
+	}
+
+		
 }
 
 export function interpolate(templateString: string, props: Record<string, any>, instance=""): string {

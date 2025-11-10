@@ -40,6 +40,18 @@
       this.dom = el;
       return el;
     }
+    removeChild(child) {
+      if (child instanceof _VElement && child.dom && this.dom) {
+        this.dom.removeChild(child.dom);
+        this.children = this.children.filter((c) => c !== child);
+      } else if (typeof child === "string" && this.dom) {
+        const textNode = Array.from(this.dom.childNodes).find((n) => n.nodeType === 3 && n.nodeValue === child);
+        if (textNode) {
+          this.dom.removeChild(textNode);
+          this.children = this.children.filter((c) => c !== child);
+        }
+      }
+    }
   };
   function interpolate(templateString, props2, instance = "") {
     return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
@@ -96,6 +108,16 @@
   }
 
   // src/Component.ts
+  function randomVarName(length = 8) {
+    const firstChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_";
+    const otherChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$_";
+    let result = firstChars[Math.floor(Math.random() * firstChars.length)];
+    for (let i = 1; i < length; i++) {
+      const idx = Math.floor(Math.random() * otherChars.length);
+      result += otherChars[idx];
+    }
+    return result;
+  }
   var Component = class {
   };
   var TemplateComponent = class {
@@ -110,34 +132,100 @@
       this.props = props;
       const dataStr = template.getAttribute("rapid-data");
       if (dataStr) {
-        this.instance = "blabla";
+        this.instance = randomVarName();
         const str = `new ${dataStr}()`;
         window[this.instance] = eval(str);
       }
       this.state = JSON.parse(template.getAttribute("state"));
     }
     render() {
-      let element = new VElement("div", {}, []);
-      const attrs = {};
-      Array.from(this.component.attributes).forEach((attr) => {
-        attrs[attr.name] = interpolate(attr.value, this.props, this.instance);
-      });
-      Array.from(this.component.children).forEach((child) => {
-        let comp = createComponent(child);
-        if (comp) {
-          comp.instance = this.instance;
-          element.children.push(comp.render());
+      const props2 = {};
+      for (const attr of this.component.attributes) {
+        if (attr.name.startsWith(":")) {
+          props2[attr.name.replace(":", "")] = attr.value.replace(/this/g, this.instance);
         } else {
-          const element2 = domToVElement(child);
-          element2.children.push(element2);
+          props2[attr.name] = attr.value;
         }
-      });
-      attrs["children"] = element.render().innerHTML;
-      const children = fragmentToVElement(this.template.content, attrs, this.instance);
-      const vel = new VElement("div", attrs, children, this.data);
+      }
+      const children = fragmentToVElement(this.template.content, props2, this.instance);
+      const vel = new VElement("div", [], children);
       return vel;
     }
   };
+
+  // src/rerender.ts
+  function diff(oldVNode2, newVNode, parentDom) {
+    if (typeof oldVNode2 === "string" && typeof newVNode === "string") {
+      if (oldVNode2 !== newVNode) {
+        const textNode = document.createTextNode(newVNode);
+        parentDom.replaceChild(textNode, parentDom.childNodes[0]);
+      }
+      return newVNode;
+    }
+    if (oldVNode2 instanceof VElement && newVNode instanceof VElement && oldVNode2.type !== newVNode.type) {
+      const newEl = newVNode.render();
+      parentDom.replaceChild(newEl, oldVNode2.dom);
+      return newVNode;
+    }
+    if (typeof newVNode === "string" && oldVNode2 instanceof VElement) {
+      const textNode = document.createTextNode(newVNode);
+      parentDom.replaceChild(textNode, oldVNode2.dom);
+      return newVNode;
+    }
+    if (typeof oldVNode2 === "string" && newVNode instanceof VElement) {
+      const newEl = newVNode.render();
+      parentDom.replaceChild(newEl, parentDom.childNodes[0]);
+      return newVNode;
+    }
+    if (oldVNode2 instanceof VElement && newVNode instanceof VElement) {
+      const el = newVNode.dom = oldVNode2.dom;
+      updateProps(el, oldVNode2.props, newVNode.props);
+      diffChildren(el, oldVNode2.children, newVNode.children);
+      return newVNode;
+    }
+  }
+  function updateProps(el, oldProps, newProps) {
+    for (const key in oldProps) {
+      if (!(key in newProps)) {
+        if (key.startsWith("on")) {
+          el.removeEventListener(key.slice(2).toLowerCase(), oldProps[key]);
+        } else {
+          el.removeAttribute(key);
+        }
+      }
+    }
+    for (const key in newProps) {
+      const oldVal = oldProps[key];
+      const newVal = newProps[key];
+      if (oldVal !== newVal) {
+        if (key.startsWith("on") && typeof newVal === "function") {
+          if (oldVal) el.removeEventListener(key.slice(2).toLowerCase(), oldVal);
+          el.addEventListener(key.slice(2).toLowerCase(), newVal);
+        } else {
+          el.setAttribute(key, newVal);
+        }
+      }
+    }
+  }
+  function diffChildren(parent, oldChildren, newChildren) {
+    const maxLen = Math.max(oldChildren.length, newChildren.length);
+    for (let i = 0; i < maxLen; i++) {
+      const oldChild = oldChildren[i];
+      const newChild = newChildren[i];
+      if (oldChild && !newChild) {
+        const childDom = oldChild instanceof VElement ? oldChild.dom : parent.childNodes[i];
+        parent.removeChild(childDom);
+        continue;
+      }
+      if (!oldChild && newChild) {
+        const newDom = newChild instanceof VElement ? newChild.render() : document.createTextNode(newChild);
+        parent.appendChild(newDom);
+        if (newChild instanceof VElement) newChild.dom = newDom;
+        continue;
+      }
+      diff(oldChild, newChild, parent);
+    }
+  }
 
   // src/main.ts
   var components = [];
@@ -150,14 +238,14 @@
       components.push(tc);
     });
   });
-  var vdom = new VElement("div", { id: "app" }, components.map((component2) => component2.render()));
   var root = document.getElementById("root");
-  if (root) root.appendChild(vdom.render());
-  window.update = () => {
-    const root2 = document.getElementById("root");
-    if (root2) {
-      root2.innerHTML = "";
-      root2.appendChild(vdom.render());
-    }
+  var oldVNode = null;
+  window.render = (vnode) => {
+    oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
+    if (!oldVNode.dom) root.appendChild(vnode.render());
   };
+  window.update = () => {
+    render(new VElement("div", { id: "app" }, components.map((component2) => component2.render())));
+  };
+  update();
 })();
