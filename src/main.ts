@@ -18,25 +18,6 @@ templates.forEach((t: HTMLTemplateElement) => {
 		
 });
 
-
-class CounterButton extends Component {
-  state = { count: 0 };
-
-  render() {
-    return new VElement('button', { onclick: () => this.increment() }, [
-      `Count: ${this.state.count}`
-    ]);
-  }
-
-		increment() {
-				this.state.count++;
-				update()
-		}
-}
-
-components.push(new CounterButton())
-
-
 // TODO FIX A REAL UPDATE
 function update(){
 		const vdom = new VElement('div', { id: 'app' }, components.map(component => component.render()));
@@ -48,5 +29,6 @@ function update(){
 }
 
 const vdom = new VElement('div', { id: 'app' }, components.map(component=>component.render()));
+
 const root = document.getElementById('root');
 if (root) root.appendChild(vdom.render());

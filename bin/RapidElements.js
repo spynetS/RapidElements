@@ -15,10 +15,12 @@
     children;
     dom;
     // optional reference to real DOM node
-    constructor(type, props2 = {}, children = []) {
+    data;
+    constructor(type, props = {}, children = [], data = {}) {
       this.type = type;
-      this.props = props2;
+      this.props = props;
       this.children = children;
+      this.data = data;
     }
     // render the VElement to a real DOM node
     render() {
@@ -42,7 +44,6 @@
   function interpolate(templateString, props) {
     return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
       try {
-        console.log(expr, eval(expr));
         return new Function("props", `return ${expr.trim()}`)(props);
       } catch (e) {
         console.warn(`Failed to evaluate expression: ${expr}`, e);
@@ -56,19 +57,19 @@
     }
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node;
-      const props2 = {};
+      const props = {};
       Array.from(el.attributes).forEach((attr) => {
-        props2[attr.name] = attr.value;
+        props[attr.name] = attr.value;
       });
       const children = Array.from(el.childNodes).map(domToVElement);
-      return new VElement(el.tagName.toLowerCase(), props2, children);
+      return new VElement(el.tagName.toLowerCase(), props, children);
     }
     return "";
   }
-  function fragmentToVElement(fragment, props2) {
+  function fragmentToVElement(fragment, props) {
     const vels = [];
     Array.from(fragment.children).forEach((el) => {
-      const html = interpolate(el.outerHTML, props2);
+      const html = interpolate(el.outerHTML, props);
       const temp = document.createElement("div");
       temp.innerHTML = html;
       Array.from(temp.children).forEach((newEl) => {
@@ -93,16 +94,21 @@
   }
 
   // src/Component.ts
-  var Component = class {
-  };
   var TemplateComponent = class {
     template;
     component;
     props;
-    constructor(template, component, props2 = []) {
+    data;
+    constructor(template, component, props = []) {
       this.template = template;
       this.component = component;
-      this.props = props2;
+      this.props = props;
+      const dataStr = template.getAttribute("rapid-data");
+      if (dataStr) {
+        this.data = JSON.parse(dataStr);
+      } else {
+        this.data = {};
+      }
     }
     render() {
       const attrs = {};
@@ -120,9 +126,7 @@
       });
       attrs["children"] = element.render().innerHTML;
       const children = fragmentToVElement(this.template.content, attrs);
-      console.log("children", attrs["children"]);
-      const vel = new VElement("div", attrs, children);
-      console.log(vel);
+      const vel = new VElement("div", attrs, children, this.data);
       return vel;
     }
   };
@@ -138,27 +142,6 @@
       components.push(tc);
     });
   });
-  var CounterButton = class extends Component {
-    state = { count: 0 };
-    render() {
-      return new VElement("button", { onclick: () => this.increment() }, [
-        `Count: ${this.state.count}`
-      ]);
-    }
-    increment() {
-      this.state.count++;
-      update();
-    }
-  };
-  components.push(new CounterButton());
-  function update() {
-    const vdom2 = new VElement("div", { id: "app" }, components.map((component) => component.render()));
-    const root2 = document.getElementById("root");
-    if (root2) {
-      root2.innerHTML = "";
-      root2.appendChild(vdom2.render());
-    }
-  }
   var vdom = new VElement("div", { id: "app" }, components.map((component) => component.render()));
   var root = document.getElementById("root");
   if (root) root.appendChild(vdom.render());

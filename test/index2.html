@@ -2,10 +2,20 @@
   <head>
 			<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
 	</head>
+
+
+	<script type="text/javascript">
+   function counter(){
+			 return {
+					 state:{count:0}
+			 }
+	 }
+	</script>
+	
 	<body>
 
-		<template rapid-name="counter">
-			<button onclick="console.log(123)">
+		<template rapid-data='{"count":0}' rapid-name="counter">
+			<button onclick="console.log(this.count++)">
 				click me
 			</button>
 			<input name="" type="text" value=""/>

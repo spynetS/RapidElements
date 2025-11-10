@@ -8,13 +8,22 @@ export abstract class Component {
 export class TemplateComponent {
 		template: HTMLTemplateElement;
 		component: Element;
-		props: []
+		props: [];
+		data:{};
 
 		constructor(template:HTMLTemplateElement, component: Element, props:[] = []){
 
 				this.template = template;
 				this.component = component;
 				this.props = props;
+
+			const dataStr = template.getAttribute("rapid-data");
+			if (dataStr) {
+				this.data = JSON.parse(dataStr); // now it's an object
+			} else {
+				this.data = {};
+			}
+				
 		}
 
     render(): VElement {
@@ -40,10 +49,8 @@ export class TemplateComponent {
 
         // Assuming fragmentToVElement exists
         const children = fragmentToVElement(this.template.content, attrs);
-				console.log('children',attrs['children'])
 				
-        const vel = new VElement('div', attrs, children);
-        console.log(vel);
+        const vel = new VElement('div', attrs, children,this.data);
         return vel;
     }
 
