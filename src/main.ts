@@ -19,11 +19,11 @@ templates.forEach((t: HTMLTemplateElement) => {
 });
 
 
-const root = document.getElementById('root');
 let oldVNode: VElement | null = null;
 
 window.render = (vnode: VElement) => {
-  oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
+	const root = document.getElementById('root');
+	oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
   if (!oldVNode.dom) root.appendChild(vnode.render());
 }
 

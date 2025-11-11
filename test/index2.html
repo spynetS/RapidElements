@@ -1,28 +1,29 @@
 <html>
   <head>
-			<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
 	</head>
 
 
 	
 	<body>
 
-		<template rapid-data="Counter" rapid-name="counter">
-			<button onclick="{{props.click}}" >
-					{{this.count}}
-			</button>
-			<input name="" type="text" value="" onkeypress="{{props.onkeyup}}" /> 
-			<p>{{this.text}}</p>
-		</template>
+			<!-- <template rapid-data="Counter" rapid-name="counter">
+					 <button onclick="{props.click}" >
+					 {this.count}
+					 </button>
+					 <input name="" type="text" value="" oninput="{props.oninput}" /> 
+					 <p>{this.text} {this.count}</p>
+					 </template>
 
-		
-		<counter :onkeyup="this.text=(event.target.value);update()" :click="this.count++;console.log(this.text); window.update()" ></counter>
-		<counter :onkeyup="this.text=(event.target.value);update()" :click="this.log()" ></counter>
-
-		
+					 
+					 <counter :oninput="this.text=(event.target.value);update()" :click="this.count++;console.log(this.text); window.update()" ></counter>
+					 <counter :oninput="this.text=(event.target.value);update()" :click="this.log()" ></counter>
+			-->
 		<div id="root"></div>
 
-		<script type="text/javascript">
+		<script src="../bin/RapidElements.js" type="text/javascript"></script>
+		<script defer type="text/javascript">
 		 class Counter {
 				 text = ""
 				 count = 0
@@ -33,6 +34,26 @@
 						 window.update()
 				 }
 		 }
+
+		 function myButton(props){
+				 return new VElement('button',props,[props.content])
+//				 return button(props,[props.content])
+		 }
+		 		 
+		 function myComp(props){
+				 return new VElement('div',{},[myButton({content:"CLICK ME",onclick:()=>{console.log(10);}})])
+				 /*
+				 return div(props).
+								 add(myButton({content:"CLICK ME",onclick:()=>console.log(10)})).
+								 add(h1({}).add("Hello WOrld!"))
+				 return div(props,[
+						 myButton({content:"CLICK ME",onclick:()=>console.log(10)}),
+						 h1({},["Hello World!"])
+				 ])
+				 */
+		 }
+		 
+		 window.render(new VElement('p',{},[myComp()]))
 		</script>
 		
 	</body>

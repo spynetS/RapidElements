@@ -54,9 +54,9 @@
     }
   };
   function interpolate(templateString, props2, instance = "") {
-    return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
+    return templateString.replace(/\{(.+?)\}/g, (_, expr) => {
       try {
-        expr = expr.replace("this", instance);
+        expr = expr.replace("this.", instance + ".");
         return new Function("props", `return ${expr.trim()}`)(props2);
       } catch (e) {
         console.warn(`Failed to evaluate expression: ${expr}`, e);
@@ -106,6 +106,7 @@
     }
     return false;
   }
+  window.VElement = VElement;
 
   // src/Component.ts
   function randomVarName(length = 8) {
@@ -142,7 +143,7 @@
       const props2 = {};
       for (const attr of this.component.attributes) {
         if (attr.name.startsWith(":")) {
-          props2[attr.name.replace(":", "")] = attr.value.replace(/this/g, this.instance);
+          props2[attr.name.replace(":", "")] = attr.value.replace(/this./g, this.instance + ".");
         } else {
           props2[attr.name] = attr.value;
         }
@@ -238,9 +239,9 @@
       components.push(tc);
     });
   });
-  var root = document.getElementById("root");
   var oldVNode = null;
   window.render = (vnode) => {
+    const root = document.getElementById("root");
     oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
     if (!oldVNode.dom) root.appendChild(vnode.render());
   };

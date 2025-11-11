@@ -18,16 +18,16 @@ To "install" just add the script link **don't forget the defer tag**
     </head>
     <body class="flex flex-col gap-2" >
         <template rapid-name="card" >
-            <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
+            <div class="bg-{props.color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {props.class}" >
                 <h1>Kort</h1>
-                <h1>{name}</h1>
-                {children}
+                <h1>{props.name}</h1>
+                {props.children}
             </div>
         </template>
 
         <template rapid-name="bigtitle">
             <div class="text-blue-600" >
-                {children}
+                {props.children}
             </div>
         </template>
 
@@ -43,6 +43,8 @@ To "install" just add the script link **don't forget the defer tag**
        <card name="card3" color="green"></card>
        <card name="card4" color="green"></card>
 
+	<div id='root'></div>
+	
     </body>
 </html>
 ```
@@ -52,16 +54,16 @@ Components.html
 ``` html
 
         <template rapid-name="card" >
-            <div class="bg-{color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {class}" >
+            <div class="bg-{props.color}-500 p-5 rouneded-lg flex flex-col items-center w-[400px] {props.class}" >
                 <h1>Kort</h1>
-                <h1>{name}</h1>
-                {children}
+                <h1>{props.name}</h1>
+                {props.children}
             </div>
         </template>
 
         <template rapid-name="bigtitle">
             <div class="text-blue-600" >
-                {children}
+                {props.children}
             </div>
         </template>
 
@@ -124,13 +126,13 @@ Try it by running
 	  <!-- home page -->
 	  <page path="home">
 		<div class="flex items-center justify-center bg-red-400 p-2">
-		  <h1>This is the {path} page</h1>
+		  <h1>This is the {props.path} page</h1>
 		</div>
 	  </page>
 	  <!-- about page -->
 	  <page path="about">
 		<div class="flex items-center justify-center bg-blue-400 p-2 h-screen">
-		  <h1>This is the {path} page</h1>
+		  <h1>This is the {props.path} page</h1>
 		</div>
 	  </page>
 	</router>

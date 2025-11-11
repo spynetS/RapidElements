@@ -75,11 +75,11 @@ export class VElement {
 }
 
 export function interpolate(templateString: string, props: Record<string, any>, instance=""): string {
-		return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
+		return templateString.replace(/\{(.+?)\}/g, (_, expr) => {
 				try {
 						// Evaluate the expression in the context of props
 						// Using new Function to safely access props
-						expr = expr.replace("this",instance)
+						expr = expr.replace("this.",instance+".")
 						return new Function('props', `return ${expr.trim()}`)(props);
 				} catch (e) {
 						console.warn(`Failed to evaluate expression: ${expr}`, e);
@@ -147,3 +147,5 @@ export function createComponent(el:Element) : TemplateComponent|false {
 		}
 		return false;
 }
+
+window.VElement = VElement;
