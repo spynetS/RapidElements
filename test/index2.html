@@ -1,60 +1,74 @@
 <html>
   <head>
 
-		<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+			<!-- <script defer src="/bin/RapidElements.js" type="text/javascript"></script> -->
+			<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+
 	</head>
 
 
 	
-	<body>
+	<body class="bg-white">
 
-			<!-- <template rapid-data="Counter" rapid-name="counter">
-					 <button onclick="{props.click}" >
-					 {this.count}
-					 </button>
-					 <input name="" type="text" value="" oninput="{props.oninput}" /> 
-					 <p>{this.text} {this.count}</p>
-					 </template>
 
-					 
-					 <counter :oninput="this.text=(event.target.value);update()" :click="this.count++;console.log(this.text); window.update()" ></counter>
-					 <counter :oninput="this.text=(event.target.value);update()" :click="this.log()" ></counter>
-			-->
+			<template rapid-data="Counter" rapid-name="but">
+					<button :onclick="this.log()" >
+							{this.count}
+					</button>
+					<input name="" type="text" value="" :oninput="this.text=event.target.value;window.update()" />
+					<p>{this.text}</p>
+			</template>
+
+			<template rapid-data="Popup" rapid-name="popup" >
+					<div style="{props.open == 'true' ? 'display:flex' : 'display:none'}" >
+							<p>HEJ HEJ</p>
+
+							<button onclick="{props.setopen}; window.update()" >
+									close
+							</button>
+							
+							<but></but>
+					</div>
+
+					
+			</template>
+
+			<template rapid-name='app' rapid-data="App">
+					<button :onclick="this.open = !this.open; window.update();console.log(this.open)" >
+							Open
+					</button>
+					<popup :open="{this.open}" :setopen="this.open = false"  ></popup>
+			</template>
+
+
+			<app></app>
+			
 		<div id="root"></div>
 
-		<script src="../bin/RapidElements.js" type="text/javascript"></script>
-		<script defer type="text/javascript">
+		<script defer src="../bin/RapidElements.js" type="text/javascript"></script>
+		<script defer type="text/javascript"></script>
+
+		<script type="text/javascript">
+		 class App {
+				 open = false;
+		 }
+		 
+		 class Popup {
+				 
+		 }
 		 class Counter {
 				 text = ""
 				 count = 0
-
 				 log(){
 						 this.count++;
 						 console.log(this.text);
 						 window.update()
 				 }
 		 }
-
-		 function myButton(props){
-				 return new VElement('button',props,[props.content])
-//				 return button(props,[props.content])
-		 }
-		 		 
-		 function myComp(props){
-				 return new VElement('div',{},[myButton({content:"CLICK ME",onclick:()=>{console.log(10);}})])
-				 /*
-				 return div(props).
-								 add(myButton({content:"CLICK ME",onclick:()=>console.log(10)})).
-								 add(h1({}).add("Hello WOrld!"))
-				 return div(props,[
-						 myButton({content:"CLICK ME",onclick:()=>console.log(10)}),
-						 h1({},["Hello World!"])
-				 ])
-				 */
-		 }
-		 
-		 window.render(new VElement('p',{},[myComp()]))
 		</script>
+
+
+		<div id="root"></div>
 		
 	</body>
 </html>

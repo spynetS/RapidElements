@@ -48,8 +48,7 @@ export class TemplateComponent {
 				const props = {}
 				for (const attr of this.component.attributes) {
 						if(attr.name.startsWith(":")){
-
-						props[attr.name.replace(":","")] = attr.value.replace(/this./g,this.instance+".")
+								props[attr.name.replace(":","")] = attr.value.replace(/this./g,this.instance+".")
 						}
 						else{
 								props[attr.name] = attr.value;
@@ -57,6 +56,8 @@ export class TemplateComponent {
 				}
 				
 				const children = fragmentToVElement(this.template.content,props,this.instance);
+				console.log(this.component.tagName,children)
+				
         const vel = new VElement('div', [], children);
         return vel;
     }

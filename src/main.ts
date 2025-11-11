@@ -3,6 +3,29 @@ import {VElement} from "./VElement"
 import {useState} from "./useState"
 import {diff} from "./rerender"
 
+
+/*TODO but in popup isnt render (because its in a div?)
+
+			<template rapid-data="Counter" rapid-name="but">
+					<button :onclick="this.log()" >
+							{this.count}
+					</button>
+					<input name="" type="text" value="" :oninput="this.text=event.target.value;window.update()" />
+					<p>{this.text}</p>
+			</template>
+
+			<template rapid-data="Popup" rapid-name="popup" >
+					<div style="{props.open == 'true' ? 'display:flex' : 'display:none'}" >
+							<p>HEJ HEJ</p>
+
+							<button onclick="{props.setopen}; window.update()" >
+									close
+							</button>
+							
+							<but></but>
+					</div>
+*/
+
 let components: [Component] = [];
 
 const templates = document.querySelectorAll('template[rapid-name]');
@@ -29,7 +52,7 @@ window.render = (vnode: VElement) => {
 
 // TODO FIX A REAL UPDATE
 window.update = () => {
-		render(new VElement('div', { id: 'app' }, components.map(component=>component.render()))); 
+		window.render(new VElement('div', { id: 'app' }, components.map(component=>component.render()))); 
 }
 
 update()

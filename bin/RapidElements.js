@@ -56,6 +56,8 @@
   function interpolate(templateString, props2, instance = "") {
     return templateString.replace(/\{(.+?)\}/g, (_, expr) => {
       try {
+        console.log(expr);
+        console.log(props2.open);
         expr = expr.replace("this.", instance + ".");
         return new Function("props", `return ${expr.trim()}`)(props2);
       } catch (e) {
@@ -64,17 +66,25 @@
       }
     });
   }
-  function domToVElement(node) {
+  function getProps(attributes, instance) {
+    let props2 = {};
+    Array.from(attributes).forEach((attr) => {
+      if (attr.name.startsWith(":")) {
+        props2[attr.name.replace(":", "")] = attr.value.replace(/this/g, instance);
+      } else {
+        props2[attr.name] = attr.value;
+      }
+    });
+    return props2;
+  }
+  function domToVElement(node, instance = "this") {
     if (node.nodeType === Node.TEXT_NODE) {
       return node.textContent || "";
     }
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node;
-      const props2 = {};
-      Array.from(el.attributes).forEach((attr) => {
-        props2[attr.name] = attr.value;
-      });
-      const children = Array.from(el.childNodes).map(domToVElement);
+      const props2 = getProps(el.attributes, instance);
+      const children = Array.from(el.childNodes).map((child) => domToVElement(child, instance));
       return new VElement(el.tagName.toLowerCase(), props2, children);
     }
     return "";
@@ -82,16 +92,22 @@
   function fragmentToVElement(fragment, props2, instance = "") {
     const vels = [];
     Array.from(fragment.children).forEach((el) => {
+      console.log(el, props2);
       const html = interpolate(el.outerHTML, props2, instance);
+      console.log(html);
       const temp = document.createElement("div");
       temp.innerHTML = html;
       Array.from(temp.children).forEach((newEl) => {
+        let props3 = getProps(newEl.attributes, instance);
+        Object.keys(props3).forEach((key) => {
+          newEl.setAttribute(key, props3[key]);
+        });
         let tc = createComponent(newEl);
         if (tc !== false) {
           vels.push(tc.render());
           return;
         }
-        const vel = domToVElement(newEl);
+        const vel = domToVElement(newEl, instance);
         vel.instance = instance;
         vels.push(vel);
       });
@@ -149,6 +165,7 @@
         }
       }
       const children = fragmentToVElement(this.template.content, props2, this.instance);
+      console.log(this.component.tagName, children);
       const vel = new VElement("div", [], children);
       return vel;
     }
@@ -246,7 +263,7 @@
     if (!oldVNode.dom) root.appendChild(vnode.render());
   };
   window.update = () => {
-    render(new VElement("div", { id: "app" }, components.map((component2) => component2.render())));
+    window.render(new VElement("div", { id: "app" }, components.map((component2) => component2.render())));
   };
   update();
 })();

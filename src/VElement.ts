@@ -88,22 +88,32 @@ export function interpolate(templateString: string, props: Record<string, any>, 
 		});
 }
 
-export function domToVElement(node: Node): VElement | string {
+
+function getProps(attributes:NamedNodeMap, instance:string) : object {
+  let props = {}
+		Array.from(attributes).forEach(attr => {
+    if (attr.name.startsWith(":")) {
+      props[attr.name.replace(":", "")] = attr.value.replace(/this/g, instance)
+    } else {
+      props[attr.name] = attr.value;
+    }
+  });
+  return props;
+}
+
+export function domToVElement(node: Node, instance = "this"): VElement | string {
 		if (node.nodeType === Node.TEXT_NODE) {
 				return node.textContent || '';
 		}
 		
 		if (node.nodeType === Node.ELEMENT_NODE) {
 				const el = node as HTMLElement;
-				const props: { [key: string]: any } = {};
+				const props: { [key: string]: any } = getProps(el.attributes,instance);
 				
 				// Convert attributes to props
-				Array.from(el.attributes).forEach(attr => {
-						props[attr.name] = attr.value;
-				});
 				
 				// Convert children recursively
-				const children = Array.from(el.childNodes).map(domToVElement);
+				const children = Array.from(el.childNodes).map(child=>domToVElement(child,instance));
 				
 				return new VElement(el.tagName.toLowerCase(), props, children);
 		}
@@ -118,19 +128,25 @@ export function fragmentToVElement(fragment: DocumentFragment, props: Record<str
 		
 		Array.from(fragment.children).forEach(el => {
 				// it is a component
+				console.log(el,props)
 				const html = interpolate(el.outerHTML, props, instance);
+				console.log(html)
 				// Create a temporary container to parse the string
 				const temp = document.createElement('div');
 				temp.innerHTML = html;
-
 				// Convert parsed element(s) to VElement
 				Array.from(temp.children).forEach(newEl => {
+						let props: {[key:string]:any} = getProps(newEl.attributes, instance);
+						Object.keys(props).forEach(key=>{
+								newEl.setAttribute(key, props[key])
+						})
 						let tc = createComponent(newEl)
 						if(tc !== false){
 								vels.push(tc.render());
 								return;
 						}
-						const vel = domToVElement(newEl as HTMLElement) as VElement;
+
+						const vel = domToVElement(newEl as HTMLElement,instance) as VElement;
 						vel.instance = instance;
 						vels.push(vel);
 				});
