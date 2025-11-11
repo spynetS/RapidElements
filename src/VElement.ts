@@ -113,7 +113,34 @@ export function domToVElement(node: Node, instance = "this"): VElement | string 
 				// Convert attributes to props
 				
 				// Convert children recursively
-				const children = Array.from(el.childNodes).map(child=>domToVElement(child,instance));
+				const children = [];
+				Array.from(el.childNodes).forEach(child => {
+						// Only process if it's an element node
+						if (child.nodeType === Node.ELEMENT_NODE) {
+								const element = child as HTMLElement;
+
+								// Set attributes
+								Object.keys(props).forEach(key => {
+										element.setAttribute(key, props[key]);
+								});
+
+								// Try to create component
+								const tc = createComponent(element);
+								if (tc !== false) {
+										children.push(tc.render());
+										return;
+								}
+
+								// Convert to virtual element
+								const vel = domToVElement(element, instance) as VElement;
+								vel.instance = instance;
+								children.push(vel);
+						} 
+						else if (child.nodeType === Node.TEXT_NODE) {
+								children.push(interpolate(child.textContent,props,instance));
+						}
+				});
+
 				
 				return new VElement(el.tagName.toLowerCase(), props, children);
 		}
@@ -128,14 +155,13 @@ export function fragmentToVElement(fragment: DocumentFragment, props: Record<str
 		
 		Array.from(fragment.children).forEach(el => {
 				// it is a component
-				console.log(el,props)
 				const html = interpolate(el.outerHTML, props, instance);
-				console.log(html)
 				// Create a temporary container to parse the string
 				const temp = document.createElement('div');
 				temp.innerHTML = html;
 				// Convert parsed element(s) to VElement
 				Array.from(temp.children).forEach(newEl => {
+
 						let props: {[key:string]:any} = getProps(newEl.attributes, instance);
 						Object.keys(props).forEach(key=>{
 								newEl.setAttribute(key, props[key])

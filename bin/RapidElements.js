@@ -56,8 +56,6 @@
   function interpolate(templateString, props2, instance = "") {
     return templateString.replace(/\{(.+?)\}/g, (_, expr) => {
       try {
-        console.log(expr);
-        console.log(props2.open);
         expr = expr.replace("this.", instance + ".");
         return new Function("props", `return ${expr.trim()}`)(props2);
       } catch (e) {
@@ -84,7 +82,25 @@
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node;
       const props2 = getProps(el.attributes, instance);
-      const children = Array.from(el.childNodes).map((child) => domToVElement(child, instance));
+      const children = [];
+      Array.from(el.childNodes).forEach((child) => {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          const element = child;
+          Object.keys(props2).forEach((key) => {
+            element.setAttribute(key, props2[key]);
+          });
+          const tc = createComponent(element);
+          if (tc !== false) {
+            children.push(tc.render());
+            return;
+          }
+          const vel = domToVElement(element, instance);
+          vel.instance = instance;
+          children.push(vel);
+        } else if (child.nodeType === Node.TEXT_NODE) {
+          children.push(interpolate(child.textContent, props2, instance));
+        }
+      });
       return new VElement(el.tagName.toLowerCase(), props2, children);
     }
     return "";
@@ -92,9 +108,7 @@
   function fragmentToVElement(fragment, props2, instance = "") {
     const vels = [];
     Array.from(fragment.children).forEach((el) => {
-      console.log(el, props2);
       const html = interpolate(el.outerHTML, props2, instance);
-      console.log(html);
       const temp = document.createElement("div");
       temp.innerHTML = html;
       Array.from(temp.children).forEach((newEl) => {
