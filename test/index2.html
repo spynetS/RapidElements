@@ -8,22 +8,47 @@
 
 	<body class="bg-white">
 
+			<template rapid-data="Counter" rapid-name="counter" >
+					<button :onclick="this.count++; window.update()" >{{this.count}}</button>
+			</template>
+
+			<template rapid-name="page" >
+					<div>
+							<p>asd</p>
+							{{props.children}}
+					</div>
+			</template>
+			
+			<template rapid-name="app1" >
+					<page>
+							<counter></counter>
+							<counter></counter>
+					</page>
+			</template>
+
+			<page>
+					<counter></counter>
+					<counter></counter>
+			</page>
+
+			<!-- <app1 open="false" ></app1> -->
+
+			
 			<div id="root"></div>
 
+			<script>
+			 class Counter {
+					 count=0
+			 }
+			</script>
+			
 			<script src="../bin/RapidElements.js" type="text/javascript"></script>
-			<script defer type="text/javascript" >
 
-				let count = 0;
-				function counter(){
-						return new VElement('button',{ onclick:()=>{count++; window.render(app())}},[count.toString()])
-				}
-				
-				function app(){
-						return new VElement('div',{},[counter()]);
-				}
+			<script type="text/javascript" >
 
-			 window.render(app())
+			 update()
 			 
 			</script>
+
 	</body>
 </html>

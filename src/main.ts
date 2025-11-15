@@ -25,7 +25,6 @@ window.getComponents = () => {
 				
 				// Combine them into a single array (no duplicates)
 				const docComps = [...new Set([...tagElements, ...attrElements])];
-				console.log("comps",docComps)
 				
 				// Convert HTMLCollection to Array to use forEach
 				Array.from(docComps).forEach((el: Element) => {
@@ -50,7 +49,6 @@ window.render = (vnode: VElement) => {
 }
 
 window.update = () => {
-	//	console.log(components)
 		window.render(new VElement('div', { id: 'app' },components.map(component=>component.render()))); 
 }
 

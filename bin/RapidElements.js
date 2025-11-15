@@ -56,6 +56,7 @@
   function interpolate(templateString, props2, instance = "") {
     return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
       try {
+        console.log(expr);
         expr = expr.replace("this.", instance + ".");
         return new Function("props", `return ${expr.trim()}`)(props2);
       } catch (e) {
@@ -130,6 +131,9 @@
     });
     return vels;
   }
+  function isRapidElement(el) {
+    return Object.keys(componentRegistry).includes(el.tagName.toLocaleLowerCase());
+  }
   function createComponent(el) {
     let tagname = el.tagName.toLocaleLowerCase();
     if (Object.keys(componentRegistry).includes(tagname)) {
@@ -153,6 +157,7 @@
   }
   var Component = class {
   };
+  var instances = {};
   var TemplateComponent = class {
     template;
     component;
@@ -163,8 +168,15 @@
       this.component = component;
       this.props = props;
       const dataStr = template.getAttribute("rapid-data");
-      if (dataStr) {
+      const id = this.component.getAttribute("rapid-id");
+      console.log(this.component.tagName, id);
+      if (instances[id]) {
+        this.instance = instances[id];
+        console.log("create instance");
+      }
+      if (dataStr && !instances[id]) {
         this.instance = randomVarName();
+        instances[id] = this.instance;
         const str = `new ${dataStr}()`;
         window[this.instance] = eval(str);
       }
@@ -178,6 +190,13 @@
           props2[attr.name] = attr.value;
         }
       }
+      console.log("children " + this.component.tagName, this.component.childNodes);
+      props2["children"] = this.component.innerHTML;
+      this.template.content.querySelectorAll("*").forEach((el) => {
+        if (isRapidElement(el) && !el.hasAttribute("rapid-id")) {
+          el.setAttribute("rapid-id", crypto.randomUUID());
+        }
+      });
       const children = fragmentToVElement(this.template.content, props2, this.instance);
       const vel = new VElement("div", {}, children);
       return vel;
@@ -186,7 +205,6 @@
 
   // src/rerender.ts
   function diff(oldVNode2, newVNode, parentDom) {
-    console.log("text", oldVNode2, newVNode);
     if (!(oldVNode2 instanceof VElement) && !(newVNode instanceof VElement)) {
       if (oldVNode2 !== newVNode) {
         const textNode = document.createTextNode(newVNode);
@@ -246,19 +264,15 @@
       const newChild = newChildren[i];
       if (oldChild && !newChild) {
         const childDom = oldChild instanceof VElement ? oldChild.dom : parent.childNodes[i];
-        console.log("remove");
         parent.removeChild(childDom);
         continue;
       }
       if (!oldChild && newChild) {
         const newDom = newChild instanceof VElement ? newChild.render() : document.createTextNode(newChild);
-        console.log("append");
         parent.appendChild(newDom);
-        console.log(parent.outerHTML);
         if (newChild instanceof VElement) newChild.dom = newDom;
         continue;
       }
-      console.log("diff");
       diff(oldChild, newChild, parent);
     }
   }
@@ -275,7 +289,6 @@
       const tagElements = Array.from(document.getElementsByTagName(rapidName));
       const attrElements = Array.from(document.querySelectorAll(`[rapid-comp="${rapidName}"]`));
       const docComps = [.../* @__PURE__ */ new Set([...tagElements, ...attrElements])];
-      console.log("comps", docComps);
       Array.from(docComps).forEach((el) => {
         const tc = new TemplateComponent(t, el);
         components2.push(tc);
