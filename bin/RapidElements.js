@@ -54,7 +54,7 @@
     }
   };
   function interpolate(templateString, props2, instance = "") {
-    return templateString.replace(/\{(.+?)\}/g, (_, expr) => {
+    return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
       try {
         expr = expr.replace("this.", instance + ".");
         return new Function("props", `return ${expr.trim()}`)(props2);
@@ -111,19 +111,21 @@
       const html = interpolate(el.outerHTML, props2, instance);
       const temp = document.createElement("div");
       temp.innerHTML = html;
-      Array.from(temp.children).forEach((newEl) => {
-        let props3 = getProps(newEl.attributes, instance);
-        Object.keys(props3).forEach((key) => {
-          newEl.setAttribute(key, props3[key]);
-        });
-        let tc = createComponent(newEl);
-        if (tc !== false) {
-          vels.push(tc.render());
-          return;
+      Array.from(temp.childNodes).forEach((newEl) => {
+        if (newEl.nodeType === Node.ELEMENT_NODE) {
+          let props3 = getProps(newEl.attributes, instance);
+          Object.keys(props3).forEach((key) => {
+            newEl.setAttribute(key, props3[key]);
+          });
+          let tc = createComponent(newEl);
+          if (tc !== false) {
+            vels.push(tc.render());
+            return;
+          }
+          const vel = domToVElement(newEl, instance);
+          vel.instance = instance;
+          vels.push(vel);
         }
-        const vel = domToVElement(newEl, instance);
-        vel.instance = instance;
-        vels.push(vel);
       });
     });
     return vels;
@@ -156,7 +158,6 @@
     component;
     props;
     instance;
-    state;
     constructor(template, component, props = []) {
       this.template = template;
       this.component = component;
@@ -167,7 +168,6 @@
         const str = `new ${dataStr}()`;
         window[this.instance] = eval(str);
       }
-      this.state = JSON.parse(template.getAttribute("state"));
     }
     render() {
       const props2 = {};
@@ -179,15 +179,15 @@
         }
       }
       const children = fragmentToVElement(this.template.content, props2, this.instance);
-      console.log(this.component.tagName, children);
-      const vel = new VElement("div", [], children);
+      const vel = new VElement("div", {}, children);
       return vel;
     }
   };
 
   // src/rerender.ts
   function diff(oldVNode2, newVNode, parentDom) {
-    if (typeof oldVNode2 === "string" && typeof newVNode === "string") {
+    console.log("text", oldVNode2, newVNode);
+    if (!(oldVNode2 instanceof VElement) && !(newVNode instanceof VElement)) {
       if (oldVNode2 !== newVNode) {
         const textNode = document.createTextNode(newVNode);
         parentDom.replaceChild(textNode, parentDom.childNodes[0]);
@@ -246,38 +246,53 @@
       const newChild = newChildren[i];
       if (oldChild && !newChild) {
         const childDom = oldChild instanceof VElement ? oldChild.dom : parent.childNodes[i];
+        console.log("remove");
         parent.removeChild(childDom);
         continue;
       }
       if (!oldChild && newChild) {
         const newDom = newChild instanceof VElement ? newChild.render() : document.createTextNode(newChild);
+        console.log("append");
         parent.appendChild(newDom);
+        console.log(parent.outerHTML);
         if (newChild instanceof VElement) newChild.dom = newDom;
         continue;
       }
+      console.log("diff");
       diff(oldChild, newChild, parent);
     }
   }
 
   // src/main.ts
-  var components = [];
-  var templates2 = document.querySelectorAll("template[rapid-name]");
-  templates2.forEach((t) => {
-    const rapidName = t.getAttribute("rapid-name") || "";
-    const docComps = document.getElementsByTagName(rapidName);
-    Array.from(docComps).forEach((el) => {
-      const tc = new TemplateComponent(t, el);
-      components.push(tc);
-    });
-  });
+  window.VElement = VElement;
   var oldVNode = null;
+  var components = [];
+  window.getComponents = () => {
+    let components2 = [];
+    const templates2 = document.querySelectorAll("template[rapid-name]");
+    templates2.forEach((t) => {
+      const rapidName = t.getAttribute("rapid-name") || "";
+      const tagElements = Array.from(document.getElementsByTagName(rapidName));
+      const attrElements = Array.from(document.querySelectorAll(`[rapid-comp="${rapidName}"]`));
+      const docComps = [.../* @__PURE__ */ new Set([...tagElements, ...attrElements])];
+      console.log("comps", docComps);
+      Array.from(docComps).forEach((el) => {
+        const tc = new TemplateComponent(t, el);
+        components2.push(tc);
+      });
+    });
+    return components2;
+  };
+  components = window.getComponents();
   window.render = (vnode) => {
     const root = document.getElementById("root");
     oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
-    if (!oldVNode.dom) root.appendChild(vnode.render());
+    if (!oldVNode.dom) {
+      let render = vnode;
+      root.appendChild(render.render());
+    }
   };
   window.update = () => {
     window.render(new VElement("div", { id: "app" }, components.map((component2) => component2.render())));
   };
-  update();
 })();

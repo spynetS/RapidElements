@@ -37,11 +37,12 @@ export class VElement {
 			const el = document.createElement(this.type);
 			// Apply props
 			for (const [key, value] of Object.entries(this.props)) {
-					el.setAttribute(key, value);
-					if (key.startsWith("on") && typeof value === "function") {
-							// Attach event listener
-							const eventName = key.slice(2).toLowerCase(); // "onClick" → "click"
-							el.addEventListener(eventName, value);
+					el.setAttribute(key,value);
+				//				el.setAttribute(key, interpolate(value,this.props,this.instance));
+				if (key.startsWith("on") && typeof value === "function") {
+					// Attach event listener
+					const eventName = key.slice(2).toLowerCase(); // "onClick" → "click"
+					el.addEventListener(eventName, value);
 					} else {
 							el.setAttribute(key, value);
 					}
@@ -75,7 +76,7 @@ export class VElement {
 }
 
 export function interpolate(templateString: string, props: Record<string, any>, instance=""): string {
-		return templateString.replace(/\{(.+?)\}/g, (_, expr) => {
+		return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
 				try {
 						// Evaluate the expression in the context of props
 						// Using new Function to safely access props
@@ -159,22 +160,25 @@ export function fragmentToVElement(fragment: DocumentFragment, props: Record<str
 				// Create a temporary container to parse the string
 				const temp = document.createElement('div');
 				temp.innerHTML = html;
-				// Convert parsed element(s) to VElement
-				Array.from(temp.children).forEach(newEl => {
 
-						let props: {[key:string]:any} = getProps(newEl.attributes, instance);
-						Object.keys(props).forEach(key=>{
-								newEl.setAttribute(key, props[key])
+			// Convert parsed element(s) to VElement
+			Array.from(temp.childNodes).forEach(newEl => {
+					if (newEl.nodeType === Node.ELEMENT_NODE) {
+						let props: { [key: string]: any } = getProps(newEl.attributes, instance);
+
+						Object.keys(props).forEach(key => {
+							newEl.setAttribute(key, props[key])
 						})
 						let tc = createComponent(newEl)
-						if(tc !== false){
-								vels.push(tc.render());
-								return;
+						if (tc !== false) {
+							vels.push(tc.render());
+							return;
 						}
 
-						const vel = domToVElement(newEl as HTMLElement,instance) as VElement;
+						const vel = domToVElement(newEl as HTMLElement, instance) as VElement;
 						vel.instance = instance;
 						vels.push(vel);
+					}
 				});
 		});
 		

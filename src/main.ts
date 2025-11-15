@@ -4,55 +4,55 @@ import {useState} from "./useState"
 import {diff} from "./rerender"
 
 
-/*TODO but in popup isnt render (because its in a div?)
+// TODO fix instances
+// if we renrender a component and a component is inside it
+// it gets an new instance but it should be the same
 
-			<template rapid-data="Counter" rapid-name="but">
-					<button :onclick="this.log()" >
-							{this.count}
-					</button>
-					<input name="" type="text" value="" :oninput="this.text=event.target.value;window.update()" />
-					<p>{this.text}</p>
-			</template>
-
-			<template rapid-data="Popup" rapid-name="popup" >
-					<div style="{props.open == 'true' ? 'display:flex' : 'display:none'}" >
-							<p>HEJ HEJ</p>
-
-							<button onclick="{props.setopen}; window.update()" >
-									close
-							</button>
-							
-							<but></but>
-					</div>
-*/
-
-let components: [Component] = [];
-
-const templates = document.querySelectorAll('template[rapid-name]');
-templates.forEach((t: HTMLTemplateElement) => {
-		const rapidName: string = t.getAttribute('rapid-name') || '';
-		const docComps = document.getElementsByTagName(rapidName)
-		    
-    // Convert HTMLCollection to Array to use forEach
-    Array.from(docComps).forEach((el: Element) => {
-				const tc = new TemplateComponent(t, el);
-				components.push(tc);
-    });
-		
-});
+window.VElement = VElement;
 
 
 let oldVNode: VElement | null = null;
+let components: [Components] = [];
+
+
+window.getComponents = () => {
+		let components: [Component] = [];
+		const templates = document.querySelectorAll('template[rapid-name]');
+		templates.forEach((t: HTMLTemplateElement) => {
+				const rapidName: string = t.getAttribute('rapid-name') || '';
+				const tagElements = Array.from(document.getElementsByTagName(rapidName));
+				const attrElements = Array.from(document.querySelectorAll(`[rapid-comp="${rapidName}"]`));
+				
+				// Combine them into a single array (no duplicates)
+				const docComps = [...new Set([...tagElements, ...attrElements])];
+				console.log("comps",docComps)
+				
+				// Convert HTMLCollection to Array to use forEach
+				Array.from(docComps).forEach((el: Element) => {
+						const tc = new TemplateComponent(t, el);
+						components.push(tc);
+				});
+		});
+		return components;
+}
+
+
+components = window.getComponents();
 
 window.render = (vnode: VElement) => {
-	const root = document.getElementById('root');
-	oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
-  if (!oldVNode.dom) root.appendChild(vnode.render());
+		const root = document.getElementById('root');
+		oldVNode = oldVNode ? diff(oldVNode, vnode, root) : vnode;
+
+		if (!oldVNode.dom){
+				let render = vnode;
+				root.appendChild(render.render());
+		}
 }
 
-// TODO FIX A REAL UPDATE
 window.update = () => {
-		window.render(new VElement('div', { id: 'app' }, components.map(component=>component.render()))); 
+	//	console.log(components)
+		window.render(new VElement('div', { id: 'app' },components.map(component=>component.render()))); 
 }
 
-update()
+
+//update()

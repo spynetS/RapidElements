@@ -15,32 +15,29 @@ function randomVarName(length = 8) {
 }
 
 export abstract class Component {
-		
 		abstract render(): VElement;
 }
-
-
 
 export class TemplateComponent {
 		template: HTMLTemplateElement;
 		component: Element;
 		props: [];
 		instance: string;
-		state:{}
+		
 		constructor(template:HTMLTemplateElement, component: Element, props:[] = []){
 				
 				this.template = template;
 				this.component = component;
 				this.props = props;
 				
-				const dataStr = template.getAttribute("rapid-data");
+				const dataStr  = template.getAttribute("rapid-data");
+				
 				if (dataStr) {
 						this.instance = randomVarName();
 						const str = `new ${dataStr}()`;
 						window[this.instance] = eval(str);
 				}
-				this.state = JSON.parse(template.getAttribute("state"));
-				
+
 		}
 		
     render(): VElement {
@@ -54,11 +51,12 @@ export class TemplateComponent {
 								props[attr.name] = attr.value;
 						}
 				}
-				
+
+
 				const children = fragmentToVElement(this.template.content,props,this.instance);
-				console.log(this.component.tagName,children)
+//				console.log(this.component.tagName,children)
 				
-        const vel = new VElement('div', [], children);
+				const vel = new VElement('div', {  }, children);
         return vel;
     }
 		
