@@ -1,54 +1,59 @@
 <html>
-  <head>
 
-			<!-- <script defer src="/bin/RapidElements.js" type="text/javascript"></script> -->
-			<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+<head>
 
-	</head>
+	<!-- <script defer src="/bin/RapidElements.js" type="text/javascript"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
 
-	<body class="bg-white">
+<body class="bg-white">
 
-			<template rapid-data="Counter" rapid-name="counter" >
-					<button :onclick="this.count++; window.update()" >{{this.count}}</button>
-			</template>
 
-			<template rapid-name="page" >
-					<div>
-							<p>asd</p>
-							{{props.children}}
-					</div>
-			</template>
-			
-			<template rapid-name="app1" >
-					<page>
-							<counter></counter>
-							<counter></counter>
-					</page>
-			</template>
+	<div id="root"></div>
 
-			<page>
-					<counter></counter>
-					<counter></counter>
-			</page>
+	<script src="/bin/RapidElements.js" type="text/javascript"></script>
 
-			<!-- <app1 open="false" ></app1> -->
+	<script type="text/javascript">
+		let state = { open: true, text:"" };
 
-			
-			<div id="root"></div>
 
-			<script>
-			 class Counter {
-					 count=0
-			 }
-			</script>
-			
-			<script src="../bin/RapidElements.js" type="text/javascript"></script>
+		function setState(newState) {
+			Object.assign(state, newState);
+			update()
+		}
 
-			<script type="text/javascript" >
+		const update = () => window.render(new VElement('div', {}, [
+			popup(),
+			button({ onClick: () => setState({ open: true }), children: ['Open'] })
+		]))
 
-			 update()
-			 
-			</script>
+		function button(props) {
+			return new VElement('button', { onClick: props.onClick, className: 'rounded-lg bg-gray-200 hover:bg-gray-400 duration-150 p-1 cursor-pointer' }, [props.children])
+		}
 
-	</body>
+		function popup(props) {
+			if (state.open) {
+				const el = new VElement('div', { className: "fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-[#000000aa] " }, [
+					new VElement('div', { className: "bg-white rounded-lg p-12" }, [
+						button({ className: "bg-red-200", onClick: () => setState({ "open": false }), children: ['Close'] }),
+						new VElement('input', { className: "bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body", onInput: (event) => setState({ text: event.target.value }) }),
+						new VElement('p', {}, [state.text.toString()]),
+						button({ className: "bg-red-200", onClick: () => alert(state.text), children: ['Alert'] }),
+
+					])
+
+				])
+				return el;
+			}
+			return new VElement('div', {}, [])
+		}
+
+		update()
+
+	</script>
+
+	<!-- <button onclick="setState({open:true})">Open</button> -->
+
+</body>
+
 </html>

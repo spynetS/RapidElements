@@ -29,6 +29,8 @@
         if (key.startsWith("on") && typeof value === "function") {
           const eventName = key.slice(2).toLowerCase();
           el.addEventListener(eventName, value);
+        } else if (key === "className") {
+          el.setAttribute("class", value);
         } else {
           el.setAttribute(key, value);
         }
@@ -56,7 +58,6 @@
   function interpolate(templateString, props2, instance = "") {
     return templateString.replace(/\{\{(.+?)\}\}/g, (_, expr) => {
       try {
-        console.log(expr);
         expr = expr.replace("this.", instance + ".");
         return new Function("props", `return ${expr.trim()}`)(props2);
       } catch (e) {
@@ -169,7 +170,6 @@
       this.props = props;
       const dataStr = template.getAttribute("rapid-data");
       const id = this.component.getAttribute("rapid-id");
-      console.log(this.component.tagName, id);
       if (instances[id]) {
         this.instance = instances[id];
         console.log("create instance");
@@ -190,7 +190,6 @@
           props2[attr.name] = attr.value;
         }
       }
-      console.log("children " + this.component.tagName, this.component.childNodes);
       props2["children"] = this.component.innerHTML;
       this.template.content.querySelectorAll("*").forEach((el) => {
         if (isRapidElement(el) && !el.hasAttribute("rapid-id")) {
@@ -208,6 +207,7 @@
     if (!(oldVNode2 instanceof VElement) && !(newVNode instanceof VElement)) {
       if (oldVNode2 !== newVNode) {
         const textNode = document.createTextNode(newVNode);
+        console.log("replace", textNode);
         parentDom.replaceChild(textNode, parentDom.childNodes[0]);
       }
       return newVNode;
@@ -269,6 +269,7 @@
       }
       if (!oldChild && newChild) {
         const newDom = newChild instanceof VElement ? newChild.render() : document.createTextNode(newChild);
+        console.log("add", newDom);
         parent.appendChild(newDom);
         if (newChild instanceof VElement) newChild.dom = newDom;
         continue;

@@ -1,4 +1,4 @@
-import {isRapidElement, VElement, fragmentToVElement, interpolate, domToVElement, createComponent } from "./VElement"
+import { isRapidElement, VElement, fragmentToVElement, interpolate, domToVElement, createComponent } from "./VElement"
 
 function randomVarName(length = 8) {
 	const firstChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_";
@@ -32,12 +32,10 @@ export class TemplateComponent {
 		this.component = component;
 		this.props = props;
 		const dataStr = template.getAttribute("rapid-data");
-		const id = this.component.getAttribute('rapid-id'); 
+		const id = this.component.getAttribute('rapid-id');
 
-			console.log(this.component.tagName,id)
-			
 		if (instances[id]) {
-				this.instance = instances[id];
+			this.instance = instances[id];
 			console.log('create instance')
 		}
 		if (dataStr && !instances[id]) {
@@ -61,12 +59,11 @@ export class TemplateComponent {
 			}
 		}
 
-			console.log("children "+this.component.tagName,this.component.childNodes);
-			props['children'] = this.component.innerHTML;
-			
+		props['children'] = this.component.innerHTML;
+
 		(this.template.content as DocumentFragment).querySelectorAll('*').forEach(el => {
 			if (isRapidElement(el) && !el.hasAttribute('rapid-id')) {
-					el.setAttribute('rapid-id', crypto.randomUUID());
+				el.setAttribute('rapid-id', crypto.randomUUID());
 			}
 		});
 

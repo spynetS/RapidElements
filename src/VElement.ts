@@ -43,6 +43,8 @@ export class VElement {
 								// Attach event listener
 								const eventName = key.slice(2).toLowerCase(); // "onClick" → "click"
 								el.addEventListener(eventName, value);
+						} else if(key === "className"){
+								el.setAttribute('class', value);
 						} else {
 								el.setAttribute(key, value);
 						}
@@ -80,7 +82,6 @@ export function interpolate(templateString: string, props: Record<string, any>, 
 				try {
 						// Evaluate the expression in the context of props
 						// Using new Function to safely access props
-						console.log(expr)
 						expr = expr.replace("this.",instance+".")
 						return new Function('props', `return ${expr.trim()}`)(props);
 				} catch (e) {

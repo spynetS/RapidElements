@@ -7,6 +7,7 @@ export function diff(oldVNode: VElement | string, newVNode: VElement | string, p
 				if (oldVNode !== newVNode) {
 						// Replace text
 						const textNode = document.createTextNode(newVNode);
+						console.log("replace",textNode)
 						parentDom.replaceChild(textNode, parentDom.childNodes[0]);
 				}
 				return newVNode;
@@ -97,7 +98,7 @@ export function diffChildren(parent: HTMLElement, oldChildren: Array<VElement | 
 				// Child added
 				if (!oldChild && newChild) {
 						const newDom = newChild instanceof VElement ? newChild.render() : document.createTextNode(newChild);
-
+						console.log("add",newDom)
 						parent.appendChild(newDom);
 						if (newChild instanceof VElement) newChild.dom = newDom;
 						continue;
