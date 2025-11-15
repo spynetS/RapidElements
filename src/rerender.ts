@@ -58,6 +58,8 @@ export function updateProps(el: HTMLElement, oldProps: any, newProps: any) {
 						if (key.startsWith("on")) {
 								el.removeEventListener(key.slice(2).toLowerCase(), oldProps[key]);
 						} else {
+								if(key == 'className')
+										el.removeAttribute("class");
 								el.removeAttribute(key);
 						}
 				}
@@ -73,7 +75,10 @@ export function updateProps(el: HTMLElement, oldProps: any, newProps: any) {
 								if (oldVal) el.removeEventListener(key.slice(2).toLowerCase(), oldVal);
 								el.addEventListener(key.slice(2).toLowerCase(), newVal);
 						} else {
-								el.setAttribute(key, newVal);
+								if(key == "className")
+										el.setAttribute('class', newVal);
+								else
+										el.setAttribute(key, newVal);
 						}
 				}
 		}
